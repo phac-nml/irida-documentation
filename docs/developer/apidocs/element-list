@@ -81,10 +81,13 @@ ca.corefacility.bioinformatics.irida.ria.utilities.components
 ca.corefacility.bioinformatics.irida.ria.utilities.converters
 ca.corefacility.bioinformatics.irida.ria.web
 ca.corefacility.bioinformatics.irida.ria.web.admin
+ca.corefacility.bioinformatics.irida.ria.web.admin.dto.statistics
 ca.corefacility.bioinformatics.irida.ria.web.ajax
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.ajax
+ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.cart
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.clients
+ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.references
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.remote
 ca.corefacility.bioinformatics.irida.ria.web.ajax.export
 ca.corefacility.bioinformatics.irida.ria.web.ajax.metadata
@@ -97,11 +100,11 @@ ca.corefacility.bioinformatics.irida.ria.web.analysis.dto
 ca.corefacility.bioinformatics.irida.ria.web.announcements
 ca.corefacility.bioinformatics.irida.ria.web.announcements.dto
 ca.corefacility.bioinformatics.irida.ria.web.cart
-ca.corefacility.bioinformatics.irida.ria.web.cart.components
 ca.corefacility.bioinformatics.irida.ria.web.cart.dto
 ca.corefacility.bioinformatics.irida.ria.web.clients
 ca.corefacility.bioinformatics.irida.ria.web.components
 ca.corefacility.bioinformatics.irida.ria.web.components.agGrid
+ca.corefacility.bioinformatics.irida.ria.web.components.ant.notification
 ca.corefacility.bioinformatics.irida.ria.web.components.ant.table
 ca.corefacility.bioinformatics.irida.ria.web.components.datatables
 ca.corefacility.bioinformatics.irida.ria.web.components.datatables.config
@@ -111,6 +114,7 @@ ca.corefacility.bioinformatics.irida.ria.web.dto
 ca.corefacility.bioinformatics.irida.ria.web.errors
 ca.corefacility.bioinformatics.irida.ria.web.exceptions
 ca.corefacility.bioinformatics.irida.ria.web.files
+ca.corefacility.bioinformatics.irida.ria.web.files.dto
 ca.corefacility.bioinformatics.irida.ria.web.linelist
 ca.corefacility.bioinformatics.irida.ria.web.linelist.dto
 ca.corefacility.bioinformatics.irida.ria.web.models
@@ -131,6 +135,7 @@ ca.corefacility.bioinformatics.irida.ria.web.search
 ca.corefacility.bioinformatics.irida.ria.web.sequencingRuns
 ca.corefacility.bioinformatics.irida.ria.web.sequencingRuns.dto
 ca.corefacility.bioinformatics.irida.ria.web.services
+ca.corefacility.bioinformatics.irida.ria.web.sessionAttrs
 ca.corefacility.bioinformatics.irida.ria.web.users
 ca.corefacility.bioinformatics.irida.ria.web.users.dto
 ca.corefacility.bioinformatics.irida.ria.web.utilities
