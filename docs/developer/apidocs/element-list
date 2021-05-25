@@ -12,6 +12,7 @@ ca.corefacility.bioinformatics.irida.events
 ca.corefacility.bioinformatics.irida.events.annotations
 ca.corefacility.bioinformatics.irida.exceptions
 ca.corefacility.bioinformatics.irida.exceptions.galaxy
+ca.corefacility.bioinformatics.irida.exceptions.pipelines
 ca.corefacility.bioinformatics.irida.model
 ca.corefacility.bioinformatics.irida.model.announcements
 ca.corefacility.bioinformatics.irida.model.assembly
@@ -87,12 +88,17 @@ ca.corefacility.bioinformatics.irida.ria.web.ajax.dto
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.ajax
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.cart
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.clients
+ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.pipeline
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.references
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.remote
+ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.ui
 ca.corefacility.bioinformatics.irida.ria.web.ajax.export
 ca.corefacility.bioinformatics.irida.ria.web.ajax.metadata
 ca.corefacility.bioinformatics.irida.ria.web.ajax.ontologies
 ca.corefacility.bioinformatics.irida.ria.web.ajax.projects
+ca.corefacility.bioinformatics.irida.ria.web.ajax.projects.settings
+ca.corefacility.bioinformatics.irida.ria.web.ajax.projects.settings.dto
+ca.corefacility.bioinformatics.irida.ria.web.ajax.projects.settings.exceptions
 ca.corefacility.bioinformatics.irida.ria.web.ajax.users
 ca.corefacility.bioinformatics.irida.ria.web.analysis
 ca.corefacility.bioinformatics.irida.ria.web.analysis.auditing
@@ -115,6 +121,8 @@ ca.corefacility.bioinformatics.irida.ria.web.errors
 ca.corefacility.bioinformatics.irida.ria.web.exceptions
 ca.corefacility.bioinformatics.irida.ria.web.files
 ca.corefacility.bioinformatics.irida.ria.web.files.dto
+ca.corefacility.bioinformatics.irida.ria.web.launchPipeline
+ca.corefacility.bioinformatics.irida.ria.web.launchPipeline.dtos
 ca.corefacility.bioinformatics.irida.ria.web.linelist
 ca.corefacility.bioinformatics.irida.ria.web.linelist.dto
 ca.corefacility.bioinformatics.irida.ria.web.models
@@ -174,6 +182,7 @@ ca.corefacility.bioinformatics.irida.validators.annotations
 ca.corefacility.bioinformatics.irida.validators.annotations.validators
 ca.corefacility.bioinformatics.irida.validators.groups
 ca.corefacility.bioinformatics.irida.web.assembler.resource
+ca.corefacility.bioinformatics.irida.web.assembler.resource.sample
 ca.corefacility.bioinformatics.irida.web.assembler.resource.sequencefile
 ca.corefacility.bioinformatics.irida.web.controller.api
 ca.corefacility.bioinformatics.irida.web.controller.api.exception
