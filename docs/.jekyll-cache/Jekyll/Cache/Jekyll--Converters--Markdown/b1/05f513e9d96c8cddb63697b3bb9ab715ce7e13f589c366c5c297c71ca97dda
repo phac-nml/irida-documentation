@@ -1,0 +1,20 @@
+I"ê<h1 id="webpack">Webpack</h1>
+
+<h2 id="code-splitting">Code Splitting</h2>
+
+<h3 id="servlet-context-path">Servlet Context Path</h3>
+<p>Since IRIDA can be hosted under any context path, this will not be known at compile time.  To get around this set the the webpack global variable <code>__webpack_public_path__</code> in the entry point to the bundle.</p>
+
+<p>See <a href="https://webpack.js.org/guides/public-path/#on-the-fly">Webpack Public Path &gt; On the fly</a> for more information.</p>
+
+<p>Just add the following snippet to your bundle entry point:</p>
+
+<div class="highlight"><pre><code class="language-javascript"><span class="cm">/*</span>
+<span class="cm">WEBPACK PUBLIC PATH</span>
+<span class="cm"> */</span>
+<span class="nx">__webpack_public_path__</span> <span class="o">=</span> <span class="sb">`</span><span class="si">${</span><span class="nb">window</span><span class="p">.</span><span class="nx">TL</span><span class="p">.</span><span class="nx">BASE_URL</span><span class="si">}</span><span class="sb">resources/dist/`</span><span class="p">;</span></code></pre></div>
+<ul>
+  <li><code>window.TL.BASE_URL</code> is found on on the base template for all pages: <code>src/main/webapp/pages/template/page.html</code>, and is passed the servlet context path via the Thymeleaf templating engine.</li>
+  <li><code>resources/dist</code> is the path that webpack bundles all js and css files into.</li>
+</ul>
+:ET

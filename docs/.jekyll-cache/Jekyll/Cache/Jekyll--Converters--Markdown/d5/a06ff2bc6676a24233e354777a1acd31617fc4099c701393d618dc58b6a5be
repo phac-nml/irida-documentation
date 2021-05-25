@@ -1,0 +1,761 @@
+I"S�<h1 class="no_toc" id="proposal-for-a-unifying-rest-api-for-gmi-compliant-repositories">Proposal for a Unifying REST API for GMI-Compliant Repositories</h1>
+
+<p>The goal of the <a href="http://www.globalmicrobialidentifier.org/">Global Microbial Identifier (GMI)</a> initiative is to create a global platform for storing whole-genome sequencing data and epidemiological metadata, and to implement an analysis platform for detecting outbreaks and emerging pathogens.</p>
+
+<p>A major component of such a global resource, as envisioned by the GMI, is a repository for storing next-generation sequencing data and epidemiological metadata. Several repositories already exist for storing sequencing data and metadata, unified by the <a href="http://www.insdc.org/">International Nucleotide Sequence Database Collaboration (INSDC)</a>. Each participant in the INSDC implements their repository independently and mirrors other participating repositories on a regular basis. In this document, we propose a new, unifying <strong>REST API</strong> for GMI-Compliant Repositories, including, <em>but not limited to</em>, the INSDC repositories.</p>
+
+<p>First, we provide a brief review of the existing INSDC repositories, and the available methods for accessing those repositories. Then we describe, at a high-level, a hierarchical data model that follows the existing INSDC data model. We then provide a basic description of REST and some motivation for the creation of a common REST API, followed by a detailed description of the metadata, links and media types associated with the proposed data model. Finally, we show some example usage scenarios of how an analytical tool developer might interact with the common REST API.</p>
+
+<p>Please note that this document is a <strong>DRAFT</strong>. Comments, errata, discussion, and constructive criticism are welcome.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#review" id="markdown-toc-review">Review</a></li>
+  <li><a href="#rest-api" id="markdown-toc-rest-api">REST API</a></li>
+  <li><a href="#rest-api-description" id="markdown-toc-rest-api-description">REST API Description</a>    <ul>
+      <li><a href="#technical-notes" id="markdown-toc-technical-notes">Technical Notes</a></li>
+      <li><a href="#authentication" id="markdown-toc-authentication">Authentication</a></li>
+      <li><a href="#proposed-media-types" id="markdown-toc-proposed-media-types">Proposed Media Types</a></li>
+      <li><a href="#data-model" id="markdown-toc-data-model">Data Model</a></li>
+      <li><a href="#resources" id="markdown-toc-resources">Resources</a>        <ul>
+          <li><a href="#study" id="markdown-toc-study">Study</a></li>
+          <li><a href="#sample" id="markdown-toc-sample">Sample</a></li>
+          <li><a href="#experiment" id="markdown-toc-experiment">Experiment</a></li>
+          <li><a href="#run" id="markdown-toc-run">Run</a></li>
+          <li><a href="#analysis" id="markdown-toc-analysis">Analysis</a></li>
+        </ul>
+      </li>
+      <li><a href="#file-upload-considerations" id="markdown-toc-file-upload-considerations">File Upload Considerations</a></li>
+      <li><a href="#http-verbs" id="markdown-toc-http-verbs">HTTP Verbs</a>        <ul>
+          <li><a href="#resource-collections" id="markdown-toc-resource-collections">Resource Collections</a></li>
+          <li><a href="#individual-resource" id="markdown-toc-individual-resource">Individual resource</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#examples" id="markdown-toc-examples">Examples</a>    <ul>
+      <li><a href="#creating-a-study" id="markdown-toc-creating-a-study">Creating a Study</a></li>
+      <li><a href="#adding-a-sample-to-a-study" id="markdown-toc-adding-a-sample-to-a-study">Adding a Sample to a Study</a></li>
+      <li><a href="#references" id="markdown-toc-references">References</a></li>
+    </ul>
+  </li>
+  <li><a href="#additional-resources-on-rest-apis" id="markdown-toc-additional-resources-on-rest-apis">Additional Resources on REST APIs</a></li>
+</ul>
+
+<h2 id="review">Review</h2>
+<p>The INSDC, consisting of the <a href="http://www.ncbi.nlm.nih.gov/">National Center for Biotechnology Information (NCBI)</a>, the <a href="https://www.ebi.ac.uk/">European Bioinformatics Institute (EBI)</a>, and the <a href="http://www.ddbj.nig.ac.jp/">DNA Data Bank of Japan (DDBJ)</a>, is the current <em>de facto</em> standard for storing sequence read data in a centralized, public repository.</p>
+
+<p>The members of the INSDC exchange and synchronize data on a regular basis so that the data at each location (NCBI in North America, EBI in Europe, and DDBJ in Japan) has a complete mirror of the sequence data submitted to each respective read archive.</p>
+
+<p>While each of these repositories share the same data, submitting and accessing data from each repository is inconsistent for both human and software clients. Furthermore, both the NCBI and EBI offer XML schemas for each type of resource in their system, but the schemas differ across institutions. Finally, the automated submission process for each site is also different; the NCBI requires submission of XML formats to CGI-based web services, where the EBI offers REST web-services for the submission of XML formats.</p>
+
+<p>Unifying these APIs with a single, modern API will reduce the complexity of accessing these repositories on the part of developers.</p>
+
+<h2 id="rest-api">REST API</h2>
+<p>Representational State Transfer (REST) is an architectural style formalized by Roy Fielding in his Ph.D. thesis “Architectural Styles and the Design of Network-based Software Architectures”. In short, REST is an architectural style that models resources and their relatedness, and promotes the use of the features exposed by a communication protocol (often HTTP) for creating, reading, and modifying those resources.</p>
+
+<p>The REST architectural style has several core tenets:</p>
+
+<ol>
+  <li>Identification of resources (a URI in HTTP),</li>
+  <li>Manipulation of resources (methods like <code>GET</code>, <code>POST</code>, <code>DELETE</code>, etc. in HTTP),</li>
+  <li>Self-describing messages (<code>Content-Type</code> headers in HTTP),</li>
+  <li>Hypermedia driving application state (named links between resources).</li>
+</ol>
+
+<p>By implementing a common REST API, we will improve the ease-of-use for developers working with GMI-compliant repositories (analytical tools accessing resources, sequencers and sequencing facilities creating new resources in the repository) because developers only need to write software to target a single, common API. Furthermore, accessing GMI-compliant repositories can be simplified for developers by providing per-language libraries on behalf of the GMI that interact with <strong>all</strong> GMI-compliant repositories.</p>
+
+<p>In addition to improving developer performance, implementing a common REST API (using formats like JSON and XML) provides an easy-to-extend model. We propose that the GMI define a minimal set of properties for each of the resources exposed by the common REST API. Each individual GMI-compliant repository is then free to extend upon that model using their own custom JSON or XML media types, provided that the GMI-defined minimal metadata is included when a client requests a resource using the media types defined by this document.</p>
+
+<p>Next, the documentation for the REST API can be confined to a single location. The NCBI BioProject interface currently has documentation spread across several different locations.</p>
+
+<p>Finally, by proposing a unified REST API for the GMI project, all interested participants in the GMI project can guide the construction of the unified REST API.</p>
+
+<h2 id="rest-api-description">REST API Description</h2>
+<h3 id="technical-notes">Technical Notes</h3>
+<ul>
+  <li>In metadata property descriptions, properties in <em>italics</em> are optional properties.</li>
+  <li>The metadata and data model described in this document adhere strictly to the INSDC Sequence Read Archive data model (see: ftp://ftp.sra.ebi.ac.uk/meta/xsd/sra_1_5/). Some of the resources might better be described as composite resources (i.e., the resource consists of several sub-resources). The data model <em>could</em> be refactored to move these sub-resources into their own, uniquely addressable resource. Sub-resources that are candidates for extraction are in <strong>bold</strong>.</li>
+  <li>Links are prefixed using <code>http://www.g-m-i.org/</code> to guarantee uniqueness of the relation name; the prefix is free to change, provided that uniqueness can be guaranteed. For example, the prefix could be <code>http://www.insdc.org/</code>, <code>http://www.ncbi.nlm.nih.gov</code>, <code>http://www.sra.ebi.ac.uk</code>, etc., provided that <em>everyone</em> implementing a GMI-compliant repository agrees on a single namespace.</li>
+</ul>
+
+<h3 id="authentication">Authentication</h3>
+<p>For resources that require authentication, specifically for the creation of new resources, we propose using basic HTTP authentication. Please see <a href="https://tools.ietf.org/html/rfc2617">RFC 2617</a> for a description of basic HTTP authentication. Storing user or client credentials is left to the implementor.</p>
+
+<p>Going forward, GMI-compliant repositories may use <a href="http://oauth.net/2/">OAuth2</a>, <a href="http://openid.net/connect/">OpenID connect</a>, <a href="https://www.mozilla.org/en-US/persona/">Persona</a>, or other types of authentication/authorization schemes for accessing resources.</p>
+
+<h3 id="proposed-media-types">Proposed Media Types</h3>
+<p>Implementors <strong>must</strong> implement the minimal complement of media types defined in the sections below. The proposed media types include a version number so that the minimal metadata can be changed over time without breaking clients targeting specific media type versions.</p>
+
+<p>We propose the use of two formats as a basis for the metadata media types exposed by GMI-compliant REST APIs:</p>
+
+<ol>
+  <li>XML (see: http://www.w3.org/standards/xml/), and</li>
+  <li>JSON (see: http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)</li>
+</ol>
+
+<p>We propose XML because a large volume of existing clients can already parse the XML documents provided by INSDC participants. We propose the addition of JSON as a convenience for software developers targeting GMI-compliant REST APIs.</p>
+
+<p>Furthermore, we propose the adoption of the existing XML media types provided by the INSDC for the Sequence Read Archive (SRA) initiative (the schemas can be found on the <a href="ftp://ftp.sra.ebi.ac.uk/meta/xsd/sra_1_5/">EBI FTP Archive</a>). The only modifications that we propose to these XML formats is the replacement of the custom <code>LINK</code>-type elements with standard <code>xml</code> <code>link</code> elements. Furthermore, we suggest that the identifiers specified in the schemas be replaced with fully-qualified URLs so that clients do not need to know how to construct the URLs themselves.</p>
+
+<h3 id="data-model">Data Model</h3>
+<p>Members of the INSDC implement a five-level, hierarchical data model (See: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3245110/#__sec5title">Kodama, Y. et al.</a>):</p>
+
+<ol>
+  <li>Study (BioProject at NCBI and DDBJ)</li>
+  <li>Sample (BioSample at NCBI and DDBJ)</li>
+  <li>Experiment</li>
+  <li>Run</li>
+  <li>Analysis</li>
+  <li>Submission</li>
+</ol>
+
+<p>We <strong>do not</strong> propose to replace this model; the existing data model is widely accepted by software developers and biologists alike, and is already implemented across the members of the INSDC. Instead, we propose to use the existing data model as the basis for a new REST API.</p>
+
+<h3 id="resources">Resources</h3>
+<p>Below we describe a <em>possible</em> set of properties and metadata for the data model described above. The properties and metadata here are generally used for data submission and resource creation.</p>
+
+<h4 id="study">Study</h4>
+<p>From <a href="https://submit.ncbi.nlm.nih.gov/subs/bioproject/">NCBI submission portal</a>: A BioProject (study) is a collection of biological data related to a single initiative, originating from a single organization or from a consortium of coordinating organizations.</p>
+
+<h5 class="no_toc" id="metadata">Metadata</h5>
+
+<p>The metadata for a study is already defined by the INSDC. Please see the <a href="ftp://ftp.sra.ebi.ac.uk/meta/xsd/sra_1_5/SRA.study.xsd">XML schema for study</a> hosted at the EBI. A summary of the metadata for a study is listed below:</p>
+
+<ul>
+  <li><em>A collection of identifiers</em> (both INSDC and non-INSDC); these could be rendered as links in the media type.</li>
+  <li>The name of the center submitting the study; this could be rendered as a link in the media type with a <code>rel</code> of <code>http://www.g-m-i.org/links/submitter</code>.</li>
+  <li>A study description:
+    <ul>
+      <li>Title (very short title).</li>
+      <li>An internal name for the study (linking to submitters LIMS).</li>
+      <li><em>Abstract</em> (a longer, abstract-length description).</li>
+      <li><em>A description</em> (a longer, free-form description of the project).</li>
+      <li>Type (the schema defines a wide selection of study types, GMI-related studies will likely have a more restricted set of types, ‘Whole Genome Sequencing’, ‘Forensic or Paleo-genomics’ (?) or ‘Other’).</li>
+      <li><em>Links to related studies</em>. (link <code>rel</code> described below as <code>http://www.g-m-i.org/links/study/related-studies</code>)</li>
+    </ul>
+  </li>
+  <li><em>Links to related resources</em> (<strong>NOT</strong> other studies, link <code>rel</code> described below as <code>http://www.g-m-i.org/links/related-resources</code>)</li>
+  <li><em>Additional, submitter-defined properties</em>. (the XML schema describes free-form tags here)</li>
+</ul>
+
+<h5 class="no_toc" id="links">Links</h5>
+
+<ul>
+  <li><code>http://www.g-m-i.org/links/study</code>: a link to return to the collection of studies.</li>
+  <li><code>http://www.g-m-i.org/links/study/samples</code>: 0 or 1 links to the collection of samples associated with the study.</li>
+  <li><code>http://www.g-m-i.org/links/submitter</code>: a link to the entity responsible for submitting the study resource to the repository.</li>
+  <li><code>http://www.g-m-i.org/links/study/related-studies</code>: 0 or 1 links to a collection of other studies related to this study.</li>
+  <li><code>http://www.g-m-i.org/links/related-resources</code>: 0 or 1 links to a collection of other resources related to this study (publications, datasets, databases, etc.)</li>
+</ul>
+
+<h5 class="no_toc" id="acceptable-media-types">Acceptable media types</h5>
+
+<ul>
+  <li><code>application/vnd.gmi.study-v1+xml</code></li>
+  <li><code>application/vnd.gmi.study-v1+json</code></li>
+  <li><code>text/html</code></li>
+</ul>
+
+<h4 id="sample">Sample</h4>
+<p>From <a href="https://submit.ncbi.nlm.nih.gov/subs/biosample/">NCBI submission portal</a>: A BioSample (sample) is a description of the biological source materials used in experimental assays.</p>
+
+<h5 class="no_toc" id="metadata-1">Metadata</h5>
+
+<p>The metadata for a sample is already defined by the INSDC. Please see the <a href="ftp://ftp.sra.ebi.ac.uk/meta/xsd/sra_1_5/SRA.sample.xsd">XML schema for sample</a> hosted at the EBI. A summary of the metadata for a sample is listed below:</p>
+
+<ul>
+  <li><em>A collection of identifiers</em> (both INSDC and non-INSDC); these could be rendered as links in the media type.</li>
+  <li><em>The name of the center submitting the sample</em>; this could be rendered as a link in the media type with a <code>rel</code> of <code>http://www.g-m-i.org/links/submitter</code>.</li>
+  <li><em>A sample title</em>. (very short description, for searching purposes; perhaps a summary of the sample name)</li>
+  <li>A collection of names for the sample:
+    <ul>
+      <li>The taxonomic identifier for the sample.</li>
+      <li><em>The scientific name of the sample</em>. (this duplicates taxonomic identifier?)</li>
+      <li><em>The common name of the sample</em>. (this duplicates taxonomic identifier?)</li>
+      <li><em>The anonymized name of the sample</em>.</li>
+      <li><em>The individual name of the sample</em> (where it came from); not suitable for human names.</li>
+    </ul>
+  </li>
+  <li><em>A sample description</em> (free-form text)</li>
+  <li><em>Links to related resources</em> (link <code>rel</code> described above as <code>http://www.g-m-i.org/links/related-resources</code>)</li>
+  <li><em>Additional, submitter-defined properties</em>. (the XML schema describes free-form tags here)</li>
+</ul>
+
+<h5 class="no_toc" id="acceptable-media-types-1">Acceptable media types</h5>
+
+<ul>
+  <li><code>application/vnd.gmi.sample-v1+xml</code></li>
+  <li><code>application/vnd.gmi.sample-v1+json</code></li>
+  <li><code>text/html</code></li>
+</ul>
+
+<h5 class="no_toc" id="links-1">Links</h5>
+
+<ul>
+  <li><code>http://www.g-m-i.org/links/study/sample/experiments</code>: 0 or 1 links to the collection of experiments executed to produce data for the sample resource.</li>
+  <li><code>http://www.g-m-i.org/links/study/samples</code>: a link to the collection of samples in a study.</li>
+  <li><code>http://www.g-m-i.org/links/study</code>: a link to the study that owns the sample.</li>
+  <li><code>http://www.g-m-i.org/links/submitter</code>: a link to the entity responsible for submitting the sample resource to the repository.</li>
+  <li><code>http://www.g-m-i.org/links/related-resources</code>: 0 or 1 links to a collection of other resources related to this sample (publications, datasets, databases, etc.)</li>
+</ul>
+
+<h4 id="experiment">Experiment</h4>
+<p>From <a href="http://www.ncbi.nlm.nih.gov/books/NBK47533/#SRA_Concepts_BK.2_Concepts">NCBI SRA Handbook</a>: An experiment is a consistent set of laboratory operations on input material with an expected result.</p>
+
+<h5 class="no_toc" id="metadata-2">Metadata</h5>
+
+<p>The metadata for a experiment is already defined by the INSDC. Please see the <a href="ftp://ftp.sra.ebi.ac.uk/meta/xsd/sra_1_5/SRA.experiment.xsd">XML schema for experiment</a> hosted at the EBI. A summary of the metadata for an experiment is listed below:</p>
+
+<ul>
+  <li><em>A collection of identifiers</em> (both INSDC and non-INSDC); these could be rendered as links in the media type.</li>
+  <li>The name of the center submitting the sample; this could be rendered as a link in the media type with a <code>rel</code> of <code>http://www.g-m-i.org/links/submitter</code>.</li>
+  <li><em>An experiment title</em>. (very short description, for searching purposes)</li>
+  <li>A link to the study that owns the experiment; this could be rendered as a link with a <code>rel</code> of <code>http://www.g-m-i.org/links/study</code>, as described above.</li>
+  <li><strong>The experimental design</strong>:
+    <ul>
+      <li>A description of the experimental design (schema describes as “Goal and setup of the individual library”).</li>
+      <li>A sample description, could be rendered as links in the media type with a <code>rel</code> of <code>http://www.g-m-i.org/links/study/sample</code>.</li>
+      <li><strong>A library description</strong>:
+        <ul>
+          <li>The name</li>
+          <li>The strategy (schema describes as “Sequencing technique intended for this library”)</li>
+          <li>The source (schema describes as “type of source material that is being sequenced”)</li>
+          <li>The selection (schema describes as “Method used to enrich the target in the sequence library preparation”)</li>
+          <li>The layout (one of SINGLE or PAIRED); paired has additional attributes of NOMINAL_LENGTH and NOMINAL_SDEV</li>
+          <li>The targeted loci (schema has no description, but this is an optional element)</li>
+          <li>The pooling strategy (schema describes as “indicates how the library or libraries are organized if multiple samples are involved”)</li>
+          <li>The construction protocol (schema describes as “free-form text describing the protocol by which the sequencing library was constructed”)</li>
+        </ul>
+      </li>
+      <li><em><strong>A spot description</strong></em> (schema describes as “specifies how to decode the individual reads of interest from the monolithic spot sequence”; I <em>think</em> that this is useful for things like <code>sff_extract</code>)
+        <ul>
+          <li>A spot decode specification
+            <ul>
+              <li><em>Spot length</em> (schema describes as “Number of base/color calls, cycles, or flows per spot”)</li>
+              <li>Read specification
+                <ul>
+                  <li>Read index (schema describes as “READ_INDEX starts at 0 and is incrementally increased for each sequential READ_SPEC within a SPOT_DECODE_SPEC”)</li>
+                  <li><em>Read label</em> (schema describes as “READ_LABEL is a name for this tag, and can be used on output to determine read name, for example F or R”)</li>
+                  <li>Read class (no description in schema)</li>
+                  <li>Read type (no description in schema)</li>
+                  <li>One of:
+                    <ul>
+                      <li>Relative order (schema describes as “The read is located beginning at the offset or cycle relative to another read.”)</li>
+                      <li>Base coordinate (schema describes as “The location of the read start in terms of base count (1 is the beginning of the spot)”)</li>
+                      <li>Expected base call table (a collection of basecalls, schema describes as “attributes provide description of this read meaning as well as matching rules”)</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>Platform; one of (all include an instrument model attribute):
+        <ul>
+          <li>LS454</li>
+          <li>Illumina</li>
+          <li>Helicos</li>
+          <li>ABI SOLiD</li>
+          <li>Complete Genomics</li>
+          <li>PacBio SMRT</li>
+          <li>Ion Torrent</li>
+          <li>Capillary</li>
+        </ul>
+      </li>
+      <li><em>Processing</em> (not sure if this is supposed to be for how the data was processed prior to upload, or instructions on how to process the data post-upload, schema does not describe)
+        <ul>
+          <li><em>Pipeline</em>
+            <ul>
+              <li>One or more pipeline section, where the pipeline section describes:
+                <ul>
+                  <li>The program name</li>
+                  <li>The version</li>
+                  <li><em>additional notes</em></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><em>Directives</em>
+            <ul>
+              <li>A demultiplexing directive (schema describes as “Tells the Archive who will execute the sample demultiplexing operation”)</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><em>Links to related resources</em> (link <code>rel</code> described above as <code>http://www.g-m-i.org/links/related-resources</code>)</li>
+  <li><em>Additional, submitter-defined properties</em>. (the XML schema describes free-form tags here)</li>
+</ul>
+
+<h5 class="no_toc" id="acceptable-media-types-2">Acceptable media types</h5>
+
+<ul>
+  <li><code>application/vnd.gmi.experiment-v1+xml</code></li>
+  <li><code>application/vnd.gmi.experiment-v1+json</code></li>
+  <li><code>text/html</code></li>
+</ul>
+
+<h5 class="no_toc" id="links-2">Links</h5>
+<ul>
+  <li><code>http://www.g-m-i.org/links/study/sample/experiment/runs</code>: 0 or 1 links to the collection of runs for the experiment.</li>
+  <li><code>http://www.g-m-i.org/links/study/sample</code>: a link to the sample that owns the experiment.</li>
+  <li><code>http://www.g-m-i.org/links/study</code>: a link to the study that owns the experiment.</li>
+  <li><code>http://www.g-m-i.org/links/related-resources</code>: 0 or 1 links to other resources related to this experiment (publications, datasets, databases, etc.)</li>
+</ul>
+
+<h4 id="run">Run</h4>
+<p>From <a href="http://www.ncbi.nlm.nih.gov/books/NBK47533/#SRA_Concepts_BK.2_Concepts">NCBI SRA Handbook</a>: Results are called runs. Runs comprise the data gathered for a sample or sample bundle and refer to a defining experiment.</p>
+
+<h5 class="no_toc" id="metadata-3">Metadata</h5>
+<p>The metadata for a run is already defined by the INSDC. Please see the <a href="ftp://ftp.sra.ebi.ac.uk/meta/xsd/sra_1_5/SRA.run.xsd">XML schema for run</a> hosted at the EBI. A summary of the metadata for an experiment is listed below:</p>
+
+<ul>
+  <li><em>A collection of identifiers</em> (both INSDC and non-INSDC); these could be rendered as links in the media type.</li>
+  <li><em>A run title</em>. (very short description, for searching purposes)</li>
+  <li>A link to the experiment that owns the run; this could be rendered as a link with a <code>rel</code> of <code>http://www.g-m-i.org/links/study/sample/experiment</code>, as described below.</li>
+  <li><em>A spot description</em> (This is the same type as spot description in the experiment type; please see above)</li>
+  <li><em>A platform</em> (This is the same type as platform in the experiment type; please see above)</li>
+  <li><em>Processing</em> (This is the same type as processing in the experiment type; please see above)</li>
+  <li><em>Links to related resources</em> (link <code>rel</code> described above as <code>http://www.g-m-i.org/links/related-resources</code>)</li>
+  <li><em>Additional, submitter-defined properties</em>. (the XML schema describes free-form tags here)</li>
+  <li><em>Data Blocks</em> (0 or more file descriptions)
+    <ul>
+      <li>Note: In the existing implementation, the files themselves are included in a ‘Submission’, not as part of the ‘Run’ directly. The information in the run refers to the file names included as part of a submission. We propose that the Run resource should be allowed to be created in a single <code>POST</code> using the <code>multipart/mixed</code> media type.</li>
+    </ul>
+  </li>
+</ul>
+
+<h5 class="no_toc" id="links-3">Links</h5>
+<p>Links for run resources are only exposed in media types that support hypermedia (i.e., <code>json</code> or <code>xml</code> file formats).</p>
+
+<ul>
+  <li><code>http://www.g-m-i.org/links/study/sample/experiment/analyses</code>: 0 or 1 links to the collection of analyses executed on the sequence data produced by a run.</li>
+  <li><code>http://www.g-m-i.org/links/study/sample/experiment</code>: a link to the experiment that owns the run.</li>
+  <li><code>http://www.g-m-i.org/links/related-resource</code>: 0 or 1 links to a collection of other resources related to this run (publications, datasets, databases, etc.)</li>
+  <li><code>http://www.g-m-i.org/links/run/data</code>: 0 or 1 links to a collection of data files generated by this run.</li>
+</ul>
+
+<h5 class="no_toc" id="acceptable-media-types-3">Acceptable media types</h5>
+<ul>
+  <li><code>application/vnd.gmi.run-v1+xml</code></li>
+  <li><code>application/vnd.gmi.run-v1+json</code></li>
+  <li><code>application/vnd.ncbi.run+sra</code>	(SRA format)</li>
+  <li><code>multipart/mixed</code>                 (included for resource creation purposes; <code>multipart/mixed</code> can include multiple request bodies with different media types in a single request. See Section 7.2.1 of http://tools.ietf.org/html/rfc1341)`</li>
+</ul>
+
+<h4 id="analysis">Analysis</h4>
+
+<h5 class="no_toc" id="metadata-4">Metadata</h5>
+<p>The metadata for an analysis is already defined by the INSDC. Please see the <a href="ftp://ftp.sra.ebi.ac.uk/meta/xsd/sra_1_5/SRA.analysis.xsd">XML schema for analysis</a> hosted at the EBI. A summary of the metadata for an analysis is listed below:</p>
+
+<ul>
+  <li><em>A collection of identifiers</em> (both INSDC and non-INSDC); these could be rendered as links in the media type.</li>
+  <li>An analysis title. (very short description, for searching purposes)</li>
+  <li>Description. (detailed description of the analysis)</li>
+  <li><em>A link to the study that owns the analysis</em>; this could be rendered as a link with a <code>rel</code> of <code>http://www.g-m-i.org/links/study</code>, as described above.</li>
+  <li><em>A set of links to the samples that were used in the analysis</em>; this could be rendered as a link with a <code>rel</code> of <code>http://www.g-m-i.org/links/sample</code>, as described above.</li>
+  <li><em>A set of links to the runs that were used in the analysis</em>; this could be rendered as a link with a <code>rel</code> of <code>http://www.g-m-i.org/links/run</code>, as described above.</li>
+  <li><em>A set of links to related analysis resources</em>; this could be rendered as a link with a <code>rel</code> of <code>http://www.g-m-i.org/links/related-analysis</code>, as described below.</li>
+  <li>The type of analysis, one of:
+    <ul>
+      <li>Reference alignment
+        <ul>
+          <li>A reference sequence (or a link to one)</li>
+          <li>Details of the assembly</li>
+        </ul>
+      </li>
+      <li>Sequence variation
+        <ul>
+          <li>A reference assembly (including a reference sequence)</li>
+          <li>Experiment type (no description in schema)</li>
+          <li>Program (no description in schema)</li>
+          <li>Platform (no description in schema)</li>
+          <li>Imputation (no description in schema)</li>
+        </ul>
+      </li>
+      <li>Sequence assembly
+        <ul>
+          <li>Name (no description in schema)</li>
+          <li>Partial (no description in schema)</li>
+          <li>Program (no description in schema)</li>
+          <li>Coverage (no description in schema)</li>
+          <li>Platform (no description in schema)</li>
+          <li><em>Minimum gap length</em> (no description in schema)</li>
+        </ul>
+      </li>
+      <li>Sequence annotation (no description in schema)</li>
+      <li>Reference sequence (no description in schema)</li>
+      <li>Sample phenotype (no description in schema)</li>
+    </ul>
+  </li>
+</ul>
+
+<h5 class="no_toc" id="links-4">Links</h5>
+<p>Links for analysis resources are only exposed in media types that support hypermedia (i.e., non-sequence file formats).</p>
+
+<ul>
+  <li><code>http://www.g-m-i.org/links/study</code>: 1 or more links to the studies associated with the analysis.</li>
+  <li><code>http://www.g-m-i.org/links/sample</code>: 1 or more links to the samples associated with the analysis.</li>
+  <li><code>http://www.g-m-i.org/links/run</code>: 1 or more links to the runs associated with the analysis.</li>
+  <li><code>http://www.g-m-i.org/links/related-analysis</code>: 0 or more links to related analysis resources.</li>
+  <li><code>http://www.g-m-i.org/links/related-resources</code>: 0 or 1 links to a collection of other resources related to this analysis (publications, datasets, databases, etc.)</li>
+</ul>
+
+<h5 class="no_toc" id="acceptable-media-types-4">Acceptable media types</h5>
+<ul>
+  <li><code>application/vnd.gmi.analysis-v1+xml</code></li>
+  <li><code>application/vnd.gmi.analysis-v1+json</code></li>
+  <li>(Other media types specific to the type of analysis executed)</li>
+  <li><code>multipart/mixed</code>                 (included for resource creation purposes; <code>multipart/mixed</code> can include multiple request bodies with different media types in a single request. See Section 7.2.1 of http://tools.ietf.org/html/rfc1341)</li>
+</ul>
+
+<h3 id="file-upload-considerations">File Upload Considerations</h3>
+<p>Many large-scale, widely available products that deal with large, binary files (notably YouTube, Google Drive, and Dropbox) provide file uploads over HTTP. Nevertheless, uploading large, binary data files over HTTP does have some realistic concerns:</p>
+
+<ol>
+  <li>Transfer speed: is the performance of uploading over HTTP worse than FTP or some other file transfer protocol? NCBI uses Aspera connect as a file transfer protocol for uploading files. Given the limited bandwidth of some centers, the file transfer protocol may be of little concern in terms of file transfer performance. Furthermore, with a sufficiently fast connection to the API, a client may overload the web server by uploading large files.</li>
+  <li>Reliability: what happens if the file transfer is interrupted during transmission? Is the client expected to re-submit a very large set of files to the server upon failure? Other file transfer protocols provide resilience over HTTP in terms of resuming file transmission after an interruption.</li>
+  <li>Browser limitations: some popular web browsers have a limit of 2GB for file uploads (notably, Firefox and Internet Explorer). While the intended audience of this REST API <em>explicitly does not</em> include web browsers, this is a realistic consideration.</li>
+  <li>Web server limitations: systems administrators may not feel comfortable allowing large files to be uploaded via the web server. Most web servers allow the administrator to specify the maximum file upload size, and the maximum file upload size may be much smaller than the type of files needed to be submitted to a sequence data repository.</li>
+</ol>
+
+<p>Possible solutions to the problems exposed by uploading files over HTTP:</p>
+
+<ol>
+  <li>Simply use an alternative protocol more suited to transferring large, binary files (like FTP, SFTP, SCP/SSH, BitTorrent, Aspera Connect, etc.) to upload the files, then include a link to the created resource in the metadata package to be submitted. One possible problem with using alternative protocols compared to using HTTP/HTTPS is that some networks prohibit or hinder the use of other types of protocols, notably BitTorrent, for transferring data. The ports used by HTTP and HTTPS are often left without such prohibition. Furthermore, the addition of another protocol over HTTP for the REST API increases the complexity of clients, as each client would need to understand how to work with all necessary protocols (possibly irrelevant; most programming languages have libraries available for natively communicating over a variety of protocols).</li>
+  <li>Adopt a resumable HTTP upload protocol. Google and YouTube allow the transfer of large, binary video files over HTTP using a wide variety of network links. The <a href="https://developers.google.com/youtube/v3/guides/using_resumable_upload_protocol">YouTube Data API</a> describes a protocol for uploading video files to YouTube over HTTP in a resumable fashion. Chunking the large file addresses the reliability and web server limitations. Web browsers cannot work with files at such a low level. Chunking the large file does not address the problem of transfer speed.</li>
+</ol>
+
+<h3 id="http-verbs">HTTP Verbs</h3>
+<p>Each resource type can be represented as a resource collection or as an individual resource. This section outlines the HTTP verbs that can be invoked on resource collections and individual resources.</p>
+
+<h4 id="resource-collections">Resource Collections</h4>
+<p>Clients can invoke the following HTTP verbs on a resource collection (studies, samples, experiments, etc.) and expect the corresponding response codes outlined below.</p>
+
+<ul>
+  <li><code>GET</code>
+    <ul>
+      <li>Access a complete list of public resources stored in the repository.</li>
+      <li>Response code is one of the following:
+        <ul>
+          <li><code>200 OK</code>, response body includes links to all public resources stored in the repository.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code>POST</code>
+    <ul>
+      <li>Create a new resource in the repository.</li>
+      <li>Requires a user account. Clients <strong>must</strong> provide an <code>Authorization</code> header; see <a href="https://tools.ietf.org/html/rfc2617">RFC 2617</a>.</li>
+      <li><code>Content-Type</code> header <strong>must</strong> be one of the media types listed above.</li>
+      <li>Response code is one of the following:
+        <ul>
+          <li>
+            <p><code>201 Created</code>, the resource was valid and created. Includes a <code>Location</code> header where the newly created resource can be found. Response body includes the resource, as stored in the repository, using the format specified by the <code>Content-Type</code> header.</p>
+
+            <p>Example response:</p>
+
+            <div class="highlight"><pre><code>HTTP/1.1 201 Created
+Location: http://repository.g-m-i.org/studies/123
+          
+... response body omitted ...
+</code></pre></div>
+          </li>
+          <li><code>202 Accepted</code>, the resource metadata was accepted for processing, but not yet actually created in the repository. This response code should be used for resources that require human intervention for validation.</li>
+          <li>
+            <p><code>400 Bad Request</code>, the resource metadata was malformed or incomplete. The response body <strong>must</strong> include the malformed properties along with an explanation (if available) of why the property was malformed. The format of the error message should either be XML or JSON, whichever format most closely matches the <code>Content-Type</code> header specified by the client.</p>
+
+            <p>Example request/response:</p>
+
+            <div class="highlight"><pre><code>POST /studies HTTP/1.1
+Authorization: Basic XXXXXXXXXXXXXXXXXX
+Content-Type: application/vnd.gmi.study-v1+json
+
+{"abstract": "a very interesting study"}
+
+HTTP/1.1 400 Bad Request
+          
+{"name": ["Study name is a required field."]}
+</code></pre></div>
+          </li>
+          <li><code>401 Unauthorized</code>, the credentials used to create the resource were not recognized.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="individual-resource">Individual resource</h4>
+<p>Individual resources are accessed via the <code>Location</code> header upon successful creation of a resource, by navigating to a specific resource via a parent collection, or by bookmarking the address of a resource.</p>
+
+<ul>
+  <li><code>GET</code>
+    <ul>
+      <li>Access an individual resource stored in the repository.</li>
+      <li>May require authentication details if the resource is not publicly available.</li>
+      <li><code>Accepts</code> header <strong>must</strong> be one of the acceptable media types listed above.</li>
+      <li>Response code is one of the following:
+        <ul>
+          <li><code>200 OK</code>, response body includes the resource in the media type specified by the <code>Accepts</code> header.</li>
+          <li><code>401 Unauthorized</code>, the credentials used to access the resource were not recognized. Repositories should respond with <code>401 Unauthorized</code> if the credentials were not recognized, regardless of the public availability of the resource.</li>
+          <li><code>403 Forbidden</code>, the credentials used to access the resource were recognized, but do not have permission to view the requested resource.</li>
+          <li><code>404 Not Found</code>, the requested resource does not exist in the repository.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code>PUT</code>
+    <ul>
+      <li>Completely replace the resource at the specified location, or creates a new resource at the location using the provided metadata. The request <strong>must</strong> include all properties of the study.</li>
+      <li>Requires a user account. Clients <strong>must</strong> provide an <code>Authorization</code> header; see <a href="https://tools.ietf.org/html/rfc2617">RFC 2617</a>.</li>
+      <li><code>Content-Type</code> header <strong>must</strong> be one of the media types listed above.</li>
+      <li>Response code is one of the following:
+        <ul>
+          <li><code>200 OK</code>, the replacement resource was valid and replaced. Includes a <code>Location</code> header where the replaced resource can be found (may be the same as the current URL for the resource). Response body includes the resource, as stored in the repository in the media type specified by the <code>Content-Type</code> header.</li>
+          <li><code>400 Bad Request</code>, the resource metadata was malformed or incomplete. The response body <strong>must</strong> include the malformed properties along with an explanation (if available) of why the property was malformed. The format of the error message should either be XML or JSON, whichever format most closely matches the <code>Content-Type</code> header specified by the client. See the resource collection resource <code>400 Bad Request</code> for an example.</li>
+          <li><code>401 Unauthorized</code>, the credentials used to update the resource were not recognized.</li>
+          <li><code>403 Forbidden</code>, the credentials used to update the resource were recognized, but do not have permission to update the requested resource.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code>PATCH</code>
+    <ul>
+      <li>Replace only the provided properties in the resource metadata at the specified location</li>
+      <li>Same requirements and response codes as <code>PUT</code>.</li>
+    </ul>
+  </li>
+  <li><code>DELETE</code>
+    <ul>
+      <li>Delete the resource from the system.</li>
+      <li>Response code is one of the following:<br />
+  	* <code>200 OK</code>, the deletion was accepted. Response body includes a link back to the collection of resource.
+        <ul>
+          <li><code>401 Unauthorized</code>, the credentials used to delete the resource were not recognized.</li>
+          <li><code>403 Forbidden</code>, the credentials used to delete the resource were recognized, but do not have permission to delete the requested resource.</li>
+          <li><code>404 Not Found</code>, the requested resource does not exist in the repository.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="examples">Examples</h1>
+
+<h3 id="creating-a-study">Creating a Study</h3>
+<p>This example shows the HTTP conversation that would take place by a client intending to create a new study. Note: the links and information shown in this example <em>do not</em> refer to a real example; the links and names were chosen arbitrarily.</p>
+
+<p>Initial request for creation of study:</p>
+
+<div class="highlight"><pre><code>POST /studies HTTP/1.1
+Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+Content-Type: application/vnd.gmi.study-v1+json
+
+{
+    "external-database-identifiers": {
+        "ncbi/genbank": {"href": "http://www.ncbi.nlm.nih.gov/bioproject/18649"},
+        "ebi/ena": {"href": "https://www.ebi.ac.uk/ena/data/view/SRP029705"}
+    },
+    "description": {
+        "title": "A very interesting study.",
+        "internal-name": "Internal study name.",
+        "abstract": "This is a very interesting study, completed by very interesting people.",
+        "description": "A supremely interesting study, this is a very long-winded description of what this project is about.",
+        "type": "Whole Genome Sequencing",
+        "related-studies": [
+            "http://www.ncbi.nlm.nih.gov/bioproject/18651",
+            "http://www.ncbi.nlm.nih.gov/bioproject/58825"
+        ]
+    },
+    "related-resources": {
+        "http://www.google.com"
+    },
+    "additional-properties": {
+        "not-used-internally": "Properties in this section are not parsed internally; submitters should use this as an opportunity to define metadata not officially required or specified by GMI-compliant repositories."
+    }
+    "submitter": [
+        { "href": "http://repository.g-m-i.org/submitters/cdc" }
+    ]
+}
+</code></pre></div>
+
+<p>Response (study has been accepted for human review):</p>
+
+<div class="highlight"><pre><code>HTTP/1.1 202 Accepted
+Location: http://repository.g-m-i.org/studies-to-review/123
+Content-Type: application/json
+
+{
+    "response": "Your study has been accepted for review. Automated parsers have briefly verified the metadata supplied with your study and have found no errors, however human review is required. Please see http://repository.g-m-i.org/studies-to-review/123 to monitor the review progress of your study."
+}
+</code></pre></div>
+
+<p>Client begins to monitor progress of review:</p>
+
+<div class="highlight"><pre><code>GET /studies-to-review/123 HTTP/1.1
+Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+Accept: application/json
+</code></pre></div>
+
+<p>Repository responds with the status of the request for creation:</p>
+
+<div class="highlight"><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+Last-Modified: Mon, 23 Dec 2013 19:43:31 GMT
+
+{
+    "status": {
+        "message": "pending review"
+    },
+}
+</code></pre></div>
+
+<p>Client continues to monitor progress of review:</p>
+
+<div class="highlight"><pre><code>GET /studies-to-review/123 HTTP/1.1
+Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+Accept: application/json
+If-Modified-Since: Mon, 23 Dec 2013 19:43:31 GMT
+</code></pre></div>
+
+<p>Content is unchanged on server; server does not send back complete response:</p>
+
+<div class="highlight"><pre><code>HTTP/1.1 304 Not Modified
+Date: Mon, 23 Dec 2013 20:43:31 GMT
+</code></pre></div>
+
+<p>Client continues to monitor progress of review:</p>
+
+<div class="highlight"><pre><code>GET /studies-to-review/123 HTTP/1.1
+Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+Accept: application/json
+If-Modified-Since: Mon, 23 Dec 2013 20:43:31 GMT
+</code></pre></div>
+
+<p>Server responds with completed review, and a hyperlink to the location of the study:</p>
+
+<div class="highlight"><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+Last-Modified: Mon, 23 Dec 2013 21:43:31 GMT
+
+{
+   "status": { 
+        "message": "review complete",
+        "http://www.g-m-i.org/links/study": "http://repository.g-m-i.org/studies/123"
+    }
+}
+</code></pre></div>
+
+<h3 id="adding-a-sample-to-a-study">Adding a Sample to a Study</h3>
+<p>In the last example we showed the general process required to add a study to a repository. In this example, we show how a client can add a new sample to an existing study.</p>
+
+<p>Given the location of the study (http://repository.g-m-i.org/studies/123), the client will issue ask the server for more information about the resource:</p>
+
+<div class="highlight"><pre><code>GET /studies/123 HTTP/1.1
+Accept: application/vnd.gmi.study-v1+json
+</code></pre></div>
+
+<p>The server will respond with the project metadata in the JSON format requested:</p>
+
+<div class="highlight"><pre><code>HTTP/1.1 200 OK
+Content-Type: application/vnd.gmi.study-v1+json
+Last-Modified: Mon, 23 Dec 2013 21:43:31 GMT
+
+{
+    "links": [
+        { "rel": "self", "href": "http://repository.g-m-i.org/studies/123" },
+        { "rel": "http://www.g-m-i.org/links/study/samples", "href": "http://repository.g-m-i.org/studies/123/samples" },
+        { "rel": "http://www.g-m-i.org/links/submitter", "href": "http://repository.g-m-i.org/users/1" },
+        { "rel": "http://www.g-m-i.org/links/study/related-studies", "href": "http://repository.g-m-i.org/studies/123/related-studies" },
+        { "rel": "http://www.g-m-i.org/links/related-resources", "href": "http://repository.g-m-i.org/studies/123/related-resources" }
+    ],
+    // Other project metadata...
+}
+</code></pre></div>
+
+<p>From the response, the client can find the link for the collection of samples associated with the study by looking for a link with a <code>rel</code> of <code>http://www.g-m-i.org/links/study/samples</code>. Once the client has found the link, it can either get the complete list of samples associated with the study by issuing a <code>GET</code> request for the URL in the <code>href</code> part of the link:</p>
+
+<div class="highlight"><pre><code>GET /studies/123/samples HTTP/1.1
+Accept: application/json
+</code></pre></div>
+
+<p>The server will respond with the complete set of samples associated with the study:</p>
+
+<div class="highlight"><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+Last-Modified: Mon, 23 Dec 2013 21:43:31 GMT
+
+{
+    [
+        { 
+            "sampleName": "sample",
+            "links": [
+                { "rel": "self", "href": "http://repository.g-m-i.org/studies/123/samples/1" },
+            ],
+            // Other sample metadata...
+        }
+    ]
+}
+</code></pre></div>
+
+<p>The client can also add new samples to the study by issuing a <code>POST</code> request to the same <code>href</code>:</p>
+
+<div class="highlight"><pre><code>POST /studies/123/samples HTTP/1.1
+Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+Content-Type: application/vnd.gmi.sample-v1+json
+
+{
+    "sampleName": "sample",
+    // Other sample metadata...
+}
+</code></pre></div>
+
+<p>The server might respond immediately indicating success:</p>
+
+<div class="highlight"><pre><code>HTTP/1.1 201 Created
+Location: http://repository.g-m-i.org/studies/123/samples/456
+</code></pre></div>
+
+<p>Or, the server might respond immediately indicating failure, with an invalid property name, for example:</p>
+
+<div class="highlight"><pre><code>HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{
+    "message": "Invalid property fields named.",
+    "invalidFields": [
+        "sampleName"
+    ]
+}
+</code></pre></div>
+
+<h2 id="references">References</h2>
+
+<ol>
+  <li><a href="http://www.ncbi.nlm.nih.gov/books/NBK47533/">NCBI SRA Handbook</a>
+    <ol>
+      <li><a href="http://www.ncbi.nlm.nih.gov/books/NBK47529/">Submission Quick Start Guide</a></li>
+    </ol>
+  </li>
+  <li><a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2808927/">Shumway, M. et al. <em>Archiving next generation sequencing data</em>.</a></li>
+  <li><a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3013647/">Leinonen, R. et al. <em>The Sequence Read Archive</em>.</a></li>
+  <li><a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3245110/">Kodama, Y. et al. <em>The sequence read archive: explosive growth of sequencing data</em>.</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc4288">IETF RFC 6838</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc2617">IETF RFC 2167</a></li>
+  <li><a href="ftp://ftp.ncbi.nlm.nih.gov/bioproject/Schema.v.1.1/Core.xsd">NCBI BioProject Core XML Schema</a></li>
+  <li><a href="https://www.iana.org/assignments/link-relations/link-relations.xhtml">IANA Link Relations</a></li>
+  <li><a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">IETF RFC 2616 - Section 10, Status Codes Definition</a></li>
+</ol>
+
+<h1 id="additional-resources-on-rest-apis">Additional Resources on REST APIs</h1>
+
+<ul>
+  <li><a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm">http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm</a></li>
+  <li><a href="http://blog.dhananjaynene.com/2009/06/why-rest/">http://blog.dhananjaynene.com/2009/06/why-rest/</a></li>
+  <li><a href="http://www.crummy.com/writing/speaking/2008-QCon/">http://www.crummy.com/writing/speaking/2008-QCon/</a></li>
+  <li><a href="http://www.martinfowler.com/articles/richardsonMaturityModel.html">http://www.martinfowler.com/articles/richardsonMaturityModel.html</a></li>
+  <li><a href="http://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven">http://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven</a></li>
+</ul>
+:ET

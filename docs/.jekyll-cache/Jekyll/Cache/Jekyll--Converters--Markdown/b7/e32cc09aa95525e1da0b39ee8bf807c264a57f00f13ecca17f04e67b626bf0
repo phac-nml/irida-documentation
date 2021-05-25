@@ -1,0 +1,23 @@
+I"ò<h1 id="ubuntu-installation-guide">Ubuntu Installation Guide</h1>
+<p>Starting with a fresh, completely up-to-date system (Ubuntu Server 18.04).</p>
+
+<h2 id="installing-software-with-apt">Installing Software with <code>apt</code></h2>
+<p>You can install the latest OpenJDK JDK on Ubuntu. The <code>apt</code> repositories also contain an up-to-date version of Tomcat 8, so no complex configuration needs to take place for Ubuntu.</p>
+
+<div class="highlight"><pre><code>#### Install OpenJDK Java 11 
+apt-get install openjdk-11-jdk
+
+#### Install tomcat8 and mariadb-server
+apt-get install --yes tomcat8 libtcnative-1 mariadb-server
+</code></pre></div>
+
+<h2 id="starting-tomcat-and-mariadb-on-startup">Starting Tomcat and MariaDB on startup</h2>
+
+<p>The last step is to make sure that Tomcat starts on startup:</p>
+
+<div class="highlight"><pre><code>systemctl enable mysql # mysql is the service name for mariadb on Ubuntu
+systemctl start mysql
+systemctl enable tomcat8
+systemctl start tomcat8
+</code></pre></div>
+:ET

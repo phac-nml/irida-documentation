@@ -1,0 +1,40 @@
+I"2<h1 id="developer-documentation">Developer documentation</h1>
+
+<ul>
+  <li><a href="https://github.com/phac-nml/irida/blob/development/CONTRIBUTING.md">IRIDA contributing guide</a></li>
+  <li><a href="getting-started/">Getting Started</a></li>
+</ul>
+
+<h2 id="setup">Setup</h2>
+<ul>
+  <li><a href="setup/">Workstation setup guide</a></li>
+  <li><a href="packer/">Building VMs with packer</a></li>
+</ul>
+
+<h2 id="tool-development">Tool Development</h2>
+<ul>
+  <li><a href="tools">Tool development notes</a></li>
+  <li><a href="tools/pipelines">IRIDA pipeline development</a></li>
+  <li><a href="tools/pipelines/workflow-description">IRIDA workflow description</a></li>
+  <li><a href="rest/">IRIDA REST API docs</a></li>
+  <li><a href="authorization">REST API OAuth2 notes</a></li>
+</ul>
+
+<h2 id="user-interface-development">User Interface development</h2>
+<ul>
+  <li><a href="interface/testing">User interface testing</a></li>
+  <li><a href="interface/webpack">Packaging JS and CSS with Webpack</a></li>
+  <li><a href="interface/i18n">Adding internationalizations</a></li>
+  <li><a href="interface/custom-login">Creating a custom login page</a></li>
+</ul>
+
+<h2 id="other-irida-developer-resources">Other IRIDA developer resources</h2>
+<ul>
+  <li><a href="apidocs/">IRIDA JavaDoc</a></li>
+  <li><a href="doc">Documentation guidelines</a></li>
+  <li><a href="data-model">IRIDA data model</a></li>
+  <li><a href="database">Database change management with Liquibase</a></li>
+  <li><a href="gmi-rest-api">GMI REST API proposal</a></li>
+  <li><a href="clojure-repl">Clojure nREPL</a></li>
+</ul>
+:ET

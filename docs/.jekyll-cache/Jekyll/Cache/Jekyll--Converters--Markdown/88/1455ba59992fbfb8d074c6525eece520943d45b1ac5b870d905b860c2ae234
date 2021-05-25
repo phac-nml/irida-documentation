@@ -1,0 +1,42 @@
+I"›<h1 class="no_toc" id="using-the-virtual-appliance">Using the Virtual Appliance</h1>
+
+<p>The virtual appliance is currently configured to use 8 CPU cores and requires <strong>at least</strong> 8GB of RAM. You <em>may</em> reduce the number of CPU cores allocated to the virtual appliance, however, we do not recommend that you use any less than 4 CPU cores.</p>
+
+<p>Once you start the virtual appliance, you can connect to IRIDA in several ways: using your web browser, using an uploader tool, or using SSH.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#connecting-with-your-web-browser" id="markdown-toc-connecting-with-your-web-browser">Connecting with your web browser</a></li>
+  <li><a href="#connecting-with-an-uploader-tool" id="markdown-toc-connecting-with-an-uploader-tool">Connecting with an uploader tool</a></li>
+  <li><a href="#connecting-with-an-ssh-client" id="markdown-toc-connecting-with-an-ssh-client">Connecting with an SSH client</a></li>
+  <li><a href="#virtual-appliance-configuration-scripts" id="markdown-toc-virtual-appliance-configuration-scripts">Virtual Appliance Configuration Scripts</a></li>
+</ul>
+
+<h2 id="connecting-with-your-web-browser">Connecting with your web browser</h2>
+
+<p>You can connect to the IRIDA web interface by opening your web browser and navigating to <a href="http://localhost:48888/irida/">http://localhost:48888/irida/</a>. The virtual appliance is configured to proxy traffic on port <code>48888</code> to port <code>80</code> in the virtual environment.</p>
+
+<p>You can log into the web interface for the first time using the username <code>admin</code> and the password <code>password1</code>. You will be prompted to change the password the first time you log in.</p>
+
+<p>You can see the Galaxy web interface by opening your web browser and navigating to <a href="http://localhost:49999/">http://localhost:49999/</a>. The virtual appliance is configured to proxy traffic on port <code>49999</code> to port <code>9090</code> in the virtual environment. We encourage you to take a look around with Galaxy, but do not change any tools or configuration settings â€“ this instance of Galaxy is configured for internal workflow execution in IRIDA.</p>
+
+<h2 id="connecting-with-an-uploader-tool">Connecting with an uploader tool</h2>
+
+<p>Please visit the GitHub for the <a href="https://github.com/phac-nml/irida-uploader">IRIDA Uploader</a> for more information about how to upload data to the IRIDA virtual appliance.</p>
+
+<h2 id="connecting-with-an-ssh-client">Connecting with an SSH client</h2>
+
+<p>You can connect to the IRIDA virtual appliance using an SSH client like <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/">Putty</a> or <a href="http://mobaxterm.mobatek.net/">MobaXterm</a> on Windows, or the <code>ssh</code> client in a UNIX or UNIX-like environment.</p>
+
+<p>The virtual appliance is configured to proxy traffic on port <code>42222</code> to port <code>22</code> in the virtual environment. The username for the virtual appliance is <code>vagrant</code> and the password is <code>vagrant</code>.</p>
+
+<p>To connect to the IRIDA virtual appliance with the <code>ssh</code> command in a UNIX or UNIX-like environment:</p>
+
+<div class="highlight"><pre><code>ssh -p 42222 vagrant@localhost
+</code></pre></div>
+
+<h2 id="virtual-appliance-configuration-scripts">Virtual Appliance Configuration Scripts</h2>
+
+<p>The IRIDA Virtual Appliance is created using a tool called <a href="https://packer.io">packer</a>. You can download the scripts that were used to create the virtual appliance from our <code>git</code> repository:</p>
+
+<p><a href="https://github.com/phac-nml/irida/tree/development/packer">https://github.com/phac-nml/irida/tree/development/packer</a></p>
+:ET

@@ -1,0 +1,2082 @@
+I"8<h1 class="no_toc" id="rest-api">REST API</h1>
+
+<p>This document describes the REST API for IRIDA.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#formats" id="markdown-toc-formats">Formats</a></li>
+  <li><a href="#authentication" id="markdown-toc-authentication">Authentication</a></li>
+  <li><a href="#general-contracts" id="markdown-toc-general-contracts">General Contracts</a>    <ul>
+      <li><a href="#formats-1" id="markdown-toc-formats-1">Formats</a></li>
+      <li><a href="#client-errors" id="markdown-toc-client-errors">Client Errors</a></li>
+      <li><a href="#http-verbs" id="markdown-toc-http-verbs">HTTP Verbs</a></li>
+    </ul>
+  </li>
+  <li><a href="#root-endpoints" id="markdown-toc-root-endpoints">Root Endpoints</a></li>
+  <li><a href="#resources" id="markdown-toc-resources">Resources</a>    <ul>
+      <li><a href="#users" id="markdown-toc-users">Users</a></li>
+      <li><a href="#projects" id="markdown-toc-projects">Projects</a>        <ul>
+          <li><a href="#project-analyses" id="markdown-toc-project-analyses">Project Analyses</a></li>
+          <li><a href="#project-users" id="markdown-toc-project-users">Project Users</a></li>
+        </ul>
+      </li>
+      <li><a href="#samples" id="markdown-toc-samples">Samples</a></li>
+      <li><a href="#sequence-files" id="markdown-toc-sequence-files">Sequence Files</a>        <ul>
+          <li><a href="#sequence-file-collection" id="markdown-toc-sequence-file-collection">Sequence File Collection</a></li>
+          <li><a href="#sequence-file-pairs-collection" id="markdown-toc-sequence-file-pairs-collection">Sequence File Pairs Collection</a></li>
+          <li><a href="#fast5-file-collection" id="markdown-toc-fast5-file-collection">FAST5 File Collection</a></li>
+        </ul>
+      </li>
+      <li><a href="#assemblies" id="markdown-toc-assemblies">Assemblies</a></li>
+      <li><a href="#sequencing-runs" id="markdown-toc-sequencing-runs">Sequencing Runs</a></li>
+      <li><a href="#analysis-submissions" id="markdown-toc-analysis-submissions">Analysis Submissions</a></li>
+      <li><a href="#analysis" id="markdown-toc-analysis">Analysis</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="formats">Formats</h1>
+
+<p>The IRIDA REST API follows a standard output format, regardless of the resource being accessed. Resources can be accessed in two ways:</p>
+
+<ol>
+  <li>As an individual resource,</li>
+  <li>As part of a resource collection.</li>
+</ol>
+
+<p>Communication with the IRIDA REST API should be via the JSON format for sending and receiving data.  Generally this means using an <code>Accept</code> and <code>Content-type</code> of <code>application/json</code> for requests and submissions.  Some resources (for example sequence file and analysis result resources stored on the file-system) support output in FASTA or FASTQ format.</p>
+
+<h2 class="no_toc" id="json-format">JSON Format</h2>
+
+<h3 class="no_toc" id="individual-resource">Individual Resource</h3>
+
+<p>Resources requested in JSON format will always have the following structure:</p>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://www.example.com&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;magic/link&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://www.example.com/magic&quot;</span>
+    <span class="p">},</span> <span class="err">...</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;resourceProperty1&quot;</span> <span class="p">:</span> <span class="s2">&quot;resourceValue&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;resourceProperty2&quot;</span> <span class="p">:</span> <span class="s2">&quot;resourceValue&quot;</span><span class="p">,</span>
+    <span class="err">...</span>
+  <span class="p">},</span>
+<span class="p">}</span></code></pre></div>
+
+<p>The entire response consists of the <code>resource</code> object. The <code>resource</code> object contains links related to the current resource as well as the properties of the resource.</p>
+
+<p>The <code>resource</code> section contains an array of link objects under the <code>links</code> key. Each link has a <code>rel</code> and an <code>href</code>. In addition to the <code>links</code> section, the <code>resource</code> section contains all properties associated with the resource.</p>
+
+<h3 class="no_toc" id="resource-collection">Resource Collection</h3>
+
+<p>Resource collections requested in JSON format will always have the following structure:</p>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;magic/link&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://www.example.com/magic&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://www.example.com&quot;</span>
+    <span class="p">},</span> <span class="err">...</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;resources&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://www.example.com/resources/1&quot;</span>
+      <span class="p">}</span> <span class="p">],</span>
+      <span class="nt">&quot;resourceProperty&quot;</span> <span class="p">:</span> <span class="s2">&quot;resourceValue&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;resourceProperty2&quot;</span> <span class="p">:</span> <span class="s2">&quot;resourceValue2&quot;</span><span class="p">,</span>
+      <span class="err">...</span>
+      <span class="p">},</span> <span class="p">{</span>
+      <span class="err">...</span>
+    <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Similar to requesting an individual resource, a resource collection is wrapped with a <code>resource</code> object. Within the <code>resource</code> object is an array of links, and an array of <code>resources</code>. The <code>resources</code> array may contain complete records for the resource in the resource collection. If the record is not complete, each entry in the <code>resources</code> array will have links about that specific resource to get more information.</p>
+
+<h1 id="authentication">Authentication</h1>
+
+<p>IRIDA does not allow any un-authenticated interaction with the REST API. IRIDA uses <a href="http://oauth.net/2/">OAuth2</a> for authentication and authorization of clients. Command-line tools must use the password grant type for OAuth2. Our examples are primarily showing how to interact with the IRIDA REST API over the using the password flow. IRIDA also supports the authorization code flow, so other web services can interact with IRIDA.</p>
+
+<p>Most programming languages have libraries with convenient interfaces for dealing with OAuth2 authorization. We provide some examples for the programming languages where we’ve written our own clients, but a comprehensive list of libraries can be found here: <a href="http://oauth.net/code/">http://oauth.net/code/</a></p>
+
+<h3 class="no_toc" id="java">Java</h3>
+
+<p>For Java, we recommend that you use <a href="http://projects.spring.io/spring-security-oauth/">Spring Security OAuth2</a> or <a href="https://oltu.apache.org/">Apache OLTU</a>. We internally use Spring Security OAuth2 to implement server-side OAuth2.</p>
+
+<h3 class="no_toc" id="python">Python</h3>
+
+<p>For Python, we recommend that you use <a href="http://rauth.readthedocs.org/en/latest/">Rauth</a> or <a href="https://requests-oauthlib.readthedocs.org/en/latest/">Requests-OAuthlib</a>.</p>
+
+<p>A complete application that uses Rauth is the <a href="https://github.com/phac-nml/irida-sistr-results">IRIDA SISTR results exporter</a> for IRIDA.</p>
+
+<p>Another option for using Python with IRIDA is the <a href="https://requests-oauthlib.readthedocs.org/en/latest/">Requests-OAuthlib</a>.</p>
+
+<p>A complete example application that uses Requests-OAuthlib is the <a href="https://github.com/phac-nml/irida-galaxy-importer">IRIDA Galaxy Import Tool</a>. This application uses the authorization code flow.</p>
+
+<h3 class="no_toc" id="perl">Perl</h3>
+
+<p>For Perl, we recommend that you use the <a href="https://metacpan.org/pod/OAuth::Lite2::Client::UsernameAndPassword"><code>OAuth::Lite2::Client::UsernameAndPassword</code></a> package.</p>
+
+<p>A complete application that uses <code>OAuth::Lite2::Client::UsernameAndPassword</code> is the <a href="https://github.com/phac-nml/irida-linker">command-line linker</a> tool for IRIDA.</p>
+
+<h3 class="no_toc" id="http">HTTP</h3>
+
+<p>If you <em>really</em> want to interact with IRIDA on the command line, or with an esoteric programming language that hasn’t yet built an OAuth2 library, you can do so with basic HTTP. The example provided here shows how to use the password flow (you can’t really use the authorization code flow without a web browser…) using shell and <code>curl</code>:</p>
+
+<div class="highlight"><pre><code class="language-bash">curl --silent http://localhost:8080/irida/api/oauth/token -X POST -d <span class="s2">&quot;client_id=</span><span class="nv">$CLIENT_ID</span><span class="s2">&amp;client_secret=</span><span class="nv">$CLIENT_SECRET</span><span class="s2">&amp;grant_type=password&amp;username=</span><span class="nv">$USERNAME</span><span class="s2">&amp;password=</span><span class="nv">$PASSWORD</span><span class="s2">&quot;</span> <span class="p">|</span> python -m json.tool</code></pre></div>
+
+<p>In the example above, you would need to replace <code>$CLIENT_ID</code>, <code>$CLIENT_SECRET</code>, <code>$USERNAME</code> and <code>$PASSWORD</code> with your own client and user credentials. The <code>--silent</code> option on <code>curl</code> suppresses the progress display, and <code>python -m json.tool</code> will pretty-print the JSON that the server responds with.</p>
+
+<p>An example response from the server is:</p>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;access_token&quot;</span><span class="p">:</span> <span class="s2">&quot;my-53cr37-04u7h-4cc355-70k3n&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;expires_in&quot;</span><span class="p">:</span> <span class="mi">43199</span><span class="p">,</span>
+  <span class="nt">&quot;scope&quot;</span><span class="p">:</span> <span class="s2">&quot;read write&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;token_type&quot;</span><span class="p">:</span> <span class="s2">&quot;bearer&quot;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Now, to access any other resources in the REST API you must include the <code>access_token</code> value in the <code>Authorization</code> header:</p>
+
+<div class="highlight"><pre><code class="language-bash">curl --silent http://localhost:8080/irida/api/projects/1 <span class="se">\\</span>
+   -H <span class="s1">&#39;Authorization: Bearer my-53cr37-04u7h-4cc355-70k3n&#39;</span> <span class="p">|</span> python -m json.tool</code></pre></div>
+
+<h1 id="general-contracts">General Contracts</h1>
+
+<h3 id="formats-1">Formats</h3>
+
+<p>By default, IRIDA will respond to requests with JSON if no <code>Accept</code> is specified.  Some resources (specifically marked) will be able to respond to requests for <code>application/fastq</code> and <code>application/fasta</code>.</p>
+
+<p>All timestamps in IRIDA are returned in <strong>milliseconds</strong> since the <a href="http://en.wikipedia.org/wiki/Unix_time">epoch</a>.</p>
+
+<h3 id="client-errors">Client Errors</h3>
+
+<p>As in the <a href="#authentication">authentication</a> section, all resources in the IRIDA REST API are protected and require authorization to access. Clients attempting to access <em>any</em> URL under the <code>/api</code> path without an authorization token will receive an HTTP <code>401 Unauthorized</code> response, regardless of the existence of a resource.</p>
+
+<p>When sending resources to the server, the following will result in <code>400 Bad Request</code>:</p>
+
+<ul>
+  <li>Sending invalid JSON (malformed, wrong type of quotes, etc.).</li>
+  <li>Sending data that is considered invalid (field length is too short, for example).</li>
+  <li>Sending data that includes unexpected fields (the server will respond with a list of acceptable field names).</li>
+</ul>
+
+<p>Some resources may not respond to all HTTP verbs. If an HTTP verb is not supported, the response will be <code>405 Request method not supported</code>.</p>
+
+<p>If you are not permitted to execute an HTTP verb on a resource, the response will be <code>403 Forbidden</code>.</p>
+
+<h3 id="http-verbs">HTTP Verbs</h3>
+
+<p>All endpoints will respond to HTTP <code>GET</code> requests.</p>
+
+<p><a href="#resource-collection">Resource collections</a> will respond to HTTP <code>POST</code> requests to create a new instance of that resource.</p>
+
+<p><a href="#individual-resource">Individual resources</a> will respond to HTTP <code>PATCH</code> requests to update a resource and <code>DELETE</code> requests to delete a resource (if the resource is allowed to be deleted). A response of <code>403 Forbidden</code> will be issued if you are not permitted to modify or delete a resource (you may have read-only permissions).</p>
+
+<h1 id="root-endpoints">Root Endpoints</h1>
+
+<p>To begin accessing IRIDA, you can issue a <code>GET</code> request to get a collection of links to the top-level resources:</p>
+
+<div class="highlight"><pre><code class="language-bash">$ curl http://irida.corefacility.ca/irida/api</code></pre></div>
+
+<p>The root resource returned matches the <a href="#individual-resource">individual resource</a> format.</p>
+
+<h3 class="no_toc" id="links">Links</h3>
+
+<p>The root endpoint has links to the top-level resource collections in IRIDA.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>the root resource</td>
+    </tr>
+    <tr>
+      <td><code>projects</code></td>
+      <td>the collection of project resources</td>
+    </tr>
+    <tr>
+      <td><code>users</code></td>
+      <td>the collection of user resources</td>
+    </tr>
+    <tr>
+      <td><code>sequencingRuns</code></td>
+      <td>the collection of sequencing runs (only administrative users can access this collection)</td>
+    </tr>
+    <tr>
+      <td><code>analysisSubmissions</code></td>
+      <td>the collection of analysis submissions created by the current user account</td>
+    </tr>
+    <tr>
+      <td><code>version</code></td>
+      <td>the builds IRIDA version string</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="resources">Resources</h1>
+
+<p>IRIDA has several major resources:</p>
+
+<ol>
+  <li><a href="#users">Users</a></li>
+  <li><a href="#projects">Projects</a>
+    <ul>
+      <li><a href="#samples">Samples</a></li>
+      <li><a href="#sequence-files">Sequence files</a></li>
+    </ul>
+  </li>
+  <li><a href="#sequencing-runs">Sequencing Runs</a></li>
+  <li><a href="#analysis-submissions">Analysis Submissions</a></li>
+  <li><a href="#analysis">Analysis</a></li>
+</ol>
+
+<h3 id="users">Users</h3>
+
+<p>Users can be accessed as a <a href="#user-collection">collection</a> or as an <a href="#user-individual">individual resource</a>.</p>
+
+<h4 class="no_toc" id="user-collection">User Collection</h4>
+
+<p>The user collection contains a reference to all users in the system. Each user resource has a <code>self</code> rel that can be followed to access details about the <a href="#user">individual user account</a>.</p>
+
+<h5 class="no_toc" id="links-1">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to the users collection</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response">Example Response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+  <span class="nt">&quot;resources&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="nt">&quot;username&quot;</span> <span class="p">:</span> <span class="s2">&quot;exampleuser&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;email&quot;</span> <span class="p">:</span> <span class="s2">&quot;user@example.org&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;firstName&quot;</span> <span class="p">:</span> <span class="s2">&quot;Example&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;lastName&quot;</span> <span class="p">:</span> <span class="s2">&quot;User&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;phoneNumber&quot;</span> <span class="p">:</span> <span class="s2">&quot;867-5309&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1431111435000</span><span class="p">,</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;user/projects&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/users/exampleuser/projects&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+    <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/users/1&quot;</span>
+    <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span> <span class="p">],</span>
+  <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/users&quot;</span>
+  <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span></code></pre></div>
+
+<h4 class="no_toc" id="user-individual">User Individual</h4>
+
+<p>Each user account can be accessed by a unique URL.</p>
+
+<h5 class="no_toc" id="properties">Properties</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Validation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>username</code></td>
+      <td>A username (used for logging in)</td>
+      <td>Required, minimum length 3, must be unique</td>
+    </tr>
+    <tr>
+      <td><code>email</code></td>
+      <td>An e-mail address</td>
+      <td>Required, minimum length 5, must be unique, must be a valid e-mail address (validated with <a href="http://docs.jboss.org/hibernate/validator/5.1/reference/en-US/html_single/#table-custom-constraints">Hibernate Validator E-mail constraint</a>)</td>
+    </tr>
+    <tr>
+      <td><code>firstName</code></td>
+      <td>The user’s first name</td>
+      <td>Required, minimum length 2</td>
+    </tr>
+    <tr>
+      <td><code>lastName</code></td>
+      <td>The user’s last name</td>
+      <td>Required, minimum length 2</td>
+    </tr>
+    <tr>
+      <td><code>phoneNumber</code></td>
+      <td>A contact phone number</td>
+      <td>Required, minimum length 4 (no other phone-number-related validation is done on this field)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="links-2">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to this user record</td>
+    </tr>
+    <tr>
+      <td><code>user/projects</code></td>
+      <td>The collection of projects that this user has permissions to view</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-1">Example Response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;createdDate&quot;</span><span class="p">:</span> <span class="mi">1431301716000</span><span class="p">,</span>
+    <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;user@example.org&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;firstName&quot;</span><span class="p">:</span> <span class="s2">&quot;Example&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;lastName&quot;</span><span class="p">:</span> <span class="s2">&quot;User&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;links&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;href&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/users/example/projects&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;rel&quot;</span><span class="p">:</span> <span class="s2">&quot;user/projects&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;href&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/example/1&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;rel&quot;</span><span class="p">:</span> <span class="s2">&quot;self&quot;</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;phoneNumber&quot;</span><span class="p">:</span> <span class="s2">&quot;867-5309&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;example&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h3 id="projects">Projects</h3>
+
+<p>The <a href="#project-collection">projects collection</a> provides the list of projects that the authorized user account has permissions to read. Each project entry in the list has a <code>self</code> rel that can be followed to view details about the <a href="#project-individual">individual project</a>.</p>
+
+<h4 class="no_toc" id="project-collection">Project Collection</h4>
+
+<h5 class="no_toc" id="links-3">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>The list of projects that the user has permissions to read.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-2">Example Response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;links&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;href&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;rel&quot;</span><span class="p">:</span> <span class="s2">&quot;self&quot;</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;resources&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;createdDate&quot;</span><span class="p">:</span> <span class="mi">1431301716000</span><span class="p">,</span>
+        <span class="nt">&quot;identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;links&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="nt">&quot;href&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects/1/users&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;rel&quot;</span><span class="p">:</span> <span class="s2">&quot;project/users&quot;</span>
+          <span class="p">},</span>
+          <span class="p">{</span>
+            <span class="nt">&quot;href&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects/1/samples&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;rel&quot;</span><span class="p">:</span> <span class="s2">&quot;project/samples&quot;</span>
+          <span class="p">},</span>
+          <span class="p">{</span>
+            <span class="nt">&quot;href&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects/1&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;rel&quot;</span><span class="p">:</span> <span class="s2">&quot;self&quot;</span>
+          <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Project 1&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;projectDescription&quot;</span><span class="p">:</span> <span class="kc">null</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h4 class="no_toc" id="project-individual">Project Individual</h4>
+
+<p>Each project can be accessed by a unique URL.</p>
+
+<h5 class="no_toc" id="links-4">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to this project</td>
+    </tr>
+    <tr>
+      <td><code>project/users</code></td>
+      <td>A link to view the collection of users that can view this project (the same format as <a href="#users">the list of users</a>)</td>
+    </tr>
+    <tr>
+      <td><code>project/samples</code></td>
+      <td>A link to view the collection of samples that are contained within this project.</td>
+    </tr>
+    <tr>
+      <td><code>project/analyses</code></td>
+      <td>A link to the analyses shared with this project.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="properties-1">Properties</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Validation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>name</code></td>
+      <td>The project name.</td>
+      <td>Required. Must be at least 5 characters long. Must not contain any of the following characters: <code>? ( ) [ ] / \ = + &lt; &gt; : ; " , * ^ | &amp;</code></td>
+    </tr>
+    <tr>
+      <td><code>projectDescription</code></td>
+      <td>A description of the project</td>
+      <td>Optional. Not validated.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-3">Example Response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;createdDate&quot;</span><span class="p">:</span> <span class="mi">1431301716000</span><span class="p">,</span>
+    <span class="nt">&quot;identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;links&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;href&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects/1/users&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;rel&quot;</span><span class="p">:</span> <span class="s2">&quot;project/users&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;href&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects/1/samples&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;rel&quot;</span><span class="p">:</span> <span class="s2">&quot;project/samples&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;project/analyses&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects/1/analyses&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;href&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects/1&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;rel&quot;</span><span class="p">:</span> <span class="s2">&quot;self&quot;</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Project 1&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;projectDescription&quot;</span><span class="p">:</span> <span class="kc">null</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h4 id="project-analyses">Project Analyses</h4>
+
+<p>Lists all the analysis submission objects that have been shared with the particular project.</p>
+
+<h5 class="no_toc" id="links-5">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to the project analyses</td>
+    </tr>
+    <tr>
+      <td><code>project</code></td>
+      <td>A link back to the individual project for these shared analyses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="properties-2">Properties</h5>
+<p>Each Analysis Submission under <code>resources</code> has the same properties as for <a href="#properties-7">Analysis Submssions</a>.</p>
+
+<h5 class="no_toc" id="example-response-4">Example Response</h5>
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;resources&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;SISTRTyping_20170728_AE014613-699860&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;workflowId&quot;</span> <span class="p">:</span> <span class="s2">&quot;e8f9cc61-3264-48c6-81d9-02d9e84bccc7&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;remoteInputDataId&quot;</span> <span class="p">:</span> <span class="s2">&quot;33b43b4e7093c91f&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;remoteWorkflowId&quot;</span> <span class="p">:</span> <span class="s2">&quot;33b43b4e7093c91f&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;inputParameters&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;assembly-contig-min-length-coverage-calculation&quot;</span> <span class="p">:</span> <span class="s2">&quot;5000&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;assembly-contig-min-length&quot;</span> <span class="p">:</span> <span class="s2">&quot;500&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;read-merge-min-overlap&quot;</span> <span class="p">:</span> <span class="s2">&quot;20&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;assembly-contig-min-coverage-ratio&quot;</span> <span class="p">:</span> <span class="s2">&quot;0.33&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;read-merge-max-overlap&quot;</span> <span class="p">:</span> <span class="s2">&quot;300&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;assembly-contig-min-repeat-coverage-ratio&quot;</span> <span class="p">:</span> <span class="s2">&quot;1.75&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1501260023000</span><span class="p">,</span>
+      <span class="nt">&quot;modifiedDate&quot;</span> <span class="p">:</span> <span class="mi">1501260369000</span><span class="p">,</span>
+      <span class="nt">&quot;analysisState&quot;</span> <span class="p">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;analysisCleanedState&quot;</span> <span class="p">:</span> <span class="s2">&quot;NOT_CLEANED&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;analysisDescription&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;SISTRTyping_20170728_AE014613-699860&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/analysisSubmissions/17&quot;</span>
+      <span class="p">}</span> <span class="p">],</span>
+      <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;17&quot;</span>
+    <span class="p">}</span> <span class="p">],</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;project&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects/2&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects/2/analyses&quot;</span>
+    <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span></code></pre></div>
+
+<h4 id="project-users">Project Users</h4>
+
+<p>Lists all the users currently added to a project (the same format as <a href="#users">the list of users</a>).</p>
+
+<h5 class="no_toc" id="links-6">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>The link back to this collection of users.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-5">Example Response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;resources&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;username&quot;</span> <span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;email&quot;</span> <span class="p">:</span> <span class="s2">&quot;test@nowhere.ca&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;firstName&quot;</span> <span class="p">:</span> <span class="s2">&quot;Test&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;lastName&quot;</span> <span class="p">:</span> <span class="s2">&quot;User&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;phoneNumber&quot;</span> <span class="p">:</span> <span class="s2">&quot;1234&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;enabled&quot;</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="nt">&quot;systemRole&quot;</span> <span class="p">:</span> <span class="s2">&quot;ROLE_USER&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1557259560000</span><span class="p">,</span>
+      <span class="nt">&quot;modifiedDate&quot;</span> <span class="p">:</span> <span class="mi">1557259560000</span><span class="p">,</span>
+      <span class="nt">&quot;locale&quot;</span> <span class="p">:</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;Test User&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/users/test&quot;</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;relationship&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects/10/users/test&quot;</span>
+      <span class="p">}</span> <span class="p">],</span>
+      <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;5&quot;</span>
+    <span class="p">}</span> <span class="p">],</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects/10/users&quot;</span>
+    <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h5 class="no_toc" id="adding-a-user-to-a-project">Adding a user to a project</h5>
+<p>To add a user to a project, <code>POST</code> the following properties to the project/users endpoint:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Validation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>userId</code></td>
+      <td>The user’s username.</td>
+      <td>Required.</td>
+    </tr>
+    <tr>
+      <td><code>role</code></td>
+      <td>The user’s role on the project</td>
+      <td>Optional. Allowed values: [<code>PROJECT_USER</code>, <code>PROJECT_OWNER</code>].</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="samples">Samples</h3>
+
+<p>A sample corresponds to a single isolate and contains the sequencing data and metadata. A <a href="#sample-collection">collection of samples</a> can only be accessed via a <a href="#project">project</a>, and an <a href="#sample-individual">individual sample</a> can only be accessed from a sample collection.</p>
+
+<h4 class="no_toc" id="sample-collection">Sample Collection</h4>
+
+<h5 class="no_toc" id="links-7">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>The link back to this collection of samples.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-6">Example Response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;resources&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1406733849000</span><span class="p">,</span>
+      <span class="nt">&quot;modifiedDate&quot;</span> <span class="p">:</span> <span class="mi">1406733849000</span><span class="p">,</span>
+      <span class="nt">&quot;sampleName&quot;</span> <span class="p">:</span> <span class="s2">&quot;Sample 1&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;description&quot;</span> <span class="p">:</span> <span class="s2">&quot;The first sample&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;organism&quot;</span> <span class="p">:</span> <span class="s2">&quot;E. coli&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;isolate&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;strain&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;collectedBy&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;collectionDate&quot;</span> <span class="p">:</span> <span class="s2">&quot;2019-01-25&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;geographicLocationName&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;isolationSource&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;latitude&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;longitude&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;Sample 1&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/5&quot;</span>
+        <span class="p">},</span> <span class="p">{</span>
+          <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample/sequenceFiles&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/5/sequenceFiles&quot;</span>
+        <span class="p">},</span> <span class="p">{</span>
+          <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample/sequenceFiles/pairs&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/5/pairs&quot;</span>
+        <span class="p">},</span> <span class="p">{</span>
+          <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample/sequenceFiles/unpaired&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/5/unpaired&quot;</span>
+        <span class="p">},</span> <span class="p">{</span>
+          <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample/metadata&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/5/metadata&quot;</span>
+        <span class="p">},</span> <span class="p">{</span>
+          <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample/project&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects/5&quot;</span>
+        <span class="p">},</span> <span class="p">{</span>
+          <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;project/sample&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects/5/samples/5&quot;</span>
+        <span class="p">}</span> <span class="p">],</span>
+        <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+      <span class="p">}</span> <span class="p">],</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects/5/samples&quot;</span>
+    <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h4 class="no_toc" id="sample-individual">Sample Individual</h4>
+
+<p>An individual sample contains the metadata associated with an isolate. The sample will also link to the collection of <a href="#sequence-files">sequence files</a> produced by a sequencer for the isolate.</p>
+
+<h5 class="no_toc" id="links-8">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to this sample.</td>
+    </tr>
+    <tr>
+      <td><code>sample/sequenceFiles</code></td>
+      <td>A link to the <a href="#sequence-file-collection">collection of sequence files</a> in this sample.</td>
+    </tr>
+    <tr>
+      <td><code>sample/sequenceFiles/pairs</code></td>
+      <td>A link to the <a href="#sequence-file-pairs-collection">collection of paired-end sequence files</a> in this sample.  Note: These resources will overlap  with the files listed in <code>sample/sequenceFiles</code>.</td>
+    </tr>
+    <tr>
+      <td><code>sample/sequenceFiles/unpaired</code></td>
+      <td>A link to the collection of unpaired sequence files in this sample. Note: These resources will overlap  with the files listed in <code>sample/sequenceFiles</code>.</td>
+    </tr>
+    <tr>
+      <td><code>sample/sequenceFiles/fast5</code></td>
+      <td>A link to the collection of <a href="#fast5-file-collection">FAST5 sequence files</a> in this sample. Note: These resources will overlap  with the files listed in <code>sample/sequenceFiles</code>.</td>
+    </tr>
+    <tr>
+      <td><code>sample/assemblies</code></td>
+      <td>A link to the collection <a href="#assemblies">assemblies</a> associated with the sample.</td>
+    </tr>
+    <tr>
+      <td><code>sample/metadata</code></td>
+      <td>A link to the metadata associated with the sample.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="properties-3">Properties</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Validation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>createdDate</code></td>
+      <td>The date the sample was created in IRIDA.</td>
+      <td>Required. This will be auto-generated by IRIDA.</td>
+    </tr>
+    <tr>
+      <td><code>modifiedDate</code></td>
+      <td>The date the sample was last modified.</td>
+      <td>Required. This will be auto-generated by IRIDA.</td>
+    </tr>
+    <tr>
+      <td><code>sampleName</code></td>
+      <td>The name used to refer to the sample by the user. This is often the same as <code>sequencerSampleId</code>, but <em>may</em> be different.</td>
+      <td>Required. Must be at least 3 characters long. Must not contain any of the following characters: <code>? ( ) [ ] / \ = + &lt; &gt; : ; " , * ^ | &amp; ' . |</code> (note: this blocklist of characters is defined by the set of invalid characters on the Windows file system)</td>
+    </tr>
+    <tr>
+      <td><code>description</code></td>
+      <td>A plain-text description of the sample.</td>
+      <td>Not required.</td>
+    </tr>
+    <tr>
+      <td><code>strain</code></td>
+      <td>The microbial or eukaryotic strain name.</td>
+      <td>Not required. Must be at least 3 characters long.</td>
+    </tr>
+    <tr>
+      <td><code>collectionDate</code></td>
+      <td>The date that the sample was collected.</td>
+      <td>Not required. Must be a valid date in the format of “YYYY-MM-DD” (e.g,. “2019-01-25” for January 25, 2019).</td>
+    </tr>
+    <tr>
+      <td><code>collectedBy</code></td>
+      <td>The person (or organization) that collected the sample.</td>
+      <td>Not required. Must be at least 3 characters long.</td>
+    </tr>
+    <tr>
+      <td><code>latitude</code></td>
+      <td>The latitude of the location where the sample was collected.</td>
+      <td>Not required. Must be a valid latitude (must match the pattern <code>^-?(\d){1,2}(\.\d+)?$</code> and the first number group must be in the range <code>[-90, 90]</code>).</td>
+    </tr>
+    <tr>
+      <td><code>longitude</code></td>
+      <td>The longitude of the location where the sample was collected.</td>
+      <td>Not required. Must be a valid longitude (must match the pattern <code>-?(\d){1,3}(\.\d+)?$</code> and the first number group must be in the range <code>[-180, 180]</code>).</td>
+    </tr>
+    <tr>
+      <td><code>organism</code></td>
+      <td>The name of the organism that is contained by the sample.</td>
+      <td>Not required. Must be at least 3 characters long.</td>
+    </tr>
+    <tr>
+      <td><code>isolate</code></td>
+      <td>The identification or description of the specific individual from which this sample was obtained.</td>
+      <td>Not required. Must be at least 3 characters long.</td>
+    </tr>
+    <tr>
+      <td><code>geographicLocationName</code></td>
+      <td>A human-readable geographic location name, complementing the latitude and longitude of collection location.</td>
+      <td>Not required. Must be at least 3 characters long. Must match the pattern <code>\w+(:\w+(:\w+)?)?</code>, as defined by the NCBI location name pattern.</td>
+    </tr>
+    <tr>
+      <td><code>isolationSource</code></td>
+      <td>Describes the physical, environmental, and/or the geographical source of the biological sample from which the sample was derived.</td>
+      <td>Not required.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-7">Example Response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1406733854000</span><span class="p">,</span>
+    <span class="nt">&quot;modifiedDate&quot;</span> <span class="p">:</span> <span class="mi">1406733854000</span><span class="p">,</span>
+    <span class="nt">&quot;sampleName&quot;</span> <span class="p">:</span> <span class="s2">&quot;Sample 5&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;description&quot;</span> <span class="p">:</span> <span class="s2">&quot;The fifth sample&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;organism&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;isolate&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;strain&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;collectedBy&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;collectionDate&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;geographicLocationName&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;isolationSource&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;latitude&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;longitude&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;Sample 5&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/5&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample/sequenceFiles&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/5/sequenceFiles&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample/sequenceFiles/pairs&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/5/pairs&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample/sequenceFiles/unpaired&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/5/unpaired&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample/metadata&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/5/metadata&quot;</span>
+    <span class="p">}</span> <span class="p">],</span>
+    <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;5&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h4 class="no_toc" id="sample-metadata">Sample Metadata</h4>
+
+<p>Sample metadata is unstructured metadata that has been associated with the sample.</p>
+
+<h5 class="no_toc" id="links-9">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to this sample metadata.</td>
+    </tr>
+    <tr>
+      <td><code>sample</code></td>
+      <td>A link back to the sample owning this metadata.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-8">Example Response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;metadata&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;SourceSite&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;value&quot;</span> <span class="p">:</span> <span class="s2">&quot;Stool&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;text&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;Serotype&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;value&quot;</span> <span class="p">:</span> <span class="s2">&quot;Infantis&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;text&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;PatientSex&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;value&quot;</span> <span class="p">:</span> <span class="s2">&quot;FEMALE&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;text&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;Genus&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;value&quot;</span> <span class="p">:</span> <span class="s2">&quot;Salmonella&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;text&quot;</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/3/metadata&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/3&quot;</span>
+    <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h3 id="sequence-files">Sequence Files</h3>
+
+<p>Each sample will refer to a <a href="#sequence-file-collection">collection of sequence files</a> that have been sequenced and uploaded to IRIDA. Every record in the sequence files resource collection has a <code>self</code> rel to access the <a href="#sequence-file-individual">individual sequence file</a>.</p>
+
+<p>The sample will also contain a <a href="#sequence-file-pairs-collection">list of paired-end sequence files</a>, and a <a href="#fast5-file-collection">list of FAST5 files</a>.</p>
+
+<h4 id="sequence-file-collection">Sequence File Collection</h4>
+
+<p>This will list the collection of sequence files for a sample.  This endpoint will list all single-end, paired-end, and FAST5 files associated with the sample.</p>
+
+<p>You can <code>POST</code> a sequence file to this endpoint to upload a new singe-end sequencefile with the parameter <code>file</code>.</p>
+
+<h5 class="no_toc" id="links-10">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to this collection of sequence files.</td>
+    </tr>
+    <tr>
+      <td><code>sample</code></td>
+      <td>A link back to the sample that owns this sequence file collection.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-9">Example response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+  <span class="nt">&quot;resources&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="nt">&quot;file&quot;</span> <span class="p">:</span> <span class="s2">&quot;/IRIDA/sequence-files/9/2/01-1111_S1_L001_R1_001.fastq&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;fileName&quot;</span> <span class="p">:</span> <span class="s2">&quot;01-1111_S1_L001_R1_001.fastq&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;9&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1407344463000</span><span class="p">,</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/projects/4/samples/51/sequenceFiles/9&quot;</span>
+    <span class="p">}</span> <span class="p">]</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="nt">&quot;file&quot;</span> <span class="p">:</span> <span class="s2">&quot;/IRIDA/sequence-files/10/2/01-1111_S1_L001_R2_001.fastq&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;fileName&quot;</span> <span class="p">:</span> <span class="s2">&quot;01-1111_S1_L001_R2_001.fastq&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;10&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1407344463000</span><span class="p">,</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/51/sequenceFiles/10&quot;</span>
+    <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span> <span class="p">],</span>
+  <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/51/sequenceFiles&quot;</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/51&quot;</span>
+  <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span></code></pre></div>
+
+<h4 class="no_toc" id="sequence-file-individual">Sequence File Individual</h4>
+
+<p>Each sequence file corresponds to a single file (may be one of a pair for paired-end sequencing) generated for an isolate. A sequence file record contains a reference to the file-system location where the file can be found locally. A file can also be downloaded from IRIDA by making a request for the file using an <code>Accept</code> header of <code>application/fastq</code>.</p>
+
+<h5 class="no_toc" id="links-11">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to this sequence file record.</td>
+    </tr>
+    <tr>
+      <td><code>sample</code></td>
+      <td>A link to the sample that contains this sequence file.</td>
+    </tr>
+    <tr>
+      <td><code>sample/sequenceFiles</code></td>
+      <td>A link to the collection of sequence files for the parent sample.</td>
+    </tr>
+    <tr>
+      <td><code>sequencefile/qc</code></td>
+      <td>A link to the FastQC data for this sequence file.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="properties-4">Properties</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Validation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>file</code></td>
+      <td>The local file system location where the file can be found.</td>
+      <td>Not specified by a client.</td>
+    </tr>
+    <tr>
+      <td><code>fileName</code></td>
+      <td>The <code>basename</code> of the file, without the directory.</td>
+      <td>Derived from the <code>file</code> property, not specified by a client.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-10">Example response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+  <span class="nt">&quot;file&quot;</span> <span class="p">:</span> <span class="s2">&quot;/IRIDA/sequence-files/9/2/01-1111_S1_L001_R1_001.fastq&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;fileName&quot;</span> <span class="p">:</span> <span class="s2">&quot;01-1111_S1_L001_R1_001.fastq&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;9&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1407344463000</span><span class="p">,</span>
+  <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample/sequenceFiles&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/51/sequenceFiles&quot;</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/51/sequenceFiles/9&quot;</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/51&quot;</span>
+  <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span></code></pre></div>
+
+<h4 class="no_toc" id="fastqc-data">FastQC Data</h4>
+
+<p>Each sequence file may have FastQC data associated with it to display some basic quality metrics about the file.</p>
+
+<h5 class="no_toc" id="links-12">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to this sequence file QC record.</td>
+    </tr>
+    <tr>
+      <td><code>qc/sequencefile</code></td>
+      <td>A back to the owning sequence file for this QC data.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-fastqc-response">Example FastQC Response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1469714441000</span><span class="p">,</span>
+    <span class="nt">&quot;description&quot;</span> <span class="p">:</span> <span class="s2">&quot;Analysis produced by FastQC&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;executionManagerAnalysisId&quot;</span> <span class="p">:</span> <span class="s2">&quot;internal-fastqc&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;additionalProperties&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="p">},</span>
+    <span class="nt">&quot;fileType&quot;</span> <span class="p">:</span> <span class="s2">&quot;Conventional base calls&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;encoding&quot;</span> <span class="p">:</span> <span class="s2">&quot;Sanger / Illumina 1.9&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;totalSequences&quot;</span> <span class="p">:</span> <span class="mi">119960</span><span class="p">,</span>
+    <span class="nt">&quot;filteredSequences&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nt">&quot;totalBases&quot;</span> <span class="p">:</span> <span class="mi">29990000</span><span class="p">,</span>
+    <span class="nt">&quot;minLength&quot;</span> <span class="p">:</span> <span class="mi">250</span><span class="p">,</span>
+    <span class="nt">&quot;maxLength&quot;</span> <span class="p">:</span> <span class="mi">250</span><span class="p">,</span>
+    <span class="nt">&quot;gcContent&quot;</span> <span class="p">:</span> <span class="mi">38</span><span class="p">,</span>
+    <span class="nt">&quot;overrepresentedSequences&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">],</span>
+    <span class="nt">&quot;fastQCReport&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;internal-fastqc&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;qc/sequencefile&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/55/pairs/12/files/16&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/55/pairs/12/files/16/qc&quot;</span>
+    <span class="p">}</span> <span class="p">],</span>
+    <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;18&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h4 id="sequence-file-pairs-collection">Sequence File Pairs Collection</h4>
+<p>Listing sequence file pairs will display the sequence files for a given sample which are paired-end.  This collection will overlap with the <a href="#sequence-file-collection">collection of sequence files</a> but will only display paired-end files.  The resources in this list are a collection of <a href="#sequence-file-pair-individual">sequence file pair individuals</a>.  You can <code>POST</code> a new pair of files with the parameters <code>file1</code> and <code>file2</code> to this endpoint to upload a new pair of sequence files.</p>
+
+<h5 class="no_toc" id="links-13">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to this collection of sequence files.</td>
+    </tr>
+    <tr>
+      <td><code>sample</code></td>
+      <td>A link back to the sample that owns this sequence file collection.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-11">Example Response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;resources&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1406726674000</span><span class="p">,</span>
+      <span class="nt">&quot;files&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+        <span class="nt">&quot;file&quot;</span> <span class="p">:</span> <span class="s2">&quot;/tmp/sequence-files/2/2/02-2222_S1_L001_R2_001.fastq&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1406726674000</span><span class="p">,</span>
+        <span class="nt">&quot;modifiedDate&quot;</span> <span class="p">:</span> <span class="mi">1406726674000</span><span class="p">,</span>
+        <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;02-2222_S1_L001_R2_001.fastq&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;fileName&quot;</span> <span class="p">:</span> <span class="s2">&quot;02-2222_S1_L001_R2_001.fastq&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+          <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/52/sequenceFiles/2&quot;</span>
+        <span class="p">}</span> <span class="p">],</span>
+        <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;2&quot;</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="nt">&quot;file&quot;</span> <span class="p">:</span> <span class="s2">&quot;/tmp/sequence-files/1/2/02-2222_S1_L001_R1_001.fastq&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1406726674000</span><span class="p">,</span>
+        <span class="nt">&quot;modifiedDate&quot;</span> <span class="p">:</span> <span class="mi">1406726674000</span><span class="p">,</span>
+        <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;02-2222_S1_L001_R1_001.fastq&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;fileName&quot;</span> <span class="p">:</span> <span class="s2">&quot;02-2222_S1_L001_R1_001.fastq&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+          <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/52/sequenceFiles/1&quot;</span>
+        <span class="p">}</span> <span class="p">],</span>
+        <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+      <span class="p">}</span> <span class="p">],</span>
+      <span class="nt">&quot;assembledGenome&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;02-2222_S1_L001_R2_001.fastq, 02-2222_S1_L001_R1_001.fastq&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/52/sequenceFiles/pairs/1&quot;</span>
+      <span class="p">},</span> <span class="p">{</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;analysis/assembly&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/analysisSubmissions/3&quot;</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;analysis/sistr&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/analysisSubmissions/4&quot;</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;pair/forward&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/52/sequenceFiles/1&quot;</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;pair/reverse&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/52/sequenceFiles/2&quot;</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/52&quot;</span>
+      <span class="p">}</span> <span class="p">],</span>
+      <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+    <span class="p">}</span> <span class="p">],</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/52/sequenceFiles/pairs&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/52&quot;</span>
+    <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h4 class="no_toc" id="sequence-file-pair-individual">Sequence File Pair Individual</h4>
+<p>A sequence file pair individual contains a reference to 2 <a href="#sequence-file-individual">sequence files</a>.  These files are generally created by the sequencer as a pair of files.</p>
+
+<h5 class="no_toc" id="links-14">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to this sequence file pair record.</td>
+    </tr>
+    <tr>
+      <td><code>analysis/assembly</code></td>
+      <td>A link to an assembly analysis associated with this pair.</td>
+    </tr>
+    <tr>
+      <td><code>analysis/sistr</code></td>
+      <td>A link to the SISTR results associated with this pair.</td>
+    </tr>
+    <tr>
+      <td><code>pair/forward</code></td>
+      <td>A link to the forward oriented sequence file.</td>
+    </tr>
+    <tr>
+      <td><code>pair/reverse</code></td>
+      <td>A link to the reverse oriented sequence file.</td>
+    </tr>
+    <tr>
+      <td><code>sample</code></td>
+      <td>A link to the sample that contains this sequence file.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="properties-5">Properties</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>files</code></td>
+      <td>The collection of sequence files in this pair.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-12">Example response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1406726674000</span><span class="p">,</span>
+    <span class="nt">&quot;files&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;file&quot;</span> <span class="p">:</span> <span class="s2">&quot;/tmp/sequence-files/2/2/02-2222_S1_L001_R2_001.fastq&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1406726674000</span><span class="p">,</span>
+      <span class="nt">&quot;modifiedDate&quot;</span> <span class="p">:</span> <span class="mi">1406726674000</span><span class="p">,</span>
+      <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;02-2222_S1_L001_R2_001.fastq&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;fileName&quot;</span> <span class="p">:</span> <span class="s2">&quot;02-2222_S1_L001_R2_001.fastq&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/52/sequenceFiles/2&quot;</span>
+      <span class="p">}</span> <span class="p">],</span>
+      <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;2&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;file&quot;</span> <span class="p">:</span> <span class="s2">&quot;/tmp/sequence-files/1/2/02-2222_S1_L001_R1_001.fastq&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1406726674000</span><span class="p">,</span>
+      <span class="nt">&quot;modifiedDate&quot;</span> <span class="p">:</span> <span class="mi">1406726674000</span><span class="p">,</span>
+      <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;02-2222_S1_L001_R1_001.fastq&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;fileName&quot;</span> <span class="p">:</span> <span class="s2">&quot;02-2222_S1_L001_R1_001.fastq&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/52/sequenceFiles/1&quot;</span>
+      <span class="p">}</span> <span class="p">],</span>
+      <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+    <span class="p">}</span> <span class="p">],</span>
+    <span class="nt">&quot;assembledGenome&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;02-2222_S1_L001_R2_001.fastq, 02-2222_S1_L001_R1_001.fastq&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/52/sequenceFiles/pairs/1&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;analysis/assembly&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/analysisSubmissions/3&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;analysis/sistr&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/analysisSubmissions/4&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;pair/forward&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/52/sequenceFiles/1&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;pair/reverse&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/52/sequenceFiles/2&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/52&quot;</span>
+    <span class="p">}</span> <span class="p">],</span>
+    <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h4 id="fast5-file-collection">FAST5 File Collection</h4>
+<p>Listing FAST5 files will display the list of FAST5 files uploaded to a sample.  This collection will overlap with the <a href="#sequence-file-collection">collection of sequence files</a> but will only display FAST5 files.</p>
+
+<p>You can <code>POST</code> a file to this endpoint with the parameter <code>file</code> to upload a new FAST5 file.</p>
+
+<h5 class="no_toc" id="links-15">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to this collection of sequence files.</td>
+    </tr>
+    <tr>
+      <td><code>sample</code></td>
+      <td>A link back to the sample that owns this sequence file collection.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-13">Example response</h5>
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;resources&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1589570873000</span><span class="p">,</span>
+      <span class="nt">&quot;processingState&quot;</span> <span class="p">:</span> <span class="s2">&quot;PROCESSING&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;fileProcessor&quot;</span> <span class="p">:</span> <span class="s2">&quot;1111@machine&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;file&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;file&quot;</span> <span class="p">:</span> <span class="s2">&quot;/opt/irida/sequence-files/48/1/data.fast5&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1589570873000</span><span class="p">,</span>
+        <span class="nt">&quot;modifiedDate&quot;</span> <span class="p">:</span> <span class="mi">1589570883000</span><span class="p">,</span>
+        <span class="nt">&quot;uploadSha256&quot;</span> <span class="p">:</span> <span class="s2">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;fileName&quot;</span> <span class="p">:</span> <span class="s2">&quot;data.fast5&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;data.fast5&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+          <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/56/fast5/31/files/48&quot;</span>
+        <span class="p">}</span> <span class="p">],</span>
+        <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;48&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;fast5Type&quot;</span> <span class="p">:</span> <span class="s2">&quot;SINGLE&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;data.fast5&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/56/fast5/31&quot;</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/56&quot;</span>
+      <span class="p">}</span> <span class="p">],</span>
+      <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;31&quot;</span>
+    <span class="p">}</span> <span class="p">],</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/56/fast5&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/56&quot;</span>
+    <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h4 class="no_toc" id="fast5-file-individual">FAST5 File Individual</h4>
+<p>The response for a FAST5 file is identical to the <a href="#sequence-file-individual">sequence files individual</a>.</p>
+
+<h3 id="assemblies">Assemblies</h3>
+
+<p>A sample will also refer to a collection of assemblies performed for that sample.  Assemblies must exist within a sample.  At the moment IRIDA can only manage assemblies generated by the IRIDA assembly &amp; annotation pipeline.</p>
+
+<h4 class="no_toc" id="assembly-collection">Assembly Collection</h4>
+
+<p>A list of assemblies can be retrieved by running a <code>GET</code> on the URL for the <code>sample/assemblies</code> endpoint.</p>
+
+<h5 class="no_toc" id="links-16">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to the collection of assemblies for the given sample.</td>
+    </tr>
+    <tr>
+      <td><code>sample</code></td>
+      <td>A link back to the sample for these assemblies.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-14">Example response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;resources&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1406726675000</span><span class="p">,</span>
+      <span class="nt">&quot;file&quot;</span> <span class="p">:</span> <span class="s2">&quot;/tmp/analysis-files/contigs.fasta&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample-contigs.fasta&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;fileSizeBytes&quot;</span> <span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+      <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/54/assemblies/1&quot;</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;assembly/analysis&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/analysisSubmissions/103&quot;</span>
+      <span class="p">}</span> <span class="p">],</span>
+      <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+    <span class="p">}</span> <span class="p">],</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/54/assemblies&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/54&quot;</span>
+    <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h4 class="no_toc" id="assembly-individual">Assembly Individual</h4>
+
+<p>An individual assembly entry will show the details about the requested assembly.  If the assembly was generated by running an assembly pipeline within IRIDA, it will also link back to the analysis that generated the assembly.</p>
+
+<p>The assembly can also be downloaded by making a request for this resource with an <code>Accept</code> header of <code>application/fasta</code>.</p>
+
+<h5 class="no_toc" id="links-17">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to this assembly..</td>
+    </tr>
+    <tr>
+      <td><code>assembly/analysis</code></td>
+      <td>A link to the analysis that created this assembly (if it was generated within IRIDA).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-15">Example response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1406726675000</span><span class="p">,</span>
+    <span class="nt">&quot;file&quot;</span> <span class="p">:</span> <span class="s2">&quot;/tmp/analysis-files/contigs.fasta&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;sample-contigs.fasta&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;fileSizeBytes&quot;</span> <span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/samples/54/assemblies/1&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;assembly/analysis&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/analysisSubmissions/103&quot;</span>
+    <span class="p">}</span> <span class="p">],</span>
+    <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h3 id="sequencing-runs">Sequencing Runs</h3>
+
+<h4 class="no_toc" id="sequencing-run-collection">Sequencing Run Collection</h4>
+
+<p><a href="#sequence-files">Sequence files</a> are commonly uploaded to IRIDA as part of a set of files generated by a single execution of a sequencer. Sequencing runs can only be viewed by administrative user accounts. Each record in the sequencing runs collection has a <code>self</code> rel that can be used to access details about the individual sequencing run resource.</p>
+
+<h5 class="no_toc" id="links-18">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to the collection of sequencing runs.</td>
+    </tr>
+    <tr>
+      <td><code>sequencingRun/miseq</code></td>
+      <td>A link to the endpoint to POST new MiSeq Runs. (Deprecated)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-16">Example response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+  <span class="nt">&quot;resources&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1583529174000</span><span class="p">,</span>
+      <span class="nt">&quot;modifiedDate&quot;</span> <span class="p">:</span> <span class="mi">1583529174000</span><span class="p">,</span>
+      <span class="nt">&quot;uploadStatus&quot;</span> <span class="p">:</span> <span class="s2">&quot;UPLOADING&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;layoutType&quot;</span> <span class="p">:</span> <span class="s2">&quot;PAIRED_END&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;sequencerType&quot;</span> <span class="p">:</span> <span class="s2">&quot;miseq&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;SequencingRun 2020-03-06 15:12:54.0&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+        <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/sequencingrun/1&quot;</span>
+      <span class="p">}</span> <span class="p">],</span>
+      <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+    <span class="p">}</span> <span class="p">],</span>
+  <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/sequencingrun&quot;</span>
+  <span class="p">}</span>
+  <span class="p">,</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;sequencingRun/miseq&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/sequencingrun/miseqrun&quot;</span>
+    <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span></code></pre></div>
+
+<h4 class="no_toc" id="creating-sequencing-runs">Creating Sequencing Runs</h4>
+<p><strong>Deprecation notice (v20.05)</strong><br />
+Previously the IRIDA REST API planned to have different endpoints for different sequencer types.  In those versions, the <code>sequencingRun/miseq</code> endpoint allowed you to <code>POST</code> a run specifically for the <em>MiSeq</em> sequencer, but other sequencers were not officially supported.  As of IRIDA 20.05, any sequencer types are supported by <code>POST</code>ing a run to the SequencingRun collection endpoint (<code>/api/sequencingrun</code>) with the values in the properties section below.</p>
+
+<p>The <code>sequencingRun/miseq</code> endpoint will be maintained for a few versions for legacy purposes, but will be removed out in the near future.  It is recommended for you to stay up to date with the latest version of the <a href="https://github.com/phac-nml/irida-uploader">IRIDA Uploader</a> to ensure compatibility.</p>
+
+<p><strong>Creating Legacy MiSeq Runs (Deprecated)</strong></p>
+
+<p>Sequencing runs are created differently from other resources.  To differentiate between different sequencer models alternate endpoints are exposed to create runs for each model.  To create a Sequencing Run for a given sequencer, <code>POST</code> the resource to the specific endpoint for that sequencer.  The following rels are enabled:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Sequencer</th>
+      <th>Rel</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Illumina Miseq</td>
+      <td><code>sequencingRun/miseq</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 class="no_toc" id="sequencing-run-individual">Sequencing Run Individual</h4>
+
+<p>A sequencing run contains a reference to all of the files that were generated by the same execution of a sequencer (may span many samples). The run resource also contains metadata captured when the files were uploaded (on Illumina this is metadata in the <code>SampleSheet.csv</code> file).</p>
+
+<h5 class="no_toc" id="links-19">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to this sequencing run.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="properties-6">Properties</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Validation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>description</code></td>
+      <td>A text description of the sequencing run.</td>
+      <td>Not required.</td>
+    </tr>
+    <tr>
+      <td><code>uploadStatus</code></td>
+      <td>The status of the upload.</td>
+      <td>Required.  This will be auto-generated by IRIDA to <code>UPLOADING</code> on creation.  It can be updated to the values listed in <a href="#sequencing-run-upload-status">Sequencing Run Upload Status</a> below.</td>
+    </tr>
+    <tr>
+      <td><code>layoutType</code></td>
+      <td>The layout of the sequencing run (single end or paired end).</td>
+      <td>Required. Values <code>SINGLE_END</code> or <code>PAIRED_END</code>.</td>
+    </tr>
+    <tr>
+      <td><code>sequencerType</code></td>
+      <td>A text value of the type of sequencer used to generate this run.</td>
+      <td>Required. Examples <code>miseq</code>, <code>directory</code>, <code>miniseq</code>…</td>
+    </tr>
+    <tr>
+      <td><code>createdDate</code></td>
+      <td>The date the sample was created in IRIDA.</td>
+      <td>This will be auto-generated by IRIDA.</td>
+    </tr>
+    <tr>
+      <td><code>modifiedDate</code></td>
+      <td>The date the sample was last modified.</td>
+      <td>This will be auto-generated by IRIDA.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 class="no_toc" id="sequencing-run-upload-status">Sequencing Run Upload Status</h4>
+<p>Sequencing Run has a special property, <code>uploadStatus</code>, which is used to track the status of a Sequencing Run upload.  <code>uploadStatus</code> should be updated by the uploader client to reflect the status of the sequencing run upload.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>UPLOADING</code></td>
+      <td>Default value.  Run is created and files are currently being uploaded.</td>
+    </tr>
+    <tr>
+      <td><code>COMPLETE</code></td>
+      <td>The run and sequence files have been successfully uploaded.</td>
+    </tr>
+    <tr>
+      <td><code>ERROR</code></td>
+      <td>An error occurred while the run was being uploaded.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-17">Example response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+  <span class="nt">&quot;projectName&quot;</span> <span class="p">:</span> <span class="s2">&quot;Test Project&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;workflow&quot;</span> <span class="p">:</span> <span class="s2">&quot;test workflow&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;experimentName&quot;</span> <span class="p">:</span> <span class="s2">&quot;Test Experiment&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;application&quot;</span> <span class="p">:</span> <span class="s2">&quot;FASTQ&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;assay&quot;</span> <span class="p">:</span> <span class="s2">&quot;Nextera&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;chemistry&quot;</span> <span class="p">:</span> <span class="s2">&quot;Amplicon&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;readLengths&quot;</span> <span class="p">:</span> <span class="mi">250</span><span class="p">,</span>
+  <span class="nt">&quot;investigatorName&quot;</span> <span class="p">:</span> <span class="s2">&quot;Jon Doe&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;description&quot;</span> <span class="p">:</span> <span class="s2">&quot;Salmonella sequencing&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;uploadStatus&quot;</span> <span class="p">:</span> <span class="s2">&quot;COMPLETE&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;layoutType&quot;</span> <span class="p">:</span> <span class="s2">&quot;SINGLE_END&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;sequencerType&quot;</span> <span class="p">:</span> <span class="s2">&quot;miseq&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1406733873000</span><span class="p">,</span>
+  <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/sequencingrun/1&quot;</span>
+  <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span></code></pre></div>
+
+<h3 id="analysis-submissions">Analysis Submissions</h3>
+
+<p>An analysis submission can provide clients with the complete set of inputs (consisting of <a href="#sequence-files">sequence files</a> and workflow parameters), the selected IRIDA workflow, and the outputs of a completed analysis. The API provides convenient endpoints for filtering on the different types of workflows in IRIDA, currently assembly and annotation and phylogenomics.</p>
+
+<h4 class="no_toc" id="analysis-submissions-collection">Analysis Submissions Collection</h4>
+
+<p>The collection of analysis submissions is the complete set of <strong>all</strong> analysis that the currently logged-in user has submitted for execution in IRIDA. You can filter on the different types of analysis by following the links below.</p>
+
+<h5 class="no_toc" id="links-20">Links</h5>
+
+<p>If your client needs to know about the specific types of outputs available to it, you should generally follow the link to the specific type of analysis that you’re looking for rather than listing the entire collection of analysis for the user. For example, if your client is interested in showing some results using a phylogenetic tree, then you should configure your client to immediately follow the <code>analysisSubmissions/phylogenomics</code> link.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to the collection of analysis submissions for this user.</td>
+    </tr>
+    <tr>
+      <td><code>analysisSubmissions/phylogenomics</code></td>
+      <td>A link to the collection of phylogenomics analysis that this user has submitted.</td>
+    </tr>
+    <tr>
+      <td><code>analysisSubmissions/assembly</code></td>
+      <td>A link to the collection of assembly and annotation analysis that this user has submitted.</td>
+    </tr>
+    <tr>
+      <td><code>analysisSubmissions/assembly-collection</code></td>
+      <td>A link to the collection of assembly and annotation collection analysis that this user has submitted.</td>
+    </tr>
+    <tr>
+      <td><code>analysisSubmissions/sistr</code></td>
+      <td>A link to the collection of SISTR Typing analysis that this user has submitted.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-18">Example response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+    <span class="nt">&quot;resource&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;links&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;href&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/analysisSubmissions&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;rel&quot;</span><span class="p">:</span> <span class="s2">&quot;self&quot;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;href&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/analysisSubmissions/analysisType/phylogenomics&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;rel&quot;</span><span class="p">:</span> <span class="s2">&quot;analysisSubmissions/phylogenomics&quot;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;href&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/analysisSubmissions/analysisType/assembly&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;rel&quot;</span><span class="p">:</span> <span class="s2">&quot;analysisSubmissions/assembly&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="nt">&quot;resources&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;analysisCleanedState&quot;</span><span class="p">:</span> <span class="s2">&quot;NOT_CLEANED&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;analysisState&quot;</span><span class="p">:</span> <span class="s2">&quot;SUBMITTING&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;createdDate&quot;</span><span class="p">:</span> <span class="mi">1434990870000</span><span class="p">,</span>
+                <span class="nt">&quot;identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;inputParameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;alternative-allele-fraction&quot;</span><span class="p">:</span> <span class="s2">&quot;0.75&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;minimum-base-quality&quot;</span><span class="p">:</span> <span class="s2">&quot;30&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;minimum-mapping-quality&quot;</span><span class="p">:</span> <span class="s2">&quot;30&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;minimum-read-coverage&quot;</span><span class="p">:</span> <span class="s2">&quot;15&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;repeat-minimum-length&quot;</span><span class="p">:</span> <span class="s2">&quot;150&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;repeat-minimum-pid&quot;</span><span class="p">:</span> <span class="s2">&quot;90&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;SNVPhyl_20150622&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;links&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="nt">&quot;href&quot;</span><span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/analysisSubmissions/1&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;rel&quot;</span><span class="p">:</span> <span class="s2">&quot;self&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">],</span>
+                <span class="nt">&quot;modifiedDate&quot;</span><span class="p">:</span> <span class="mi">1434990873000</span><span class="p">,</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;SNVPhyl_20150622&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;remoteFilesPaired&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="nt">&quot;remoteFilesSingle&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="nt">&quot;remoteInputDataId&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="nt">&quot;remoteWorkflowId&quot;</span><span class="p">:</span> <span class="s2">&quot;f605f7fc4b86cc72&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;workflowId&quot;</span><span class="p">:</span> <span class="s2">&quot;ccca532d-b0be-4f2c-bd6d-9886aa722571&quot;</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h4 class="no_toc" id="analysis-submission-individual">Analysis Submission Individual</h4>
+
+<p>Each analysis submission corresponds to a collection of inputs (files and parameters), and a collection of outputs. The outputs for an analysis submission depend on the type of analysis that was submitted. Analysis submissions and analysis outputs are immutable once created.</p>
+
+<h5 class="no_toc" id="links-21">Links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to this analysis submission.</td>
+    </tr>
+    <tr>
+      <td><code>analysis</code></td>
+      <td>A link to the <strong>completed</strong> analysis created for this submission. This link will only appear when the analysis submission is in the <code>COMPLETED</code> state.</td>
+    </tr>
+    <tr>
+      <td><code>input/paired</code></td>
+      <td>A link to the collection of paired-end input files used for this analysis. See <a href="#sequence-file-pairs-collection">Sequence File Pairs Collection</a> for response format.</td>
+    </tr>
+    <tr>
+      <td><code>input/unpaired</code></td>
+      <td>A link to the collection of single-end input files used for this analysis.  See <a href="#sequence-file-collection">Sequence File Collection</a> for response format.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="properties-7">Properties</h5>
+
+<p><strong>Note</strong>: No validation is marked for analysis submission properties because an analysis submission is immutable.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>analysisCleanedState</code></td>
+      <td>Indicates whether or not temporary files created by the analysis submission execution have been cleaned in the workflow execution manager.</td>
+    </tr>
+    <tr>
+      <td><code>analysisState</code></td>
+      <td>Indicates the current state of the analysis in the workflow execution manager. Can be one of: <code>NEW</code>, <code>DOWNLOADING</code>, <code>FINISHED_DOWNLOADING</code>, <code>PREPARING</code>, <code>PREPARED</code>, <code>SUBMITTING</code>, <code>RUNNING</code>, <code>FINISHED_RUNNING</code>, <code>COMPLETING</code>, <code>COMPLETED</code>, or, <code>ERROR</code>.</td>
+    </tr>
+    <tr>
+      <td><code>inputParameters</code></td>
+      <td>A map of <em>submitted</em> parameters exposed by the workflow.</td>
+    </tr>
+    <tr>
+      <td><code>name</code></td>
+      <td>The name of the analysis submission (defined by the user).</td>
+    </tr>
+    <tr>
+      <td><code>remoteFilesPaired</code></td>
+      <td>A (possibly empty) collection of paired-end files used in this analysis that were downloaded from remote servers.</td>
+    </tr>
+    <tr>
+      <td><code>remoteFilesSingle</code></td>
+      <td>A (possibly empty) collection of single-end files used in this analysis that were downloaded from remote servers.</td>
+    </tr>
+    <tr>
+      <td><code>remoteInputDataId</code></td>
+      <td>The ID used to refer to the data collection created in the workflow execution manager.</td>
+    </tr>
+    <tr>
+      <td><code>remoteWorkflowId</code></td>
+      <td>The ID used to refer to the workflow created in the workflow execution manager.</td>
+    </tr>
+    <tr>
+      <td><code>workflowId</code></td>
+      <td>The IRIDA-specific workflow identifier used for this analysis submission.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="example-response-19">Example Response</h5>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+  <span class="nt">&quot;resource&quot;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;Analysis-13&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;workflowId&quot;</span> <span class="p">:</span> <span class="s2">&quot;3fd2719d-8729-4e91-bd01-c6c20b99874d&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;remoteInputDataId&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;remoteWorkflowId&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;remoteFilesSingle&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">],</span>
+    <span class="nt">&quot;remoteFilesPaired&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">],</span>
+    <span class="nt">&quot;inputParameters&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="p">},</span>
+    <span class="nt">&quot;createdDate&quot;</span> <span class="p">:</span> <span class="mi">1406559662000</span><span class="p">,</span>
+    <span class="nt">&quot;modifiedDate&quot;</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;analysisState&quot;</span> <span class="p">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;analysisCleanedState&quot;</span> <span class="p">:</span> <span class="s2">&quot;NOT_CLEANED&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;label&quot;</span> <span class="p">:</span> <span class="s2">&quot;Analysis-13&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;links&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;analysis&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/analysisSubmissions/13/analysis&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;input/unpaired&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/analysisSubmissions/13/sequenceFiles/unpaired&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;input/paired&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/analysisSubmissions/13/sequenceFiles/pairs&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rel&quot;</span> <span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;href&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://localhost:8080/api/analysisSubmissions/13&quot;</span>
+    <span class="p">}</span> <span class="p">],</span>
+    <span class="nt">&quot;identifier&quot;</span> <span class="p">:</span> <span class="s2">&quot;13&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h3 id="analysis">Analysis</h3>
+
+<p>An analysis is the final resulting outputs of an <a href="#analysis-submissions">analysis submission</a>. You must follow the <code>analysis</code> link from an analysis submission, once it’s completed.</p>
+
+<h4 class="no_toc" id="links-22">Links</h4>
+
+<p>The links for an anlysis generally correspond to the files that are produced as output from a specific type of analysis submission. You can infer the type of analysis submission based on the filter link that you used to list the analysis submissions. For example, if you filtered analysis submissions using the <code>analysisSubmissions/assembly</code> link, then the linked type of analysis will have output links corresponding to the assembly and annotation pipeline.</p>
+
+<p>To access the file contents of each analysis output, use an <code>Accept</code> header of <code>text/plain</code>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>self</code></td>
+      <td>A link to this analysis.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="phylogenomics-links">Phylogenomics links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>outputFile/tree</code></td>
+      <td>A newick-formatted tree file.</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/matrix</code></td>
+      <td>The SNP matrix.</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/table</code></td>
+      <td>The SNP table.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="assembly-and-annotation-links">Assembly and annotation links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>outputFile/read-merge-log</code></td>
+      <td>Log file from merging reads (with FLASH).</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/assembly-log</code></td>
+      <td>Log file from assembly (with SPAdes).</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/filter-assembly-log</code></td>
+      <td>Log from filtering outputs from SPAdes.</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/contigs-all</code></td>
+      <td>All contigs produced by the assembly.</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/contigs-with-repeats</code></td>
+      <td>All contigs produced by the assembly (including repeats), but filtering short contigs.</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/contigs-without-repeats</code></td>
+      <td>All contigs produced by the assembly, excluding repeats and short contigs.</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/assembly-stats-repeats</code></td>
+      <td>Log file for assembly filtering step (stats about number of repeats).</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/annotations-genbank</code></td>
+      <td>Annotated genome in genbank format.</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/annotations-stats</code></td>
+      <td>Annotation statistics from Prokka.</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/annotations-log</code></td>
+      <td>Log file produced by Prokka on <code>STDOUT</code>.</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/annotations-error</code></td>
+      <td>Log file produced by Prokka on <code>STDERR</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 class="no_toc" id="sistr-typing-links">SISTR Typing links</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>outputFile/sistr-cgmlst</code></td>
+      <td>The cgMLST alleleic profile for the genome.</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/assembly-stats</code></td>
+      <td>Some basic statistics on the <em>de novo</em> assembly used by SISTR.</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/sistr-alleles</code></td>
+      <td>A file containing details on each of the allele calls.</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/assembly</code></td>
+      <td>The set of contigs generated from the <em>de novo</em> assembly and used by SISTR.</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/sistr-predictions</code></td>
+      <td>The SISTR prediction results used to generate the SISTR report.</td>
+    </tr>
+    <tr>
+      <td><code>outputFile/sistr-novel-alleles</code></td>
+      <td>A list of any novel alleles that were detected by SISTR.</td>
+    </tr>
+  </tbody>
+</table>
+:ET

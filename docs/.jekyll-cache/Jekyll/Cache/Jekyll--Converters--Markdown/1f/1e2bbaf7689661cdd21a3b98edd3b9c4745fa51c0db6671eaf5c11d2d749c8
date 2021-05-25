@@ -1,0 +1,45 @@
+I"�
+<h1 class="no_toc" id="irida-analysis-visualizations">IRIDA Analysis Visualizations</h1>
+
+<p>IRIDA has a set of integrated visualization tools that allow for a more thorough analyses of pipeline results.</p>
+
+<h3 id="advanced-snvphyl-line-list-visualization">Advanced SNVPhyl Line List Visualization</h3>
+
+<p>Phylogenetic trees created by the SNVPhyl Analysis Pipeline can be combined with metadata from the samples to display the metadata beside the tree leaves.</p>
+
+<p><img src="images/plain_tree.png" alt="Tree" /></p>
+
+<p>Sample metadata can be added to the sample using the sample metadata uploader (see <a href="../sample-metadata">Sample Metadata</a> for how to import).</p>
+
+<p>To get to the advanced visualization page, on the analysis page, click the <code>View Advanced Visualization</code> button on the <code>Phylogenetic Tree</code> tab:</p>
+
+<p><img src="images/viz_link.png" alt="Link to advanced analysis on analysis results page" /></p>
+
+<h4 id="using-sample-metadata-field-templates">Using Sample Metadata Field Templates</h4>
+
+<p><a href="../sample-metadata-templates/">Sample Metadata Templates</a> can be used to update which metadata fields are displayed in the visualization.  When the page is loaded the default template is presented, all metadata fields are shown.  A different template can be selected from the template selection as demonstrated below.  This will update the view with the desired metadata fields in the proper order.</p>
+
+<p><img src="images/template_selection.png" alt="Demonstration of applying Sample Metadata Templates to the visualization" /></p>
+
+<h4 id="toggling-sample-metadata-fields">Toggling Sample Metadata Fields</h4>
+
+<p>Individual Metadata Fields can be displayed or hidden by clicking <code>Toggle Metadata</code> button, which will open a side panel displaying a list of metadata fields with checkboxes to make them visible or hidden.</p>
+
+<p><img src="images/toggle_metadata_button.png" alt="Open metadata selection btn" /></p>
+
+<p>Individual metadata field by clicking on the field label in the side panel.</p>
+
+<p><img src="images/toggle_metadatafield.png" alt="Toggle metadata field" /></p>
+
+<p>After unchecking the checkbox next to ‘Province’ the metadata column is removed from the image.</p>
+
+<p><img src="images/toggle_metadatafield_after.png" alt="Result of removing 'PFGE-BlnI-pattern'" /></p>
+
+<h4 id="export-to-svg">Export to SVG</h4>
+
+<p>To export a copy of the visualization into SVG format, simply click on the <code>Export SVG</code> button in the upper right.</p>
+
+<p><img src="images/export_svg.png" alt="Export SVG" /></p>
+
+<p>This svg file can be opened in most external imaging software (except Adobe Illustrator for Mac).</p>
+:ET

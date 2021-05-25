@@ -1,0 +1,26 @@
+I"S<h1 class="no_toc" id="user-settings">User Settings</h1>
+
+<p>The user settings page allows you to view and update your user details, view details about which projects you are on, and manage your email subscriptions.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#user-details" id="markdown-toc-user-details">User Details</a></li>
+  <li><a href="#projects" id="markdown-toc-projects">Projects</a></li>
+</ul>
+
+<p><img src="images/usersettings.png" alt="User details page" /></p>
+
+<h2 id="user-details">User Details</h2>
+
+<p>The user details section displays all of your current system settings.  Many of these settings can be updated by clicking the “Edit” button.</p>
+
+<p><img src="images/editdetails.png" alt="Edit user details" /></p>
+
+<h2 id="projects">Projects</h2>
+<p>The projects section displays which projects you are a part of and what your role is on those projects.  You can also manange which projects you receive activity updates for in this section.</p>
+
+<p><img src="images/user-projects.png" alt="User Projects" /></p>
+
+<p>To subscribe to a project, click the checkbox beside the project name.  By subscribing to a project, you will receive daily email updates about what activities have occurred on the project.</p>
+
+<p><strong>Note:</strong>  If no activities occur on any of your projects in 24 hours, you will not receive an email update.</p>
+:ET

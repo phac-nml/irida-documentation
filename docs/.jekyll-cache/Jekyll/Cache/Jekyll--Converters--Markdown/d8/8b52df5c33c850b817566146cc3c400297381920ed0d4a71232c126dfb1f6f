@@ -1,0 +1,32 @@
+I"n<h1 class="no_toc" id="managing-user-groups">Managing User Groups</h1>
+
+<p>User accounts can be organized into a collection called a user group. User groups can be used to assign <a href="../project/#project-members">project permissions</a> to collections of user accounts. This section of the user guide descibes how you can view projects, edit project metadata (including uploading reference files), search for projects by name, and create new projects.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#viewing-existing-user-groups" id="markdown-toc-viewing-existing-user-groups">Viewing existing user groups</a></li>
+</ul>
+
+<h2 id="viewing-existing-user-groups">Viewing existing user groups</h2>
+
+<p>You can access the list of user groups that have already been created by clicking on the “Settings” menu at the top of the dashboard and selecting “Groups”:</p>
+
+<p><img src="images/groups-menu.png" alt="Groups dashboard location." /></p>
+
+<p>The user groups list shows all user groups in IRIDA:</p>
+
+<p><img src="../../../images/tutorials/common/users/user-groups-list.png" alt="List of user groups." /></p>
+
+<p>The projects list provides a high-level overview of project details, including:</p>
+
+<ul>
+  <li>The name of the group,</li>
+  <li>The group description,</li>
+  <li>The date that the group was created,</li>
+  <li>The date that the group was last modified, and</li>
+  <li>(if you are permitted) group deletion buttons.</li>
+</ul>
+
+<p>{% include tutorials/common/managing-user-groups.md %}</p>
+
+<p><a href="../dashboard/">Previous: Dashboard overview</a><a href="../project/" style="float: right;">Next: Managing projects</a></p>
+:ET

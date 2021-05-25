@@ -1,0 +1,87 @@
+I"c<h1 class="no_toc" id="uploading-with-the-web-interface">Uploading with the Web Interface</h1>
+
+<p>This is a quick tutorial on how to upload data to IRIDA using the web interface. You should only upload data to IRIDA from the web interface if you are uploading sequencing data for a very small number of samples – uploading large amounts of data (especially if you’re a sequencing facility) should be done using the [IRIDA Uploader][https://github.com/phac-nml/irida-uploader].</p>
+
+<p>You should start from the beginning of this tutorial if you have not yet created a <a href="../../user/project/">project</a>, or your project does not have any <a href="../../user/samples/">samples</a>. You can skip ahead to other sections if you’ve already got a project with samples added.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#creating-a-new-project" id="markdown-toc-creating-a-new-project">Creating a new Project</a>    <ul>
+      <li><a href="#creating-a-project-from-cart" id="markdown-toc-creating-a-project-from-cart">Creating a project from cart</a></li>
+    </ul>
+  </li>
+  <li><a href="#creating-a-sample-in-your-project" id="markdown-toc-creating-a-sample-in-your-project">Creating a Sample in your Project</a></li>
+  <li><a href="#uploading-data-to-your-sample" id="markdown-toc-uploading-data-to-your-sample">Uploading data to your Sample</a>    <ul>
+      <li><a href="#sequence-files--assemblies" id="markdown-toc-sequence-files--assemblies">Sequence Files &amp; Assemblies</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="creating-a-new-project">Creating a new Project</h2>
+
+<p>You can create a new project by clicking on the “Projects” menu at the top of the dashboard and selecting “Your Projects”.</p>
+
+<p><img src="images/your-projects.png" alt="your-projects" /></p>
+
+<p>From the projects listing page click the “Create New Project” button:</p>
+
+<p><img src="images/create-new-project-btn.png" alt="create-new-project" /></p>
+
+<p><img src="/documentation/images/tutorials/common/projects/create-new-project-btn.png" alt="Create new project dashboard location." /></p>
+
+<p>When you create a new project, you’ll need to provide a project name, and can optionally provide a project organism, a free-form project description, and a link to another web site that has more inforamtion about the project:</p>
+
+<p><img src="/documentation/images/tutorials/common/projects/create-new-project-form.png" alt="Create new project form." /></p>
+
+<p>A project name must be <strong>at least</strong> 5 characters long, and <strong>must not</strong> contain any of the following characters: <code>? ( ) [ ] / \ = + &lt; &gt; : ; " , * ^ | &amp;</code></p>
+
+<p>If you choose to set a project organism, click on the “Select an Organism” drop-down menu and begin typing the name of the organism. For example, if you wanted to specify a project organism of “Salmonella enterica”, you would begin to type “Sal” and the menu would allow you to choose from a set of well-defined organism names:</p>
+
+<p><img src="/documentation/images/tutorials/common/projects/project-organism.png" alt="Project organism entry." /></p>
+
+<p>The organism names are derived from the <a href="http://www.ncbi.nlm.nih.gov/taxonomy">NCBI taxonomy database</a>.</p>
+
+<p>To lock sample modification in the new project, check the “Lock sample modification” box. This setting will only allow the sample owner to edit any sample data.</p>
+
+<p>When you’ve finished entering the details for your new project, click on the “Create Project” button. You will be redirected to the projects list.</p>
+
+<p>IRIDA will automatically generate a numeric project identifier for your project. The project identifier is used by external tools for uploading sequencing data to IRIDA. The project identifier can be found in the <a href="/documentation/user/user/project/index.html#viewing-project-details">“Project Details” panel</a>, or in the <a href="/documentation/user/user/project/index.html#viewing-existing-projects">projects list</a>.</p>
+
+<h4 id="creating-a-project-from-cart">Creating a project from cart</h4>
+
+<p>You can create a project with samples already added to the project by using the cart.  Continue creating the project details as described above, but select the checkbox <strong>Add samples in cart to project</strong>.  If this checkbox is enabled any samples in the cart will be automatically added to this project.  If there are any samples which you cannot add to the project, a warning will be displayed below.</p>
+
+<p><img src="/documentation/images/tutorials/common/projects/create-project-cart-warning.png" alt="Create project cart warning" /></p>
+
+<h2 id="creating-a-sample-in-your-project">Creating a Sample in your Project</h2>
+
+<p>You can add a new sample to the project if you have the project Manager role on the project. To add a new sample to the project, click on the “Add New Sample” button in the “Samples” menu:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/add-sample-button.png" alt="New sample button" /></p>
+
+<p>Clicking this button will open the Create New Sample modal dialog.  When creating a sample, you must define the sample name (only upper and lowercase letters, numbers, and the special characters <code>!, @, #, $, %, _, -</code>, and <code>`</code> are allowed) and optionally choose an organism for the sample:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/add-sample.gif" alt="Create new sample palge" /></p>
+
+<p>When you’ve finished choosing the name and organism for the sample, click on the “Create Sample” button.</p>
+
+<h2 id="uploading-data-to-your-sample">Uploading data to your Sample</h2>
+
+<h3 id="sequence-files--assemblies">Sequence Files &amp; Assemblies</h3>
+
+<p>Sequence files can be uploaded by hovering over the “Upload Files” above the sequence file table, and selecting the button for the appropriate file type.</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/upload-sample-file-btn.png" alt="Upload sequence file." /></p>
+
+<ul>
+  <li><strong>Upload Sequence Files</strong> - Files must have the extension <code>.fastq</code> or <code>.fastq.gz</code>, all other formats will be ignored.  You can select single or multiple files in the system file selection window.  If you are uploading paired end data, ensure they are selected in the same upload.</li>
+  <li>
+    <p><strong>Upload Fast5 Files</strong>  - Files must have the extension <code>.fast5</code> or <code>.fast5.tar.gz</code>.</p>
+  </li>
+  <li><strong>Upload Assembly</strong> - Assembly files must have the extension <code>.fasta</code> or <code>.fna</code>.</li>
+</ul>
+
+<p>Files will upload will begin immediately.  A notification will open in the bottom right corner of the screen displaying the status of the upload.  If you need to cancel an upload click the <img class="inline" src="/documentation/images/tutorials/common/samples/upload-sample-cancel-btn.png" alt="Cancel Upload Button" /> button.  <strong>Do not leave or refresh the page as this will cancel the upload</strong>, a warning will be display if you attempt to do this.</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/upload-sample-progress-cancel.png" alt="Cancel upload" /></p>
+
+:ET

@@ -1,0 +1,74 @@
+I"<h1 class="no_toc" id="logging-in-to-irida">Logging in to IRIDA</h1>
+
+<p>After an administrator or manager has created a user account for you in IRIDA, you’ll be able to log in.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#logging-in-for-the-first-time" id="markdown-toc-logging-in-for-the-first-time">Logging in for the first time</a></li>
+  <li><a href="#logging-in-after-your-first-login" id="markdown-toc-logging-in-after-your-first-login">Logging in after your first login</a></li>
+  <li><a href="#resetting-your-password" id="markdown-toc-resetting-your-password">Resetting your password</a></li>
+</ul>
+
+<h2 id="logging-in-for-the-first-time">Logging in for the first time</h2>
+
+<p>After a manager or administrator has created a user account for you, you’ll receive an e-mail with instructions about how to access IRIDA:</p>
+
+<p><img src="images/user-welcome-email.png" alt="User welcome e-mail." /></p>
+
+<p>To log in to IRIDA for the first time, click on the “Activate Account” link.</p>
+
+<p>The first thing that you’re required to do when you access IRIDA is to create a password for your account:</p>
+
+<p><img src="images/create-password.png" alt="Create password." /></p>
+
+<p>As in the <a href="..">system introduction</a>, passwords must:</p>
+
+<p>{% include tutorials/common/password-requirements.md %}</p>
+
+<p>After you enter a new password you should automatically be redirected to the main IRIDA dashboard:</p>
+
+<p><img src="images/irida-dashboard.png" alt="IRIDA main dashboard" /></p>
+
+<p>Once you’ve logged in, you can proceed to the <a href="../dashboard">dashboard overview</a> page.</p>
+
+<h2 id="logging-in-after-your-first-login">Logging in after your first login</h2>
+
+<p>Logging in after you have created a password is simple. Navigate to the IRIDA URL provided in your welcome e-mail (you should bookmark this URL!):</p>
+
+<p><img src="images/irida-login.png" alt="IRIDA login screen." /></p>
+
+<p>Enter the username provided in the e-mail and the password you selected the first time you logged in. After logging in you will be automatically directed to the main IRIDA dashboard:</p>
+
+<p><img src="images/irida-dashboard.png" alt="IRIDA main dashboard." /></p>
+
+<p>Once you’ve logged in, you can proceed to the <a href="../dashboard">dashboard overview</a> page.</p>
+
+<h2 id="resetting-your-password">Resetting your password</h2>
+
+<p>If you have forgotten your IRIDA password, you can have IRIDA reset your password. From the login page, click on the “Forgot Password” link:</p>
+
+<p><img src="images/irida-login-password-reset.png" alt="IRIDA login screen, password reset highlighted." /></p>
+
+<p>You will be required to enter the e-mail address associated with your IRIDA account:</p>
+
+<p><img src="images/password-reset.png" alt="Password reset page." /></p>
+
+<p>Enter your e-mail address and click the “Reset Password” button. You will then see a confirmation that your password reset request has been e-mailed to you, so check your inbox. When the e-mail arrives, you can click on the “Create New Password” link:</p>
+
+<p><img src="images/password-reset-email.png" alt="Password reset request e-mail." /></p>
+
+<p>You can then change your password:</p>
+
+<p><img src="images/create-password.png" alt="Create password." /></p>
+
+<p>As in the <a href="../system-overview">system overview</a>, passwords must:</p>
+
+<p>{% include tutorials/common/password-requirements.md %}</p>
+
+<p>After you enter a new password you should automatically be redirected to the main IRIDA dashboard:</p>
+
+<p><img src="images/irida-dashboard.png" alt="IRIDA main dashboard" /></p>
+
+<p>Once you’ve logged in, you can proceed to the <a href="../dashboard">dashboard overview</a> page.</p>
+
+<p><a href="../system-overview/">Previous: System Overview</a><a href="../dashboard/" style="float: right;">Next: Dashboard Overview</a></p>
+:ET

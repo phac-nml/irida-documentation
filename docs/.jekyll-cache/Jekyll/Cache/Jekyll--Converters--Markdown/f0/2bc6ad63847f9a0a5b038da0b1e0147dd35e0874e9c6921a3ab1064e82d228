@@ -1,0 +1,96 @@
+I":$<h1 id="custom-login-page">Custom Login Page</h1>
+
+<p>The default landing / login page for IRIDA can be replaced by an institution without modifying the existing one.</p>
+
+<p>Create a html file called <code>login.html</code> on your files system, and save it to the path <code>/etc/irida/templates/</code>;</p>
+
+<div class="highlight"><pre><code class="language-properties"><span class="c"># Overwritten UI templates</span>
+<span class="na">ui.templates</span><span class="o">=</span><span class="s">/etc/irida/templates/</span></code></pre></div>
+
+<h3 id="use-irida-base-login-form">Use IRIDA base login form.</h3>
+
+<p>IRIDA uses a React component as its login form and can be added to any template by adding:</p>
+
+<ul>
+  <li>CSS (<code>/dist/css/login.bundle.css</code>) and JS (<code>/dist/js/login.bundle.js</code>) files.</li>
+  <li>A <code>head</code> &gt; <code>script</code> tag with a global <code>PAGE</code> variable containing: <code>BASE_URL: /*[[@{"/"}]]*/ "/"</code> as an attribute.</li>
+  <li>The div with id <code>login-root</code> should be placed on the dom element that you want React to render the login form.</li>
+</ul>
+
+<h4 id="adding-custom-resources">Adding custom resources</h4>
+
+<p>Images, CSS and JS files can be added into <code>/etc/irida/static</code> and then loaded onto the custom login page.  Ensure that the Thymeleaf attributes are added, for example:</p>
+
+<p>Examples:</p>
+
+<div class="highlight"><pre><code>* Image: `&lt;img th:src="@{/static/myImage.png}" alt="A great picture or logo" &gt;`
+* JS: `&lt;script th:src="@{/static/myFile.js}"&gt;&lt;/script&gt;`
+* CSS: `&lt;link th:href="@{/static/myFile.css}" /&gt;`
+</code></pre></div>
+
+<h4 id="example">Example</h4>
+
+<div class="highlight"><pre><code class="language-html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&quot;en&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">th:href</span><span class="o">=</span><span class="s">&quot;@{/dist/css/login.bundle.css}&quot;</span> <span class="p">/&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">th:inline</span><span class="o">=</span><span class="s">&quot;javascript&quot;</span><span class="p">&gt;</span>
+      <span class="nb">window</span><span class="p">.</span><span class="nx">PAGE</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">BASE_URL</span><span class="o">:</span> <span class="cm">/*[[@{&quot;/&quot;}]]*/</span> <span class="s2">&quot;/&quot;</span>
+      <span class="p">};</span>
+    <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;login-root&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">th:src</span><span class="o">=</span><span class="s">&quot;@{/dist/js/login.bundle.js}&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span></code></pre></div>
+
+<h4 id="example-of-custom-login-page">Example of Custom login page</h4>
+
+<p><a href="./basic-login.html.md">Code for a basic custom login page.</a></p>
+
+<p><img src="images/irida-basic-login.png" alt="Custom Login Page" /></p>
+
+<p><a href="./custom-login.html.md">Code for a more involved login page with added CSS.</a></p>
+
+<p><img src="images/irida-custom-login.png" alt="Custom Login Page" /></p>
+
+<h3 id="create-a-custom-login-form">Create a custom login form</h3>
+
+<p>To create a fully custom login page, you need to include a form that <code>POST</code>s to the url <code>/login</code>, with two elements:</p>
+<ol>
+  <li><code>username</code> input</li>
+  <li><code>password</code> input</li>
+</ol>
+
+<p>If the authorization attempt fails, the server will redirect the <code>/login?error=true</code> which can be captured with JavaScript and display an error message to the user.</p>
+
+<p>Please note in the example below the <code>th:</code> attributes on the form and other elements, this is from the server templating laguage Thymeleaf and will do the follow:</p>
+<ul>
+  <li><code>th:action="@{/login}"</code> will update the url to use what ever base url the servlet context is using.
+    <ul>
+      <li>For example if the context is <code>/foobar</code> the form’s action will be updated to be <code>/foobar/login</code></li>
+    </ul>
+  </li>
+  <li><code>th:text="#{LoginPage.username}"</code> this is a call the internationalization function of Thymeleaf. The value between the braces is the key to a value in the file <code>messages_[language].resources</code>.</li>
+</ul>
+
+<p>For more information of the <a href="https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html">Thymeleaf please see their online documentation</a>.</p>
+
+<div class="highlight"><pre><code class="language-html"><span class="p">&lt;</span><span class="nt">form</span> <span class="na">method</span><span class="o">=</span><span class="s">&quot;post&quot;</span> <span class="na">th:action</span><span class="o">=</span><span class="s">&quot;@{/login}&quot;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">label</span> <span class="na">for</span><span class="o">=</span><span class="s">&quot;name&quot;</span> <span class="na">th:text</span><span class="o">=</span><span class="s">&quot;#{LoginPage.username}&quot;</span><span class="p">&gt;</span>Username<span class="p">&lt;/</span><span class="nt">label</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">input</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;name&quot;</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;username&quot;</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">label</span> <span class="na">for</span><span class="o">=</span><span class="s">&quot;password&quot;</span> <span class="na">th:text</span><span class="o">=</span><span class="s">&quot;#{LoginPage.password}&quot;</span><span class="p">&gt;</span>Password<span class="p">&lt;/</span><span class="nt">label</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">input</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;password&quot;</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;password&quot;</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;password&quot;</span> <span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;submit&quot;</span> <span class="na">th:text</span><span class="o">=</span><span class="s">&quot;#{LoginPage.submit}&quot;</span><span class="p">&gt;</span>Login<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">a</span> <span class="na">th:href</span><span class="o">=</span><span class="s">&quot;@{/password_reset}&quot;</span> <span class="na">th:text</span><span class="o">=</span><span class="s">&quot;#{LoginPage.forgot}&quot;</span><span class="p">&gt;</span>Forgot Password<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">a</span> <span class="na">th:href</span><span class="o">=</span><span class="s">&quot;@{/password_reset/activate}&quot;</span> <span class="na">th:text</span><span class="o">=</span><span class="s">&quot;#{LoginPage.activate}&quot;</span><span class="p">&gt;</span>Activate Account<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span></code></pre></div>
+:ET

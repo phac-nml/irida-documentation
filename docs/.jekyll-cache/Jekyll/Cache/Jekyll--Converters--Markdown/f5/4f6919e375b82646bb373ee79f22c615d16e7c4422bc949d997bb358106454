@@ -1,0 +1,461 @@
+I"Ҧ<h1 id="irida-pipeline-development">IRIDA Pipeline Development</h1>
+
+<p>This document describes the necessary steps for integrating new pipelines into IRIDA.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#irida-pipeline-development" id="markdown-toc-irida-pipeline-development">IRIDA Pipeline Development</a></li>
+  <li><a href="#1-introduction" id="markdown-toc-1-introduction">1. Introduction</a></li>
+  <li><a href="#2-galaxy-workflow-development" id="markdown-toc-2-galaxy-workflow-development">2. Galaxy Workflow Development</a>    <ul>
+      <li><a href="#21-integrate-tools-into-galaxy" id="markdown-toc-21-integrate-tools-into-galaxy">2.1. Integrate tools into Galaxy</a></li>
+      <li><a href="#22-develop-a-galaxy-workflow" id="markdown-toc-22-develop-a-galaxy-workflow">2.2. Develop a Galaxy Workflow</a>        <ul>
+          <li><a href="#221-input-format" id="markdown-toc-221-input-format">2.2.1. Input Format</a></li>
+          <li><a href="#222-output-format" id="markdown-toc-222-output-format">2.2.2. Output Format</a></li>
+        </ul>
+      </li>
+      <li><a href="#23-export-workflow" id="markdown-toc-23-export-workflow">2.3. Export Workflow</a></li>
+    </ul>
+  </li>
+  <li><a href="#3-irida-integration" id="markdown-toc-3-irida-integration">3. IRIDA Integration</a>    <ul>
+      <li><a href="#31-write-irida-workflow-files" id="markdown-toc-31-write-irida-workflow-files">3.1. Write IRIDA workflow files</a></li>
+      <li><a href="#32-write-irida-workflow-plugin" id="markdown-toc-32-write-irida-workflow-plugin">3.2. Write IRIDA workflow plugin</a>        <ul>
+          <li><a href="#321-install-irida-to-local-maven-repository" id="markdown-toc-321-install-irida-to-local-maven-repository">3.2.1. Install IRIDA to local Maven repository</a></li>
+          <li><a href="#322-download-irida-plugin-example" id="markdown-toc-322-download-irida-plugin-example">3.2.2. Download IRIDA plugin example</a></li>
+          <li><a href="#323-copy-workflow-files-above-from-output-to-srcmainresourcesworkflows" id="markdown-toc-323-copy-workflow-files-above-from-output-to-srcmainresourcesworkflows">3.2.3. Copy workflow files above from <code>output/</code> to src/main/resources/workflows</a>            <ul>
+              <li><a href="#3231-irida_workflow_structurega" id="markdown-toc-3231-irida_workflow_structurega">3.2.3.1. <code>irida_workflow_structure.ga</code></a></li>
+              <li><a href="#3232-irida_workflowxml" id="markdown-toc-3232-irida_workflowxml">3.2.3.2. <code>irida_workflow.xml</code></a></li>
+              <li><a href="#3233-messages_enproperties" id="markdown-toc-3233-messages_enproperties">3.2.3.3. <code>messages_en.properties</code></a></li>
+            </ul>
+          </li>
+          <li><a href="#324-write-a-plugin-implementation-defining-some-key-properties-of-the-pipeline" id="markdown-toc-324-write-a-plugin-implementation-defining-some-key-properties-of-the-pipeline">3.2.4. Write a <code>Plugin</code> implementation defining some key properties of the pipeline</a></li>
+          <li><a href="#325-optional-implement-an-updater-class" id="markdown-toc-325-optional-implement-an-updater-class">3.2.5. (Optional) Implement an Updater class</a></li>
+          <li><a href="#326-optional-set-a-viewer-for-analysis-results" id="markdown-toc-326-optional-set-a-viewer-for-analysis-results">3.2.6. (Optional) Set a viewer for analysis results</a></li>
+        </ul>
+      </li>
+      <li><a href="#33-update-the-pomxml-file" id="markdown-toc-33-update-the-pomxml-file">3.3. Update the pom.xml file</a>        <ul>
+          <li><a href="#331-update-the-maven-versioninfo" id="markdown-toc-331-update-the-maven-versioninfo">3.3.1. Update the Maven version/info</a></li>
+          <li><a href="#332-update-the-properties-sectionplugin-info" id="markdown-toc-332-update-the-properties-sectionplugin-info">3.3.2. Update the <code>properties</code> section/plugin info</a></li>
+        </ul>
+      </li>
+      <li><a href="#34-build" id="markdown-toc-34-build">3.4. Build</a></li>
+    </ul>
+  </li>
+  <li><a href="#4-test-in-irida" id="markdown-toc-4-test-in-irida">4. Test in IRIDA</a></li>
+</ul>
+
+<h1 id="1-introduction">1. Introduction</h1>
+
+<p>Pipelines in IRIDA take as input data managed by IRIDA and run through a collection of tools to produce some meaningful result.  Pipelines are implemented as a <a href="https://wiki.galaxyproject.org/Learn/AdvancedWorkflow">Galaxy Workflow</a> and executed using an instance of <a href="http://galaxyproject.org/">Galaxy</a> that has been setup for IRIDA.  Pipelines are versioned and are stored and distributed either along with the IRIDA software, or as a separate plugin compiled into a Java JAR file.  Tools used by a pipeline are versioned and are stored and distributed using <a href="https://wiki.galaxyproject.org/ToolShed">Galaxy Toolsheds</a>.  In particular, the <a href="https://toolshed.g2.bx.psu.edu/">Galaxy Main Toolshed</a> is used to store and distribute tools for a pipeline.</p>
+
+<p><img src="images/irida-pipelines.png" alt="irida-pipelines" /></p>
+
+<p>IRIDA provides support for developing and integrating additional pipelines from Galaxy.  This process can be divided into two stages: <strong>Galaxy Workflow Development</strong> and <strong>IRIDA Integration</strong>.  The necessary steps, in brief, are:</p>
+
+<ul>
+  <li>Galaxy Workflow Development
+    <ul>
+      <li>Integrate tools into Galaxy</li>
+      <li>Develop a Galaxy Workflow</li>
+      <li>Export Workflow</li>
+    </ul>
+  </li>
+  <li>IRIDA Integration
+    <ul>
+      <li>Write IRIDA workflow files (or run <a href="https://github.com/phac-nml/irida-wf-ga2xml">irida-wf-ga2xml</a>)</li>
+      <li>Write IRIDA workflow plugin</li>
+      <li>Build plugin JAR and move to <code>/etc/irida/plugins</code> directory</li>
+      <li>Start IRIDA</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="2-galaxy-workflow-development">2. Galaxy Workflow Development</h1>
+
+<p>Galaxy provides the ability to organize different bioinformatics tools together into a single workflow for producing specific results.  These workflows can make use of already existing bioinformatics tools in Galaxy, or can include customized tools which can be distributed using a <a href="https://wiki.galaxyproject.org/ToolShed">Galaxy Toolshed</a>.</p>
+
+<h2 id="21-integrate-tools-into-galaxy">2.1. Integrate tools into Galaxy</h2>
+
+<p>The first step to constructing a pipeline for IRIDA is to make sure the underlying bioinformatics tools are available in Galaxy. You can check the <a href="https://toolshed.g2.bx.psu.edu/">Galaxy Main Toolshed</a> to see if the software you wish to use is available.</p>
+
+<p>If the software does not already exist as an installable tool in Galaxy, then you may have to package the necessary files to integrate into Galaxy yourself. The software package <a href="https://planemo.readthedocs.io">Planemo</a> can be used to construct the necessary wrappers for tools in Galaxy and integrate these into the Galaxy environment. More information on how to develop Galaxy tools with Planemo can be found in the <a href="https://planemo.readthedocs.io/en/latest/writing_standalone.html">Planemo Building Galaxy Tools</a> section.</p>
+
+<p>Once the necessary wrappers are constructed for Galaxy, these should be integrated into <a href="https://wiki.galaxyproject.org/ToolShed">Galaxy Toolshed</a>. This step will allow anyone to install the Galaxy tools into their local Galaxy instance. On upload of a Galaxy tool to the Galaxy Toolshed, a unique id will be assigned to each tool, which is used by IRIDA to specify the exact software to be run in Galaxy. For example, the id for Prokka, which is used for annotation of genomes, is <code>toolshed.g2.bx.psu.edu/repos/crs4/prokka/prokka/1.4.0</code>, which includes the name of the toolshed where Prokka can be found <a href="https://toolshed.g2.bx.psu.edu/">https://toolshed.g2.bx.psu.edu/</a>.</p>
+
+<h2 id="22-develop-a-galaxy-workflow">2.2. Develop a Galaxy Workflow</h2>
+
+<p>Tools in Galaxy can be linked together to construct a workflow. Galaxy provides a built-in editor for constructing and modifying workflows.</p>
+
+<p><img src="images/galaxy-workflow-editor.png" alt="galaxy-workflow-editor" /></p>
+
+<p>This editor allows for the definition of input files and file types, tools and parameter settings for the tools, as well as which files will be used as output from the workflow.  More information on constructing Galaxy workflows can be found in the <a href="https://wiki.galaxyproject.org/Learn/AdvancedWorkflow/BasicEditing">Galaxy Workflow Editor</a> documentation.</p>
+
+<p>In order for a workflow to properly be integrated into IRIDA, the input and output to this workflow must be in a specific format.</p>
+
+<h3 id="221-input-format">2.2.1. Input Format</h3>
+
+<p>IRIDA currently only supports two types of input files: a collection of <strong>paired-end sequence reads</strong> in <em>FASTQ</em> format, and an optional <strong>reference genome</strong> in FASTA format.</p>
+
+<p>For the <strong>paired-end sequence reads</strong> this must be a dataset collection of type <strong>list:paired</strong>, which will correspond to a list of paired-end FASTQ sequence reads (one entry in the list per each sample/pair of fastq files transferred from IRIDA).</p>
+
+<p><img src="images/sequence-reads-input-editor.png" alt="sequence-reads-input-editor" /></p>
+
+<p>For the optional <strong>reference genome</strong>, if you wish to use a reference genome, the type must be an <strong>input dataset</strong>, not a dataset collection. Currently, IRIDA only supports reference genomes in FASTA format.</p>
+
+<p><img src="images/reference-input-editor.png" alt="reference-input-editor" /></p>
+
+<p>Please also make note of the names given to each input dataset, in this case <em>sequence_reads_paired</em> and <em>reference</em>, as the names will be used to link up data sent from IRIDA to the Galaxy workflow.</p>
+
+<h3 id="222-output-format">2.2.2. Output Format</h3>
+
+<p>Output datasets within IRIDA can be of any file type and there can be many outputs for each workflow.  Each output should have a consistent name which will be used by IRIDA to find and download the appropriate file from Galaxy.  This can be accomplished by adding a <strong>Rename Dataset</strong> action to each output file.  In this case, for the tool <strong>PhyML</strong> the name is <strong>phylogeneticTree.tre</strong>.</p>
+
+<p><img src="images/output-editor.png" alt="output-editor" /></p>
+
+<p>In addition, each output dataset should be marked as a <strong>workflow output</strong> by selecting the asterix <code>*</code> icon, in this case both the <strong>output_tree</strong> and the <strong>csv</strong> files from the PhyML and SNP Matrix tools have been selected as output.</p>
+
+<h2 id="23-export-workflow">2.3. Export Workflow</h2>
+
+<p>Once the workflow is written in Galaxy, it can be exported to a file by going to the <strong>Workflow</strong> menu at the top, finding your particular workflow and selecting <strong>Download or Export</strong>.  This will save the workflow as a <strong>*.ga</strong> file, which is a JSON-formatted file defining the tools, tool versions, and structure of the workflow.</p>
+
+<p><img src="images/export-workflow.png" alt="export-workflow" /></p>
+
+<h1 id="3-irida-integration">3. IRIDA Integration</h1>
+
+<h2 id="31-write-irida-workflow-files">3.1. Write IRIDA workflow files</h2>
+
+<p>IRIDA makes use of three files <code>irida_workflow.xml</code>, <code>irida_workflow_structure.ga</code>, and <code>messages_en.properties</code> to define the workflow and associated metadata about the workflow.</p>
+
+<p>The easiest way to generate these files is to make use of the <a href="https://github.com/phac-nml/irida-wf-ga2xml">irida-wf-ga2xml</a> program. Assuming you already have a <code>galaxy_workflow.ga</code> file exported from the steps above, you can generate the necessary additional files for IRIDA with:</p>
+
+<div class="highlight"><pre><code class="language-bash">java -jar irida-wf-ga2xml-1.0.0-SNAPSHOT-standalone.jar <span class="se">\</span>
+  -i galaxy_workflow.ga <span class="se">\</span>
+  -n WORKFLOW_NAME <span class="se">\</span>
+  -t ANALYSIS_TYPE <span class="se">\</span>
+  -W WORKFLOW_VERSION <span class="se">\</span>
+  -o output</code></pre></div>
+
+<p>This will build the necesary files under <code>output/</code>.  As an example:</p>
+
+<div class="highlight"><pre><code class="language-bash">java -jar irida-wf-ga2xml-1.0.0-SNAPSHOT-standalone.jar -i src/main/resources/ca/corefacility/bioinformatics/irida/model/workflow/analysis/type/workflows/SISTRTyping/0.3/irida_workflow_structure.ga -n SISTRTyping -t SISTR_TYPING -W <span class="m">0</span>.1.0 -o output</code></pre></div>
+
+<p>This will produce the following directory structure:</p>
+
+<div class="highlight"><pre><code>output
+└── SISTRTyping
+    └── 0.1.0
+        ├── irida_workflow_structure.ga
+        ├── irida_workflow.xml
+        └── messages_en.properties
+</code></pre></div>
+
+<p><em>NOTE: You may need to edit the output from <a href="https://github.com/phac-nml/irida-wf-ga2xml">irida-wf-ga2xml</a> to ensure that only necessary tool parameters are kept in the <strong>irida_workflow.xml</strong> file and that the proper tool revision is used for each tool if this information is not embedded in your Galaxy Workflow <code>ga</code> file.</em></p>
+
+<h2 id="32-write-irida-workflow-plugin">3.2. Write IRIDA workflow plugin</h2>
+
+<p>IRIDA includes a mechanism for packaging up all the above workflow files into a single JAR file which can be distributed and installed independently of the main IRIDA software. To package up the IRIDA workflow into a JAR file you can start with a template plugin located in <a href="https://github.com/phac-nml/irida-plugin-example">irida-plugin-example</a>. An overview of the changes you will need to make is as follows.</p>
+
+<h3 id="321-install-irida-to-local-maven-repository">3.2.1. Install IRIDA to local Maven repository</h3>
+
+<p>In order to compile the IRIDA plugin, you will have to install the main IRIDA code (<a href="https://github.com/phac-nml/irida">https://github.com/phac-nml/irida</a>) to your local Maven repository. This can be accomplished with:</p>
+
+<div class="highlight"><pre><code class="language-bash">git clone https://github.com/phac-nml/irida.git
+<span class="nb">cd</span> irida
+mvn clean install -DskipTests</code></pre></div>
+
+<h3 id="322-download-irida-plugin-example">3.2.2. Download IRIDA plugin example</h3>
+
+<p>Once you’ve installed IRIDA to your local Maven repository, you can download the IRIDA example plugin to your machine and begin modifying the files in this project to suite your needs.</p>
+
+<div class="highlight"><pre><code class="language-bash">git clone https://github.com/phac-nml/irida-plugin-example
+<span class="nb">cd</span> irida-plugin-example</code></pre></div>
+
+<h3 id="323-copy-workflow-files-above-from-output-to-srcmainresourcesworkflows">3.2.3. Copy workflow files above from <code>output/</code> to <a href="https://github.com/phac-nml/irida-plugin-example/tree/master/src/main/resources/workflows">src/main/resources/workflows</a></h3>
+
+<p>You will need to copy over the files generated above to <code>src/main/resources/workflows</code>. The directory structure you should end up with will be:</p>
+
+<div class="highlight"><pre><code>workflows/
+└── 0.1.0
+    ├── irida_workflow_structure.ga
+    ├── irida_workflow.xml
+    └── messages_en.properties
+</code></pre></div>
+
+<ul>
+  <li>The directory <code>0.1.0</code> corresponds to all files for a particular version of a pipeline (in this case <code>0.1.0</code>). Previous versions of the pipeline should each be kept in their own numbered directory (e.g., <code>0.1.0</code>, <code>0.2.0</code>) so that IRIDA can load up information about these pipelines.</li>
+  <li>The file <code>irida_workflow_structure.ga</code> is a <a href="http://galaxyproject.org/">Galaxy</a> workflow file which is uploaded to a Galaxy instance by IRIDA before execution.</li>
+  <li>The file <code>irida_workflow.xml</code> contains information about the particular pipeline used by IRIDA.</li>
+  <li>The file <code>messages_en.properties</code> contains messages which will be displayed in the IRIDA UI.</li>
+</ul>
+
+<p>You may (or may not) need to modify these files from the automatically generated versions. A description of each of these files is as follows.</p>
+
+<h4 id="3231-irida_workflow_structurega">3.2.3.1. <code>irida_workflow_structure.ga</code></h4>
+
+<p>The <code>irida_workflow_structure.ga</code> file contains the workflow structure (generated from <a href="http://galaxyproject.org/">Galaxy</a>). An example of the format is as follows:</p>
+
+<div class="highlight"><pre><code class="language-json"><span class="p">{</span>
+    <span class="nt">&quot;a_galaxy_workflow&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span> 
+    <span class="nt">&quot;annotation&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> 
+    <span class="nt">&quot;format-version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.1&quot;</span><span class="p">,</span> 
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Read info&quot;</span><span class="p">,</span> 
+    <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;0&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;annotation&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> 
+            <span class="nt">&quot;content_id&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span> 
+            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> 
+            <span class="nt">&quot;input_connections&quot;</span><span class="p">:</span> <span class="p">{},</span> 
+            <span class="nt">&quot;inputs&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> 
+                    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;sequence_reads&quot;</span>
+                <span class="p">}</span>
+            <span class="p">],</span> 
+            <span class="nt">&quot;label&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span> 
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Input dataset collection&quot;</span><span class="p">,</span> 
+            <span class="nt">&quot;outputs&quot;</span><span class="p">:</span> <span class="p">[],</span> 
+            <span class="nt">&quot;position&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;left&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> 
+                <span class="nt">&quot;top&quot;</span><span class="p">:</span> <span class="mi">200</span>
+            <span class="p">},</span> 
+            <span class="nt">&quot;tool_errors&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span> 
+            <span class="nt">&quot;tool_id&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span> 
+            <span class="nt">&quot;tool_state&quot;</span><span class="p">:</span> <span class="s2">&quot;{\&quot;collection_type\&quot;: \&quot;list:paired\&quot;, \&quot;name\&quot;: \&quot;sequence_reads\&quot;}&quot;</span><span class="p">,</span> 
+            <span class="nt">&quot;tool_version&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span> 
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;data_collection_input&quot;</span><span class="p">,</span> 
+            <span class="nt">&quot;uuid&quot;</span><span class="p">:</span> <span class="s2">&quot;e267248b-6ddc-4b5e-a476-e805ce1bc4d5&quot;</span><span class="p">,</span> 
+            <span class="nt">&quot;workflow_outputs&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;label&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span> 
+                    <span class="nt">&quot;output_name&quot;</span><span class="p">:</span> <span class="s2">&quot;output&quot;</span><span class="p">,</span> 
+                    <span class="nt">&quot;uuid&quot;</span><span class="p">:</span> <span class="s2">&quot;ae59d874-94ab-4b14-b456-15e2fee2860d&quot;</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+<span class="err">...</span></code></pre></div>
+
+<p>Normally you will not be required to modify this file.</p>
+
+<h4 id="3232-irida_workflowxml">3.2.3.2. <code>irida_workflow.xml</code></h4>
+
+<p>This file contains information about the particular pipeline installed in IRIDA. An example would be:</p>
+
+<div class="highlight"><pre><code class="language-xml"><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;iridaWorkflow&gt;</span>
+  <span class="nt">&lt;id&gt;</span>79d90ca8-00ae-441b-b5c7-193c9e85a968<span class="nt">&lt;/id&gt;</span>
+  <span class="nt">&lt;name&gt;</span>ReadInfo<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;version&gt;</span>0.1.0<span class="nt">&lt;/version&gt;</span>
+  <span class="nt">&lt;analysisType&gt;</span>READ_INFO<span class="nt">&lt;/analysisType&gt;</span>
+  <span class="nt">&lt;inputs&gt;</span>
+    <span class="nt">&lt;sequenceReadsPaired&gt;</span>sequence_reads<span class="nt">&lt;/sequenceReadsPaired&gt;</span>
+    <span class="nt">&lt;requiresSingleSample&gt;</span>true<span class="nt">&lt;/requiresSingleSample&gt;</span>
+  <span class="nt">&lt;/inputs&gt;</span>
+  <span class="nt">&lt;parameters&gt;</span>
+    <span class="nt">&lt;parameter</span> <span class="na">name=</span><span class="s">&quot;Grep1-4-pattern&quot;</span> <span class="na">defaultValue=</span><span class="s">&quot;^@&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;toolParameter</span> <span class="na">toolId=</span><span class="s">&quot;Grep1&quot;</span> <span class="na">parameterName=</span><span class="s">&quot;pattern&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/parameter&gt;</span>
+  <span class="nt">&lt;/parameters&gt;</span>
+  <span class="nt">&lt;outputs&gt;</span>
+    <span class="nt">&lt;output</span> <span class="na">name=</span><span class="s">&quot;hash.txt&quot;</span> <span class="na">fileName=</span><span class="s">&quot;hash.txt&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;output</span> <span class="na">name=</span><span class="s">&quot;read-count.txt&quot;</span> <span class="na">fileName=</span><span class="s">&quot;read-count.txt&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/outputs&gt;</span>
+  <span class="nt">&lt;toolRepositories/&gt;</span>
+<span class="nt">&lt;/iridaWorkflow&gt;</span></code></pre></div>
+
+<p>Normally this file will be generated for you by <a href="https://github.com/phac-nml/irida-wf-ga2xml">irida-wf-ga2xml</a>. A few key elements are:</p>
+
+<ol>
+  <li><code>&lt;id&gt;</code> defines a unique id for the workflow.  This must be a UUID.  A quick way to generate a random UUID on linux is the command <code>uuid -v 4</code>.</li>
+  <li><code>&lt;analysisType&gt;</code> defines what type of analysis this workflow belongs to.  This string should match the string defined for the <code>AnalysisType</code> in the Java plugin class defined below.</li>
+  <li><code>&lt;sequenceReadsPaired&gt;</code> defines the name of the input dataset in Galaxy for the paired-end sequence reads chosen previously.  In this case it is <em>sequence_reads</em>.</li>
+  <li><code>&lt;toolParameter&gt;</code> defines how to map parameters a user selects in IRIDA to those in Galaxy (defined in the <strong>irida_workflow_structure.ga</strong> file).</li>
+  <li><code>&lt;output&gt;</code> defines, for an output file, a name in IRIDA and maps it to the name of the file in Galaxy that was chosen previously.  In this case it is <em>hash.txt</em> and <em>read-count.txt</em>.</li>
+  <li><code>&lt;toolRepositories&gt;</code> defines the different Galaxy ToolSheds from which the dependency tools come from, as well as a revision number for the tool.</li>
+</ol>
+
+<p>Additional details and a description of the syntax of this file can be found in the <a href="workflow-description/">IRIDA Workflow Description</a> documentation.</p>
+
+<h4 id="3233-messages_enproperties">3.2.3.3. <code>messages_en.properties</code></h4>
+
+<p>This file contains information on the text to display in the IRIDA UI for each pipeline (specifically the <em>en</em> or English text, other languages can be stored in other <code>messages_xx.properties</code> files). An example of this file is:</p>
+
+<div class="highlight"><pre><code class="language-properties"><span class="na">pipeline.parameters.modal-title.readinfo</span><span class="o">=</span><span class="s">ReadInfo Pipeline Parameters</span>
+<span class="na">workflow.READ_INFO.title</span><span class="o">=</span><span class="s">ReadInfo Pipeline</span>
+<span class="na">pipeline.h1.ReadInfo</span><span class="o">=</span><span class="s">ReadInfo Pipeline</span>
+<span class="na">pipeline.title.ReadInfo</span><span class="o">=</span><span class="s">Pipelines - ReadInfo</span>
+<span class="na">workflow.READ_INFO.description</span><span class="o">=</span>
+
+<span class="na">pipeline.parameters.readinfo.Grep1-4-invert</span><span class="o">=</span><span class="s">Grep1-4-invert</span>
+<span class="na">pipeline.parameters.readinfo.Grep1-4-pattern</span><span class="o">=</span><span class="s">Grep1-4-pattern</span>
+
+<span class="na">pipeline.parameters.readinfo.wc_gnu-5-include_header</span><span class="o">=</span><span class="s">wc_gnu-5-include_header</span></code></pre></div>
+
+<p>The entries like <code>workflow.READ_INFO.title=ReadInfo Pipeline</code> contain the text used to display the pipeline entry on the “Pipelines” page in the UI:</p>
+
+<p><img src="images/irida-pipelines.png" alt="irida-pipelines" /></p>
+
+<p>The entries like <code>pipeline.parameters.readinfo.Grep1-4-pattern=Grep1-4-pattern</code> contain information used to display the text when adjusting pipeline parameters:</p>
+
+<p><img src="images/pipeline-parameters.png" alt="pipeline-parameters" /></p>
+
+<p>The <code>Grep1-4-pattern</code> part corresponds to the <strong>name</strong> attribute under a <code>&lt;parameter&gt;</code> entry in the <strong>irida_workflow.xml</strong> file:</p>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;parameter</span> <span class="na">name=</span><span class="s">&quot;Grep1-4-pattern&quot;</span> <span class="na">defaultValue=</span><span class="s">&quot;^@&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;toolParameter</span> <span class="na">toolId=</span><span class="s">&quot;Grep1&quot;</span> <span class="na">parameterName=</span><span class="s">&quot;pattern&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/parameter&gt;</span></code></pre></div>
+
+<h3 id="324-write-a-plugin-implementation-defining-some-key-properties-of-the-pipeline">3.2.4. Write a <code>Plugin</code> implementation defining some key properties of the pipeline</h3>
+
+<p>This is a class which defines configuration for the pipeline and allows IRIDA to load the necessary files. When implementing the pipeline as a plugin this class can be located in any package you wish, and can have any name you wish. You will want to implement the two methods which are indicated as <strong>required</strong> in this file. You can also override the methods indicated as <strong>optional</strong> in the file for additional configuration. For an example of a class you can look at <a href="https://github.com/phac-nml/irida-plugin-example/tree/master/src/main/java/ca/corefacility/bioinformatics/irida/plugins/ExamplePlugin.java">ExamplePlugin.java</a>. This should look like:</p>
+
+<div class="highlight"><pre><code class="language-java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExamplePlugin</span> <span class="kd">extends</span> <span class="n">Plugin</span> <span class="o">{</span>
+
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">AnalysisType</span> <span class="n">MY_ANALYSIS_TYPE</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AnalysisType</span><span class="o">(</span><span class="s">&quot;MY_ANALYSIS_TYPE&quot;</span><span class="o">);</span>
+
+	<span class="kd">public</span> <span class="nf">ExamplePlugin</span><span class="o">(</span><span class="n">PluginWrapper</span> <span class="n">wrapper</span><span class="o">)</span> <span class="o">{</span>
+		<span class="kd">super</span><span class="o">(</span><span class="n">wrapper</span><span class="o">);</span>
+	<span class="o">}</span>
+
+	<span class="nd">@Extension</span>
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PluginInfo</span> <span class="kd">implements</span> <span class="n">IridaPlugin</span> <span class="o">{</span>
+
+		<span class="cm">/*** Required ***/</span>
+		
+		<span class="nd">@Override</span>
+		<span class="kd">public</span> <span class="n">AnalysisType</span> <span class="nf">getAnalysisType</span><span class="o">()</span> <span class="o">{</span>
+			<span class="k">return</span> <span class="k">new</span> <span class="n">AnalysisType</span><span class="o">(</span><span class="s">&quot;READ_INFO&quot;</span><span class="o">);</span>
+		<span class="o">}</span>
+
+		<span class="nd">@Override</span>
+		<span class="kd">public</span> <span class="n">UUID</span> <span class="nf">getDefaultWorkflowUUID</span><span class="o">()</span> <span class="o">{</span>
+			<span class="k">return</span> <span class="n">UUID</span><span class="o">.</span><span class="na">fromString</span><span class="o">(</span><span class="s">&quot;79d90ca8-00ae-441b-b5c7-193c9e85a968&quot;</span><span class="o">);</span>
+		<span class="o">}</span>
+		
+		<span class="cm">/*** Optional ***/</span>
+		
+		<span class="nd">@Override</span>
+		<span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">Color</span><span class="o">&gt;</span> <span class="nf">getBackgroundColor</span><span class="o">()</span> <span class="o">{</span>
+			<span class="k">return</span> <span class="n">Optional</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">Color</span><span class="o">.</span><span class="na">decode</span><span class="o">(</span><span class="s">&quot;#dd1c77&quot;</span><span class="o">));</span>
+		<span class="o">}</span>
+		
+		<span class="nd">@Override</span>
+		<span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">Color</span><span class="o">&gt;</span> <span class="nf">getTextColor</span><span class="o">()</span> <span class="o">{</span>
+			<span class="k">return</span> <span class="n">Optional</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">Color</span><span class="o">.</span><span class="na">BLACK</span><span class="o">);</span>
+		<span class="o">}</span>
+		
+		<span class="nd">@Override</span>
+		<span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">AnalysisSampleUpdater</span><span class="o">&gt;</span> <span class="nf">getUpdater</span><span class="o">(</span><span class="n">MetadataTemplateService</span> <span class="n">metadataTemplateService</span><span class="o">,</span>
+				<span class="n">SampleService</span> <span class="n">sampleService</span><span class="o">,</span> <span class="n">IridaWorkflowsService</span> <span class="n">iridaWorkflowsService</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IridaPluginException</span> <span class="o">{</span>
+			<span class="k">return</span> <span class="n">Optional</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="k">new</span> <span class="n">ExamplePluginUpdater</span><span class="o">(</span><span class="n">metadataTemplateService</span><span class="o">,</span> <span class="n">sampleService</span><span class="o">,</span> <span class="n">iridaWorkflowsService</span><span class="o">));</span>
+		<span class="o">}</span>
+
+		<span class="nd">@Override</span>
+		<span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">getAnalysisViewer</span><span class="o">()</span> <span class="o">{</span>
+			<span class="k">return</span> <span class="n">Optional</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">&quot;tree&quot;</span><span class="o">);</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+
+<p>The purpose of each method is as follows:</p>
+
+<ul>
+  <li>
+    <p><code>getAnalysisType()</code>: This returns an <code>AnalysisType</code> object which stores the type of analysis as a <code>String</code> (matches the <code>&lt;analysisType&gt;READ_INFO&lt;/analysisType&gt;</code> entry in the <strong>irida_workflow.xml</strong> file).</p>
+  </li>
+  <li>
+    <p><code>getDefaultWorkflowUUID()</code>: This returns the id of the workflow (matching the <code>&lt;id&gt;79d90ca8-00ae-441b-b5c7-193c9e85a968&lt;/id&gt;</code> entry in the <strong>irida_workflow.xml</strong> file). Returning the appropriate value here is especially important if there are multiple versions of the same pipeline in this plugin (this will define the default or “latest” version).</p>
+  </li>
+  <li>
+    <p><code>getBackgroundColor()</code> and <code>getTextColor()</code>: The background and text color to display in the UI (defaults to grey for background and black for text). This is <strong>optional</strong>. See example below:</p>
+
+    <p><img src="images/example-plugin-pipeline.png" alt="example-plugin-pipeline.png" /></p>
+  </li>
+  <li>
+    <p><code>getUpdater()</code>: Gets an instance of a class used for post-processing on pipeline results (e.g., updating the IRIDA metadata). This is <strong>optional</strong>. Additional documentation about this class is described below.</p>
+  </li>
+</ul>
+
+<h3 id="325-optional-implement-an-updater-class">3.2.5. (Optional) Implement an <a href="https://github.com/phac-nml/irida-plugin-example/tree/master/src/main/java/ca/corefacility/bioinformatics/irida/plugins/ExamplePluginUpdater.java">Updater</a> class</h3>
+
+<p>An <a href="https://github.com/phac-nml/irida-plugin-example/tree/master/src/main/java/ca/corefacility/bioinformatics/irida/plugins/ExamplePluginUpdater.java">Updater</a> class is used to perform post-processing on the resulting files, primarily intended to write back pipeline results into the IRIDA metadata system. Please see the <a href="https://github.com/phac-nml/irida-plugin-example/tree/master/src/main/java/ca/corefacility/bioinformatics/irida/plugins/ExamplePluginUpdater.java">ExamplePluginUpdater.java</a> for an example implementation, or the built-in implementations in <a href="https://github.com/phac-nml/irida/tree/development/src/main/java/ca/corefacility/bioinformatics/irida/pipeline/results/impl">https://github.com/phac-nml/irida/tree/development/src/main/java/ca/corefacility/bioinformatics/irida/pipeline/results/impl</a>. Implementing this class is optional for your pipeline.</p>
+
+<p>If you do implement this class, you will also want to make sure to update the <code>messages_en.properties</code> file with an entry like:</p>
+
+<div class="highlight"><pre><code class="language-properties"><span class="na">workflow.label.share-analysis-samples.READ_INFO</span><span class="o">=</span><span class="s">Save sequence read information to Project Line List Metadata</span></code></pre></div>
+
+<p>This contains the message to display asking the user if they wish to <strong>Save Results to Samples</strong> for their pipeline before launching the pipeline.</p>
+
+<p><img src="images/example-plugin-save-results.png" alt="example-plugin-save-results.png" /></p>
+
+<h3 id="326-optional-set-a-viewer-for-analysis-results">3.2.6. (Optional) Set a viewer for analysis results</h3>
+
+<p>Your plugin can use one of IRIDA’s built in analysis results viewers by implementing the <code>getAnalysisViewer()</code> method in <code>IridaPlugin</code>.</p>
+
+<p>The viewers available to plugins in IRIDA are the following:</p>
+
+<ul>
+  <li><code>tree</code> - A phylogentic tree viewer.  By setting this analysis viewer type, IRIDA will look for an output file with a <code>.newick</code> extension and display it in the analysis output pages.  Note that only one tree file is currently able to be visualized.</li>
+  <li><code>sistr</code> - A viewer for SISTR results.  Generally this should only be used for the SISTR pipeline.</li>
+  <li><code>biohansel</code> - A viwer for BioHansel results.  Generally this should only be used for the BioHansel pipeline.</li>
+</ul>
+
+<h2 id="33-update-the-pomxml-file">3.3. Update the <a href="https://github.com/phac-nml/irida-plugin-example/tree/master/pom.xml">pom.xml</a> file</h2>
+
+<p>You will have to update the <code>pom.xml</code> file in order to set version information and other metadata about your pipeline.</p>
+
+<h3 id="331-update-the-maven-versioninfo">3.3.1. Update the Maven version/info</h3>
+
+<p>You will want to update the Maven version/information section for this particular plugin.  That is:</p>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;groupId&gt;</span>ca.corefacility.bioinformatics.irida.plugins<span class="nt">&lt;/groupId&gt;</span>
+<span class="nt">&lt;artifactId&gt;</span>example-plugin<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;version&gt;</span>0.1.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span></code></pre></div>
+
+<p>Please see the <a href="https://maven.apache.org/guides/introduction/introduction-to-the-pom.html#Minimal_POM">Maven Documentation</a> for more details.</p>
+
+<h3 id="332-update-the-properties-sectionplugin-info">3.3.2. Update the <code>properties</code> section/plugin info</h3>
+
+<p>The <code>properties</code> section contains additional information you will have to update. In particular:</p>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;plugin.id&gt;</span>example-plugin<span class="nt">&lt;/plugin.id&gt;</span>
+<span class="nt">&lt;plugin.class&gt;</span>ca.corefacility.bioinformatics.irida.plugins.ExamplePlugin<span class="nt">&lt;/plugin.class&gt;</span>
+<span class="nt">&lt;plugin.version&gt;</span>0.1.0<span class="nt">&lt;/plugin.version&gt;</span>
+<span class="nt">&lt;plugin.provider&gt;</span>Aaron Petkau<span class="nt">&lt;/plugin.provider&gt;</span>
+<span class="nt">&lt;plugin.dependencies&gt;&lt;/plugin.dependencies&gt;</span>
+<span class="nt">&lt;plugin.requires.runtime&gt;</span>1.0.0<span class="nt">&lt;/plugin.requires.runtime&gt;</span>
+
+<span class="nt">&lt;irida.version.compiletime&gt;</span>0.23.0-SNAPSHOT<span class="nt">&lt;/irida.version.compiletime&gt;</span></code></pre></div>
+
+<p>The <code>&lt;plugin.*&gt;</code> entries contain information about your particular plugin as defined by <a href="https://pf4j.org/doc/getting-started.html">PF4J</a>.</p>
+
+<ul>
+  <li><code>plugin.id</code>: An identifier for your plugin.</li>
+  <li><code>plugin.class</code>: The fully-qualified name of the class implementing this plugin (in this case, the <a href="https://github.com/phac-nml/irida-plugin-example/tree/master/src/main/java/ca/corefacility/bioinformatics/irida/plugins/ExamplePlugin.java">ExamplePlugin.java</a> class).</li>
+  <li><code>plugin.version</code>: A version number for your plugin.</li>
+  <li><code>plugin.provider</code>: The provider of this plugin.</li>
+  <li><code>plugin.dependencies</code>: Other IRIDA plugins this plugin depends on.</li>
+  <li><code>plugin.requires.runtime</code>: The <strong>exact</strong> version of the IRIDA plugin API this plugin requires at runtime (stored in the <a href="https://github.com/phac-nml/irida/tree/development/src/main/java/ca/corefacility/bioinformatics/irida/plugins/IridaPlugin.java">IridaPlugin.java</a> interface). You normally don’t need to update this unless the version is also updated in IRIDA.</li>
+</ul>
+
+<p>The <code>&lt;irida.version.compiletime&gt;</code> contains the exact IRIDA version this plugin will need to be compiled against (compile-time version).</p>
+
+<h2 id="34-build">3.4. Build</h2>
+
+<p>Once you’ve made all the updates, you can try building and testing your plugin. To build your plugin, you can run:</p>
+
+<div class="highlight"><pre><code class="language-bash">mvn clean package</code></pre></div>
+
+<p>You should find your packaged plugin JAR file in <code>target/</code> (e.g., <code>target/example-plugin-0.1.0-SNAPSHOT.jar</code>).</p>
+
+<h1 id="4-test-in-irida">4. Test in IRIDA</h1>
+
+<p>Once you’ve built your Galaxy workflow and made all the above modifications, you can attempt to load up the pipeline in IRIDA. To do this, please first copy the <code>target/*.jar</code> file to <code>/etc/irida/plugins</code> on a machine with IRIDA installed and restart IRIDA. Your plugin should show up in the <strong>Analyses &gt; Pipelines</strong> page in IRIDA.</p>
+
+<p><img src="images/example-plugin-pipeline.png" alt="example-plugin-pipeline.png" /></p>
+
+<p>You should also be able to see messages like below in the IRIDA log file when starting up:</p>
+
+<div class="highlight"><pre><code>INFO org.pf4j.AbstractPluginManager:801 - Plugin 'example-plugin@0.1.0' resolved
+INFO org.pf4j.AbstractPluginManager:320 - Start plugin 'example-plugin@0.1.0'
+DEBUG ca.corefacility.bioinformatics.irida.config.services.IridaPluginConfig:45 - Loaded 1 valid pipeline plugins.
+</code></pre></div>
+
+:ET

@@ -1,0 +1,70 @@
+I"ƒ<h1 class="no_toc" id="managing-sample-metadata-templates">Managing Sample Metadata Templates</h1>
+
+<p>Samples metadata templates can be created, modified, or deleted within project settings.</p>
+
+<p><img src="images/sample_metadata_template_settings_link.png" alt="Link to metadata templates" /></p>
+
+<h2 id="creating-a-metadata-template">Creating a metadata template</h2>
+
+<p>To create a metadata template, click on the<code>Create New Template</code> link in the top right corner of the page.</p>
+
+<p><img src="images/create_template_link.png" alt="Create template link" /></p>
+
+<p>Every template required 2 items:</p>
+
+<ol>
+  <li>Template name.
+    <ul>
+      <li>Name must be at least 5 characters long.</li>
+      <li>Name cannot already be used as a template name within the current project.</li>
+    </ul>
+  </li>
+  <li>At least one metadata field.</li>
+</ol>
+
+<p>If the template name selected already exists in the current project or the name is not long enough a warning is displayed.</p>
+
+<p>To add a metadata field to the template click on the <code>Add Metadata Field</code> button, which will open up a dialog window.</p>
+
+<p><img src="images/metadata_field_btn.png" alt="Metadata field button" /></p>
+
+<p>A metadata field might already exist within this project.  As you type, existing metadata field names will be presented as options to select.</p>
+
+<p><img src="images/field_search_options.png" alt="Options for metadata field" /></p>
+
+<p>When entering the name of a metadata field, options will be presented to either used an existing metadata field or create a new field (see image above).  To select the field that you want, just type the full name and press <code>enter</code> or select the option from the drop down.</p>
+
+<p>Once fields have been added they can be rearranged by dragging and dropping to their required location.  This is good when related fields should be next to each other.</p>
+
+<p><img src="images/drag_and_drop.gif" alt="Drag and drop metadata fields" /></p>
+
+<p>A field can be removed from the template by clicking on the Ã— button at the end of the field row.</p>
+
+<p><img src="images/remove_field.png" alt="Remove field" /></p>
+
+<p>Once the template is ready, click the <code>Save Template Button</code>, this saves the template.  You will know the template is saved when a <code>Template ID</code> is displayed at the top of the page, and there is an option to delete the template at the bottom of the page.</p>
+
+<p><img src="images/save_template.png" alt="Save Template" /></p>
+
+<h2 id="modifying-existing-metadata-templates">Modifying existing metadata templates</h2>
+
+<p>From the Sample Metadata Template page within project settings, click on the name of the template you want to modify.  Fields can be modified as explained in the above section on creating a template.</p>
+
+<p><img src="images/settings_metadata_templates.png" alt="Setting Metadata Templates Page" /></p>
+
+<h2 id="deleting-metadata-templates">Deleting metadata templates</h2>
+
+<p>Clicking on the delete template button will open a warning about deleting the template.  Clicking the <code>Delete this template</code> button in the modal will delete this template <strong>this cannot be undone</strong>.</p>
+
+<p><img src="images/delete_template_btn.png" alt="Delete Template" /></p>
+
+<h2 id="downloading-metadata-templates">Downloading metadata templates</h2>
+
+<p>An existing template can be downloaded directly on the Settings page by clicking on the <i class="fa fa-download fa-fw"></i> button on the right side of the table row.  This will download an excel file containing a header row with all the metadata fields in the template.</p>
+
+<p><img src="images/download_buttons.png" alt="Download template" /></p>
+
+<p>Templates can also be downloaded on their individual details page by clicking on the <i class="fa fa-download fa-fw"></i> button at the top of the page.</p>
+
+<p><img src="images/download_button_page.png" alt="Download template" /></p>
+:ET

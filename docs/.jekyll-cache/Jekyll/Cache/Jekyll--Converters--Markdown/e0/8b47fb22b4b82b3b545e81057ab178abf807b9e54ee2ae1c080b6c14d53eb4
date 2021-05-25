@@ -1,0 +1,128 @@
+I"�&<h1 class="no_toc" id="multi-locus-sequence-typing-with-mentalist">Multi-locus Sequence Typing with MentaLiST</h1>
+
+<p>This is a quick tutorial on how to use IRIDA to analyze data with <a href="https://github.com/WGS-TB/MentaLiST">MentaLiST</a>.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#prepare-kmer-database" id="markdown-toc-prepare-kmer-database">Prepare Kmer Database</a></li>
+  <li><a href="#initial-data" id="markdown-toc-initial-data">Initial Data</a></li>
+  <li><a href="#adding-samples-to-the-cart" id="markdown-toc-adding-samples-to-the-cart">Adding Samples to the Cart</a></li>
+  <li><a href="#selecting-a-pipeline" id="markdown-toc-selecting-a-pipeline">Selecting a Pipeline</a></li>
+  <li><a href="#selecting-parameters" id="markdown-toc-selecting-parameters">Selecting Parameters</a></li>
+  <li><a href="#monitoring-pipeline-status" id="markdown-toc-monitoring-pipeline-status">Monitoring Pipeline Status</a></li>
+  <li><a href="#viewing-the-results" id="markdown-toc-viewing-the-results">Viewing the Results</a></li>
+  <li><a href="#interpreting-the-results" id="markdown-toc-interpreting-the-results">Interpreting the Results</a></li>
+  <li><a href="#viewing-provenance-information" id="markdown-toc-viewing-provenance-information">Viewing Provenance Information</a></li>
+  <li><a href="#viewing-pipeline-details" id="markdown-toc-viewing-pipeline-details">Viewing Pipeline Details</a></li>
+</ul>
+
+<h1 id="prepare-kmer-database">Prepare Kmer Database</h1>
+<p>Before analyzing samples, we must prepare a MentaLiST kmer database for the organism of interest. This is done in the Galaxy web interface, and must be done with an account that has Galaxy Admin privileges. This step will only need to be done once per organism, then subsequent analyses can re-use the same kmer database. Please refer to the <a href="../../../administrator/galaxy/pipelines/mentalist">administrator documentation</a> for detailed instructions on installing MentaLiST kmer databases.</p>
+
+<h1 id="initial-data">Initial Data</h1>
+<p>The data for this tutorial comes from <a href="https://irida.corefacility.ca/downloads/data/irida-sample-data.zip">https://irida.corefacility.ca/downloads/data/irida-sample-data.zip</a>. It is assumed the sequence files in <code>miseq-run-salmonella/</code> have been uploaded into appropriate samples as described in the <a href="../web-upload/">Web Upload Tutorial</a>. Before starting this tutorial you should have a project with samples that appear as:</p>
+
+<p><img src="images/mentalist-samples.png" alt="mentalist-samples" /></p>
+
+<h1 id="adding-samples-to-the-cart">Adding Samples to the Cart</h1>
+
+<p>Before a pipeline can be run a set of samples and sequence read data must be selected and added to the cart. For this tutorial please select the single sample and click the <strong>Add to Cart</strong> button.</p>
+
+<p><img src="images/add-to-cart.png" alt="add-to-cart" /></p>
+
+<p>Once the samples have been added to the cart, the samples can be reviewed by clicking on the <strong>Cart</strong> button at the top.</p>
+
+<p><img src="images/cart-button.png" alt="cart-button" /></p>
+
+<h1 id="selecting-a-pipeline">Selecting a Pipeline</h1>
+
+<p>Once inside the cart all available pipelines will be listed in the main area of the page. For this tutorial, we will select the <strong>MentaLiST MLST Pipeline</strong>.</p>
+
+<p><img src="images/pipeline-select.png" alt="pipeline-select" /></p>
+
+<h1 id="selecting-parameters">Selecting Parameters</h1>
+
+<p>Once the pipeline is selected, the next page provides an overview of all the input files, as well as the option to modify parameters.</p>
+
+<p><img src="images/mentalist-pipeline-page.png" alt="mentalist-pipeline-page" /></p>
+
+<p>Before launching the pipeline, we must select a MentaLiST kmer database to run our samples against. Select an appropriate ‘Salmonella enterica’ database from the <strong>Kmer DB</strong> drop-down menu. Note that the kmer databases available on your system will have a different date and may have been built with a different value of k than the ones shown below. If there is no ‘Salmonella enterica’ database available, please contact your IRIDA system administrator and refer to the <a href="../../../administrator/galaxy/pipelines/mentalist">administrator documentation</a> for detailed instructions on installing MentaLiST kmer databases.</p>
+
+<p><img src="images/mentalist-pipeline-parameters.png" alt="mentalist-pipeline-parameters" /></p>
+
+<p>Please use the <strong>Ready to Launch?</strong> button to start the pipeline.</p>
+
+<p><img src="../../../images/tutorials/common/pipelines/ready-to-launch-button.png" alt="launch-button" /></p>
+
+<p>Once the button is selected you should see a screen showing that your pipeline has been launched.</p>
+
+<p><img src="images/pipeline-launched.png" alt="pipeline-launched" /></p>
+
+<h1 id="monitoring-pipeline-status">Monitoring Pipeline Status</h1>
+
+<p>To monitor the status of the launched pipeline, please select the <strong>Analysis &gt; Your Analyses</strong> menu or click the <strong>Let’s see how this pipeline is doing</strong> button.</p>
+
+<p><img src="images/view-your-analyses.png" alt="view-your-analyses" /></p>
+
+<p>The will bring you to a page where you can monitor the status of each launched workflow.</p>
+
+<p><img src="images/monitor-analyses.png" alt="monitor-analyses" /></p>
+
+<p>Clicking the pipeline name <strong>MLSTMentalist_20200227</strong> will bring you to a page for that analysis pipeline. It will take a while for the MentaLiST analysis pipeline to complete. Along the top of the page you can check the current step of the analysis and at the bottom of the <strong>Details</strong> tab you can select if you would like to receive an email upon pipeline completion. The email option is only available if the analysis is not in <code>COMPLETED</code> or <code>ERROR</code> state.</p>
+
+<p><img src="images/analysis-in-progress.png" alt="analysis-in-progress" /></p>
+
+<h1 id="viewing-the-results">Viewing the Results</h1>
+
+<p>Once the pipeline is complete, you will be able to view the results of the <code>MentaList</code> analysis. Note that not all files have an available preview and as such are not displayed in the Output File Preview but are downloaded when selecting the <code>Download All Files</code> button.</p>
+
+<p><img src="images/mentalist-results.png" alt="mentalist-results" /></p>
+
+<p>To download individual files select the <strong>…</strong> next to the Download All Files and select the file to download.</p>
+
+<p><img src="images/mentalist-download-individual-files.png" alt="mentalist-download-individual-files" /></p>
+
+<p>To download al the files generated by the analysis, please select the <strong>Download All Files</strong> button.</p>
+
+<p><img src="images/mentalist-download-all-files.png" alt="mentalist-download-all-files" /></p>
+
+<h1 id="interpreting-the-results">Interpreting the Results</h1>
+
+<p>MentaLiST provides MLST results in a simple tab-separated value file that can be opened in a plaintext editor such as <a href="https://en.wikipedia.org/wiki/Microsoft_Notepad">Microsoft Notepad</a> or <a href="https://en.wikipedia.org/wiki/TextEdit">Apple TextEdit</a>, or a spreadsheet application such as <a href="https://products.office.com/en-ca/excel">Microsoft Excel</a> or <a href="https://www.libreoffice.org/discover/calc/">LibreOffice Calc</a>.</p>
+
+<p>The first row is a header. The following rows represent the MLST results for each sample. The first column contains the sample ID. Subsequent columns contain allele calls for each locus in the typing scheme. The sequence type (ST) and clonal complex are reported in the final two columns.</p>
+
+<p><img src="images/mentalist-results-interpretation.png" alt="mentalist-results-interpretation" /></p>
+
+<h1 id="viewing-provenance-information">Viewing Provenance Information</h1>
+
+<p>To view the pipeline provenance information, please select the <strong>Provenance</strong> tab.</p>
+
+<p><img src="images/mentalist-provenance.png" alt="mentalist-provenance" /></p>
+
+<p>The provenance is displayed on a per file basis. Clicking on the <code>mentalist_call.tsv</code> file will display it’s provenance. Expanding each tool will display the parameters that the tool was executed with.</p>
+
+<p><img src="images/mentalist-provenance-tools.png" alt="mentalist-provenance-tools" /></p>
+
+<h1 id="viewing-pipeline-details">Viewing Pipeline Details</h1>
+
+<p>To view analysis details, please select the <strong>Settings</strong> tab. From here you can view the analysis name, analysis description, analysis id, pipeline and pipeline version used by the analysis, analysis priority, when the analysis was created, and duration of the analysis.</p>
+
+<p><img src="images/mentalist-settings.png" alt="mentalist-settings" /></p>
+
+<p>To edit an analysis name, please select the Pencil icon next to the analysis name. Once you have edited the analysis name, pressing the <code>ENTER</code> key on your keyboard or clicking anywhere outside of the text box will update the name. To cancel editing a name you can either hit the <code>ESC</code> key on your keyboard or if the name has not been changed you can also click anywhere outside of the text box.</p>
+
+<p><img src="images/mentalist-settings-edit-name.png" alt="mentalist-settings-edit-name" /></p>
+
+<p>To view samples used by the analysis, please select the <strong>Samples</strong> tab.</p>
+
+<p><img src="images/mentalist-settings-samples.png" alt="mentalist-settings-samples" /></p>
+
+<p>To share analysis results with other projects, please select the <strong>Manage Results</strong> tab.</p>
+
+<p><img src="images/mentalist-settings-share.png" alt="mentalist-settings-share" /></p>
+
+<p>To delete an analysis, please select the <strong>Delete Analysis</strong> tab.</p>
+
+<p><img src="images/mentalist-settings-delete.png" alt="mentalist-settings-delete" /></p>
+
+:ET

@@ -1,0 +1,702 @@
+I"��<h1 id="irida-workflow-description">IRIDA Workflow Description</h1>
+
+<p>This file describes the IRIDA Workflow Description format.  This is an <strong>XML</strong> format that is used to link up a <a href="https://wiki.galaxyproject.org/Learn/AdvancedWorkflow">Galaxy Workflow</a> and the corresponding <a href="https://toolshed.g2.bx.psu.edu/">Galaxy Tools</a> into IRIDA and provide IRIDA with the necessary information on the input datasets for Galaxy, parameters, and output files to save.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#irida-workflow-description" id="markdown-toc-irida-workflow-description">IRIDA Workflow Description</a></li>
+  <li><a href="#workflow-description-xml-element-details" id="markdown-toc-workflow-description-xml-element-details">Workflow Description XML Element Details</a>    <ul>
+      <li><a href="#iridaworkflow" id="markdown-toc-iridaworkflow"><code>&lt;iridaWorkflow&gt;</code></a>        <ul>
+          <li><a href="#attributes" id="markdown-toc-attributes">Attributes</a></li>
+          <li><a href="#example" id="markdown-toc-example">Example</a></li>
+        </ul>
+      </li>
+      <li><a href="#id" id="markdown-toc-id"><code>&lt;id&gt;</code></a>        <ul>
+          <li><a href="#attributes-1" id="markdown-toc-attributes-1">Attributes</a></li>
+          <li><a href="#example-1" id="markdown-toc-example-1">Example</a></li>
+        </ul>
+      </li>
+      <li><a href="#name" id="markdown-toc-name"><code>&lt;name&gt;</code></a>        <ul>
+          <li><a href="#attibutes" id="markdown-toc-attibutes">Attibutes</a></li>
+          <li><a href="#example-2" id="markdown-toc-example-2">Example</a></li>
+        </ul>
+      </li>
+      <li><a href="#version" id="markdown-toc-version"><code>&lt;version&gt;</code></a>        <ul>
+          <li><a href="#attributes-2" id="markdown-toc-attributes-2">Attributes</a></li>
+          <li><a href="#example-3" id="markdown-toc-example-3">Example</a></li>
+        </ul>
+      </li>
+      <li><a href="#analysistype" id="markdown-toc-analysistype"><code>&lt;analysisType&gt;</code></a>        <ul>
+          <li><a href="#attributes-3" id="markdown-toc-attributes-3">Attributes</a></li>
+          <li><a href="#example-4" id="markdown-toc-example-4">Example</a></li>
+        </ul>
+      </li>
+      <li><a href="#inputs" id="markdown-toc-inputs"><code>&lt;inputs&gt;</code></a>        <ul>
+          <li><a href="#attributes-4" id="markdown-toc-attributes-4">Attributes</a></li>
+          <li><a href="#example-5" id="markdown-toc-example-5">Example</a></li>
+        </ul>
+      </li>
+      <li><a href="#parameters" id="markdown-toc-parameters"><code>&lt;parameters&gt;</code></a>        <ul>
+          <li><a href="#attributes-5" id="markdown-toc-attributes-5">Attributes</a></li>
+          <li><a href="#example-6" id="markdown-toc-example-6">Example</a></li>
+        </ul>
+      </li>
+      <li><a href="#outputs" id="markdown-toc-outputs"><code>&lt;outputs&gt;</code></a>        <ul>
+          <li><a href="#attributes-6" id="markdown-toc-attributes-6">Attributes</a></li>
+          <li><a href="#example-7" id="markdown-toc-example-7">Example</a></li>
+        </ul>
+      </li>
+      <li><a href="#toolrepositories" id="markdown-toc-toolrepositories"><code>&lt;toolRepositories&gt;</code></a>        <ul>
+          <li><a href="#attributes-7" id="markdown-toc-attributes-7">Attributes</a></li>
+          <li><a href="#example-8" id="markdown-toc-example-8">Example</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#inputs-elements" id="markdown-toc-inputs-elements"><strong><code>&lt;inputs&gt;</code></strong> Elements</a>    <ul>
+      <li><a href="#sequencereadspaired" id="markdown-toc-sequencereadspaired"><code>&lt;sequenceReadsPaired&gt;</code></a>        <ul>
+          <li><a href="#attributes-8" id="markdown-toc-attributes-8">Attributes</a></li>
+          <li><a href="#example-9" id="markdown-toc-example-9">Example</a>            <ul>
+              <li><a href="#galaxy-workflow-input" id="markdown-toc-galaxy-workflow-input">Galaxy Workflow Input</a></li>
+              <li><a href="#workflow-description-file" id="markdown-toc-workflow-description-file">Workflow Description File</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#sequencereadssingle" id="markdown-toc-sequencereadssingle"><code>&lt;sequenceReadsSingle&gt;</code></a>        <ul>
+          <li><a href="#attributes-9" id="markdown-toc-attributes-9">Attributes</a></li>
+          <li><a href="#example-10" id="markdown-toc-example-10">Example</a>            <ul>
+              <li><a href="#galaxy-workflow-input-1" id="markdown-toc-galaxy-workflow-input-1">Galaxy Workflow Input</a></li>
+              <li><a href="#workflow-description-file-1" id="markdown-toc-workflow-description-file-1">Workflow Description File</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#reference" id="markdown-toc-reference"><code>&lt;reference&gt;</code></a>        <ul>
+          <li><a href="#attributes-10" id="markdown-toc-attributes-10">Attributes</a></li>
+          <li><a href="#example-11" id="markdown-toc-example-11">Example</a>            <ul>
+              <li><a href="#galaxy-workflow-input-2" id="markdown-toc-galaxy-workflow-input-2">Galaxy Workflow Input</a></li>
+              <li><a href="#workflow-description-file-2" id="markdown-toc-workflow-description-file-2">Workflow Description File</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#requiressinglesample" id="markdown-toc-requiressinglesample"><code>&lt;requiresSingleSample&gt;</code></a>        <ul>
+          <li><a href="#attributes-11" id="markdown-toc-attributes-11">Attributes</a></li>
+          <li><a href="#example-12" id="markdown-toc-example-12">Example</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#parameters-elements" id="markdown-toc-parameters-elements"><strong><code>&lt;parameters&gt;</code></strong> Elements</a>    <ul>
+      <li><a href="#parameter" id="markdown-toc-parameter"><code>&lt;parameter&gt;</code></a>        <ul>
+          <li><a href="#attributes-12" id="markdown-toc-attributes-12">Attributes</a></li>
+          <li><a href="#example-13" id="markdown-toc-example-13">Example</a></li>
+        </ul>
+      </li>
+      <li><a href="#dynamicsource" id="markdown-toc-dynamicsource"><code>&lt;dynamicSource&gt;</code></a>        <ul>
+          <li><a href="#attributes-13" id="markdown-toc-attributes-13">Attributes</a></li>
+        </ul>
+      </li>
+      <li><a href="#galaxytooldatatable" id="markdown-toc-galaxytooldatatable"><code>&lt;galaxyToolDataTable&gt;</code></a>        <ul>
+          <li><a href="#attributes-14" id="markdown-toc-attributes-14">Attributes</a></li>
+          <li><a href="#example-14" id="markdown-toc-example-14">Example</a></li>
+        </ul>
+      </li>
+      <li><a href="#toolparameter" id="markdown-toc-toolparameter"><code>&lt;toolParameter&gt;</code></a>        <ul>
+          <li><a href="#attributes-15" id="markdown-toc-attributes-15">Attributes</a></li>
+          <li><a href="#example-15" id="markdown-toc-example-15">Example</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#outputs-elements" id="markdown-toc-outputs-elements"><strong><code>&lt;outputs&gt;</code></strong> Elements</a>    <ul>
+      <li><a href="#output" id="markdown-toc-output"><code>&lt;output&gt;</code></a>        <ul>
+          <li><a href="#attributes-16" id="markdown-toc-attributes-16">Attributes</a></li>
+          <li><a href="#example-16" id="markdown-toc-example-16">Example</a>            <ul>
+              <li><a href="#workflow-description-file-3" id="markdown-toc-workflow-description-file-3">Workflow Description File</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#toolrepositories-elements" id="markdown-toc-toolrepositories-elements"><strong><code>&lt;toolRepositories&gt;</code></strong> Elements</a>    <ul>
+      <li><a href="#repository" id="markdown-toc-repository"><code>&lt;repository&gt;</code></a>        <ul>
+          <li><a href="#attributes-17" id="markdown-toc-attributes-17">Attributes</a></li>
+          <li><a href="#example-17" id="markdown-toc-example-17">Example</a></li>
+        </ul>
+      </li>
+      <li><a href="#name-1" id="markdown-toc-name-1"><code>&lt;name&gt;</code></a>        <ul>
+          <li><a href="#attributes-18" id="markdown-toc-attributes-18">Attributes</a></li>
+          <li><a href="#example-18" id="markdown-toc-example-18">Example</a></li>
+        </ul>
+      </li>
+      <li><a href="#owner" id="markdown-toc-owner"><code>&lt;owner&gt;</code></a>        <ul>
+          <li><a href="#attributes-19" id="markdown-toc-attributes-19">Attributes</a></li>
+          <li><a href="#example-19" id="markdown-toc-example-19">Example</a></li>
+        </ul>
+      </li>
+      <li><a href="#url" id="markdown-toc-url"><code>&lt;url&gt;</code></a>        <ul>
+          <li><a href="#attributes-20" id="markdown-toc-attributes-20">Attributes</a></li>
+          <li><a href="#example-20" id="markdown-toc-example-20">Example</a></li>
+        </ul>
+      </li>
+      <li><a href="#revision" id="markdown-toc-revision"><code>&lt;revision&gt;</code></a>        <ul>
+          <li><a href="#attributes-21" id="markdown-toc-attributes-21">Attributes</a></li>
+          <li><a href="#example-21" id="markdown-toc-example-21">Example</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#workflow-description-example" id="markdown-toc-workflow-description-example">Workflow Description Example</a></li>
+</ul>
+
+<h1 id="workflow-description-xml-element-details">Workflow Description XML Element Details</h1>
+
+<h2 id="iridaworkflow"><code>&lt;iridaWorkflow&gt;</code></h2>
+
+<p>The outer-most element tag. All other tags are contained within an <code>&lt;iridaWorkflow&gt;</code>.</p>
+
+<h3 id="attributes">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example">Example</h3>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;iridaWorkflow&gt;</span>
+...
+<span class="nt">&lt;/iridaWorkflow&gt;</span></code></pre></div>
+
+<h2 id="id"><code>&lt;id&gt;</code></h2>
+
+<p>An ID for the workflow which is used to uniquely identify this exact workflow.  This should be a <a href="http://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</a>.  A quick way to generate a random (version 4) UUID is with the <code>uuid</code> command, as in <code>uuid -v 4</code>.</p>
+
+<h3 id="attributes-1">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-1">Example</h3>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;id&gt;</span>79872edb-4f3b-4a51-aff7-33ddbc05ec5e<span class="nt">&lt;/id&gt;</span></code></pre></div>
+
+<h2 id="name"><code>&lt;name&gt;</code></h2>
+
+<p>The name of the workflow.</p>
+
+<h3 id="attibutes">Attibutes</h3>
+
+<p>None.</p>
+
+<h3 id="example-2">Example</h3>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;name&gt;</span>MyPipeline<span class="nt">&lt;/name&gt;</span></code></pre></div>
+
+<h2 id="version"><code>&lt;version&gt;</code></h2>
+
+<p>A version number for the workflow.  This should be incremented on every modification to the workflow.</p>
+
+<h3 id="attributes-2">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-3">Example</h3>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;version&gt;</span>1.0<span class="nt">&lt;/version&gt;</span></code></pre></div>
+
+<h2 id="analysistype"><code>&lt;analysisType&gt;</code></h2>
+
+<p>The particular type or class of analysis this workflow belongs to.  This must be one of the types defined in the <code>AnalysisType</code> enum in IRIDA.  Currently, the type can be either <code>assembly-annotation</code> or <code>phylogenomics</code>.  Please see the <a href="../../../apidocs/ca/corefacility/bioinformatics/irida/model/enums/AnalysisType.html">AnalysisType JavaDoc</a> for more details.</p>
+
+<h3 id="attributes-3">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-4">Example</h3>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;analysisType&gt;</span>phylogenomics<span class="nt">&lt;/analysisType&gt;</span></code></pre></div>
+
+<h2 id="inputs"><code>&lt;inputs&gt;</code></h2>
+
+<p>A description of the different types of inputs to this workflow.  This must contain at least one of <code>&lt;sequenceReadsPaired&gt;</code> or <code>&lt;sequenceReadsSingle&gt;</code> as a sub-element.</p>
+
+<h3 id="attributes-4">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-5">Example</h3>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;inputs&gt;</span>
+	<span class="nt">&lt;sequenceReadsPaired&gt;</span>sequence_reads_paired<span class="nt">&lt;/sequenceReadsPaired&gt;</span>
+<span class="nt">&lt;/inputs&gt;</span></code></pre></div>
+
+<h2 id="parameters"><code>&lt;parameters&gt;</code></h2>
+
+<p>This defines the set of parameters for a workflow as well as how to map these parameters to Galaxy tool names and versions.</p>
+
+<h3 id="attributes-5">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-6">Example</h3>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;parameters&gt;</span>
+    <span class="nt">&lt;parameter</span> <span class="na">name=</span><span class="s">&quot;myparameter&quot;</span> <span class="na">defaultValue=</span><span class="s">&quot;HKY85&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;toolParameter</span> <span class="na">toolId=</span><span class="s">&quot;irida.corefacility.ca/galaxy-shed/repos/irida/phyml/phyml1/3.1&quot;</span>
+            <span class="na">parameterName=</span><span class="s">&quot;datatype_condition.model&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/parameter&gt;</span>
+<span class="nt">&lt;/parameters&gt;</span></code></pre></div>
+
+<h2 id="outputs"><code>&lt;outputs&gt;</code></h2>
+
+<p>Used to define a list of output files from the Galaxy workflow which will be saved back into IRIDA.</p>
+
+<h3 id="attributes-6">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-7">Example</h3>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;outputs&gt;</span>
+    <span class="nt">&lt;output</span> <span class="na">name=</span><span class="s">&quot;tree&quot;</span> <span class="na">fileName=</span><span class="s">&quot;phylogeneticTree.tre&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/outputs&gt;</span></code></pre></div>
+
+<h2 id="toolrepositories"><code>&lt;toolRepositories&gt;</code></h2>
+
+<p>Defines a list of the repositories storing the dependency Galaxy tools for this workflow.  This is used to keep track of the particular versions of dependencies and can also be used for integration testing with Galaxy.</p>
+
+<h3 id="attributes-7">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-8">Example</h3>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;toolRepositories&gt;</span>
+    <span class="nt">&lt;repository&gt;</span>
+        <span class="nt">&lt;name&gt;</span>spades<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;owner&gt;</span>lionelguy<span class="nt">&lt;/owner&gt;</span>
+        <span class="nt">&lt;url&gt;</span>https://toolshed.g2.bx.psu.edu/<span class="nt">&lt;/url&gt;</span>
+        <span class="nt">&lt;revision&gt;</span>21734680d921<span class="nt">&lt;/revision&gt;</span>
+    <span class="nt">&lt;/repository&gt;</span>
+<span class="nt">&lt;/toolRepositories&gt;</span></code></pre></div>
+
+<h1 id="inputs-elements"><strong><code>&lt;inputs&gt;</code></strong> Elements</h1>
+
+<h2 id="sequencereadspaired"><code>&lt;sequenceReadsPaired&gt;</code></h2>
+
+<p>An optional element tag contained in the <code>&lt;inputs&gt;</code> tag set.  This defines the name, if any, of a list of paired-end files used as input to the Galaxy workflow.</p>
+
+<h3 id="attributes-8">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-9">Example</h3>
+
+<p>If a Galaxy workflow contains an <strong>Input dataset collection</strong> of type <strong>list:paired</strong> then the name of the dataset collection, <code>sequence_reads_paired</code>, should correspond to the name in this element.  Please see the image below.</p>
+
+<h4 id="galaxy-workflow-input">Galaxy Workflow Input</h4>
+
+<p><img src="images/galaxy-paired-input.png" alt="galaxy-paired-input" /></p>
+
+<h4 id="workflow-description-file">Workflow Description File</h4>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;sequenceReadsPaired&gt;</span>sequence_reads_paired<span class="nt">&lt;/sequenceReadsPaired&gt;</span></code></pre></div>
+
+<h2 id="sequencereadssingle"><code>&lt;sequenceReadsSingle&gt;</code></h2>
+
+<p>An optional element tag contained in the <code>&lt;inputs&gt;</code> tag set.  This defines the name, if any, of a list of single-end files used as input to the Galaxy workflow.</p>
+
+<h3 id="attributes-9">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-10">Example</h3>
+
+<p>If a Galaxy workflow contains an <strong>Input dataset collection</strong> of type <strong>list</strong> then the name of the dataset collection, <code>sequence_reads_single</code>, should correspond to the name in this element.  Please see the image below.</p>
+
+<h4 id="galaxy-workflow-input-1">Galaxy Workflow Input</h4>
+
+<p><img src="images/galaxy-single-input.png" alt="galaxy-single-input" /></p>
+
+<h4 id="workflow-description-file-1">Workflow Description File</h4>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;sequenceReadsSingle&gt;</span>sequence_reads_single<span class="nt">&lt;/sequenceReadsSingle&gt;</span></code></pre></div>
+
+<h2 id="reference"><code>&lt;reference&gt;</code></h2>
+
+<p>An optional element tag contained in the <code>&lt;inputs&gt;</code> tag set.  This defines the name, if any, of the reference input for the Galaxy workflow.</p>
+
+<h3 id="attributes-10">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-11">Example</h3>
+
+<p>If a Galaxy workflow contains an <strong>Input dataset</strong> for a reference genome, then the name of the dataset, <code>reference</code>, should correspond to the name in this element.  Please see the image below.</p>
+
+<h4 id="galaxy-workflow-input-2">Galaxy Workflow Input</h4>
+
+<p><img src="images/galaxy-reference-input.png" alt="galaxy-reference-input" /></p>
+
+<h4 id="workflow-description-file-2">Workflow Description File</h4>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;reference&gt;</span>reference<span class="nt">&lt;/reference&gt;</span></code></pre></div>
+
+<h2 id="requiressinglesample"><code>&lt;requiresSingleSample&gt;</code></h2>
+
+<p>An optional element tag contained in the <code>&lt;inputs&gt;</code> tag set.  This defines whether or not this workflow only operates on a single sample <code>true</code> or can handle multiple samples <code>false</code>.  That is to say, if this workflow will upload only a single sample to Galaxy to execute the workflow, such as with the assembly and annotation workflow, then this should be set to <code>true</code>.  Otherwise this should be set to <code>false</code>.  The default is <code>false</code>.</p>
+
+<h3 id="attributes-11">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-12">Example</h3>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;requiresSingleSample&gt;</span>false<span class="nt">&lt;/requiresSingleSample&gt;</span></code></pre></div>
+
+<h1 id="parameters-elements"><strong><code>&lt;parameters&gt;</code></strong> Elements</h1>
+
+<h2 id="parameter"><code>&lt;parameter&gt;</code></h2>
+
+<p>Contained in the <code>&lt;parameters&gt;</code> element tag.  This defines a single parameter for a workflow.  This must contain at least one <code>&lt;toolParameter&gt;</code> element which defines the specific Galaxy tool and parameter to override.  The <code>defaultValue</code> should also correspond to one of the acceptible Galaxy parameter values. If no <code>defaultValue</code> can be specified, then the <code>required</code> attribute should be set to <code>true</code>, indicating that the user must input a parameter value before each pipeline run.</p>
+
+<h3 id="attributes-12">Attributes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">attribute</th>
+      <th style="text-align: left">type</th>
+      <th style="text-align: left">details</th>
+      <th style="text-align: left">required</th>
+      <th style="text-align: left">example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>name</strong></td>
+      <td style="text-align: left">string</td>
+      <td style="text-align: left">The name of the parameter.  This will be used in the IRIDA database and configuration files to refer to this parameter.</td>
+      <td style="text-align: left">yes</td>
+      <td style="text-align: left"><code>name="myparameter"</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>defaultValue</strong></td>
+      <td style="text-align: left">string</td>
+      <td style="text-align: left">The default value of the parameter.</td>
+      <td style="text-align: left">yes</td>
+      <td style="text-align: left"><code>defaultValue="1"</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>required</strong></td>
+      <td style="text-align: left">boolean</td>
+      <td style="text-align: left">“true” if no default value can be set for the parameter, so the user must select a value before launching. Defaults to “false” if not set.</td>
+      <td style="text-align: left">no</td>
+      <td style="text-align: left"><code>required="true"</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="example-13">Example</h3>
+
+<p>To override the model parameter defined in the Galaxy version of PhyML in <a href="https://github.com/phac-nml/snvphyl-galaxy/blob/v0.1/tools/phyml/phyml.xml">https://github.com/phac-nml/snvphyl-galaxy/blob/v0.1/tools/phyml/phyml.xml</a>, the following entry can be used.  The <code>defaultValue="HKY85"</code> must correspond to the value defined in the Galaxy PhyML Tool (see <a href="https://github.com/phac-nml/snvphyl-galaxy/blob/v0.1/tools/phyml/phyml.xml#L38">phyml.xml#L38</a>).</p>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;parameter</span> <span class="na">name=</span><span class="s">&quot;myparameter&quot;</span> <span class="na">defaultValue=</span><span class="s">&quot;HKY85&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;toolParameter</span> <span class="na">toolId=</span><span class="s">&quot;irida.corefacility.ca/galaxy-shed/repos/irida/phyml/phyml1/3.1&quot;</span>
+        <span class="na">parameterName=</span><span class="s">&quot;datatype_condition.model&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/parameter&gt;</span></code></pre></div>
+
+<h2 id="dynamicsource"><code>&lt;dynamicSource&gt;</code></h2>
+
+<h3 id="attributes-13">Attributes</h3>
+
+<p>(None)</p>
+
+<h2 id="galaxytooldatatable"><code>&lt;galaxyToolDataTable&gt;</code></h2>
+
+<h3 id="attributes-14">Attributes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">attribute</th>
+      <th style="text-align: left">type</th>
+      <th style="text-align: left">details</th>
+      <th style="text-align: left">required</th>
+      <th style="text-align: left">example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>name</strong></td>
+      <td style="text-align: left">string</td>
+      <td style="text-align: left">Name of the Galaxy Tool Data Table from which parameter values will be pulled.</td>
+      <td style="text-align: left">yes</td>
+      <td style="text-align: left"><code>name="mentalist_databases"</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>displayColumn</strong></td>
+      <td style="text-align: left">string</td>
+      <td style="text-align: left">The name of the Tool Data Table column containing a human-readable label for the parameter value.</td>
+      <td style="text-align: left">yes</td>
+      <td style="text-align: left"><code>displayColumn="name"</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>parameterColumn</strong></td>
+      <td style="text-align: left">string</td>
+      <td style="text-align: left">The name of the Tool Data Table column containing the parameter value to be passed to the pipeline.</td>
+      <td style="text-align: left">yes</td>
+      <td style="text-align: left"><code>parameterColumn="value"</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="example-14">Example</h3>
+
+<p>Dynamic sources are used to pull parameter values from outside systems such as Galaxy <a href="https://galaxyproject.org/admin/tools/data-tables/">Tool Data Tables</a></p>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;parameter</span> <span class="na">name=</span><span class="s">&quot;kmer_db&quot;</span> <span class="na">required=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;dynamicSource&gt;</span>
+        <span class="nt">&lt;galaxyToolDataTable</span> <span class="na">name=</span><span class="s">&quot;mentalist_databases&quot;</span> <span class="na">displayColumn=</span><span class="s">&quot;name&quot;</span> <span class="na">parameterColumn=</span><span class="s">&quot;value&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/dynamicSource&gt;</span>
+    <span class="nt">&lt;toolParameter</span> <span class="na">toolId=</span><span class="s">&quot;toolshed.g2.bx.psu.edu/repos/dfornika/mentalist/mentalist_call/0.1.3&quot;</span>
+        <span class="na">parameterName=</span><span class="s">&quot;kmer_db&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/parameter&gt;</span></code></pre></div>
+
+<h2 id="toolparameter"><code>&lt;toolParameter&gt;</code></h2>
+
+<p>Contained in the <code>&lt;parameter&gt;</code> element tag.  This defines a parameter in a Galaxy tool to map to from the parent <code>&lt;parameter&gt;</code> definition.  The <code>toolId</code> and <code>parameterName</code> must correspond to the information defined in the Galaxy workflow and Galaxy tool XML configuration files.</p>
+
+<h3 id="attributes-15">Attributes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">attribute</th>
+      <th style="text-align: left">type</th>
+      <th style="text-align: left">details</th>
+      <th style="text-align: left">required</th>
+      <th style="text-align: left">example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>toolId</strong></td>
+      <td style="text-align: left">string</td>
+      <td style="text-align: left">The id of the tool in the Galaxy workflow of the parameter to override.</td>
+      <td style="text-align: left">yes</td>
+      <td style="text-align: left"><code>toolId="my_galaxy_tool"</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>parameterName</strong></td>
+      <td style="text-align: left">string</td>
+      <td style="text-align: left">The name of the parameter in the Galaxy tool to override.</td>
+      <td style="text-align: left">yes</td>
+      <td style="text-align: left"><code>parameterName="parameter.section.name"</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="example-15">Example</h3>
+
+<p>For the tool <strong>PhyML</strong> in the <a href="https://github.com/phac-nml/snvphyl-galaxy/blob/v0.1/workflows/SNVPhyl/0.1/snvphyl_workflow.ga">SNVPhyl Galaxy Workflow</a>, the <code>tool_id</code> is given below:</p>
+
+<p><strong>tool_id</strong> (see <a href="https://github.com/phac-nml/snvphyl-galaxy/blob/v0.1/workflows/SNVPhyl/0.1/snvphyl_workflow.ga#L506">snvphyl-workflow.ga#L506</a>)</p>
+
+<div class="highlight"><pre><code>"tool_id": "irida.corefacility.ca/galaxy-shed/repos/irida/phyml/phyml1/3.1"
+</code></pre></div>
+
+<p>This corresponds to the <code>toolId</code> attribute to use in the <code>&lt;toolParameters&gt;</code> element (<code>tool_id="irida.corefacility.ca/galaxy-shed/repos/irida/phyml/phyml1/3.1"</code>).</p>
+
+<p>For the <code>model</code> parameter name, the corresponding line in the <a href="https://github.com/phac-nml/snvphyl-galaxy/blob/v0.1/workflows/SNVPhyl/0.1/snvphyl_workflow.ga">SNVPhyl Galaxy workflow</a> is given below:</p>
+
+<p><strong>model</strong> (see <a href="https://github.com/phac-nml/snvphyl-galaxy/blob/v0.1/workflows/SNVPhyl/0.1/snvphyl_workflow.ga#L507">snvphyl-workflow.ga#L507</a>)</p>
+
+<div class="highlight"><pre><code>"tool_state": "...\\\"model\\\": \\\"HKY85\\\"...
+</code></pre></div>
+
+<p>However, this parameter is stored as a sub-element of other parameters.  To get the full parameter name the <a href="https://github.com/phac-nml/snvphyl-galaxy/blob/v0.1/tools/phyml/phyml.xml">PhyML Galaxy Tool XML</a> file must be referenced:</p>
+
+<p><strong>parameterName</strong> (see <a href="https://github.com/phac-nml/snvphyl-galaxy/blob/v0.1/tools/phyml/phyml.xml#L6">phyml.xml#L6</a>)</p>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;command</span> <span class="na">interpreter=</span><span class="s">&quot;bash&quot;</span><span class="nt">&gt;</span>./phyml.sh ... -m $datatype_condition.model ...
+...
+<span class="nt">&lt;/command&gt;</span></code></pre></div>
+
+<p>Since the string <code>datatype_condition.model</code> is used to refer to the <code>model</code> parameter, this should be used as the full <code>parameterName</code> attribute.</p>
+
+<p>Putting both these together into the IRIDA Workflow Description <code>&lt;toolParameter&gt;</code> element gives:</p>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;toolParameter</span> <span class="na">toolId=</span><span class="s">&quot;irida.corefacility.ca/galaxy-shed/repos/irida/phyml/phyml1/3.1&quot;</span>
+	<span class="na">parameterName=</span><span class="s">&quot;datatype_condition.model&quot;</span> <span class="nt">/&gt;</span></code></pre></div>
+
+<h1 id="outputs-elements"><strong><code>&lt;outputs&gt;</code></strong> Elements</h1>
+
+<h2 id="output"><code>&lt;output&gt;</code></h2>
+
+<p>Contained in the <code>&lt;outputs&gt;</code> element tag.  Defines a particular output file from a Galaxy workflow. In order to save this output file in IRIDA, the name of the dataset file in Galaxy must be defined in the <code>fileName</code> attribute of the <code>&lt;output&gt;</code> element.  This can be accomplished by using the <strong>Rename Dataset</strong> action in a Galaxy workflow to give an output dataset file an explicit name.</p>
+
+<h3 id="attributes-16">Attributes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">attribute</th>
+      <th style="text-align: left">type</th>
+      <th style="text-align: left">details</th>
+      <th style="text-align: left">required</th>
+      <th style="text-align: left">example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>name</strong></td>
+      <td style="text-align: left">string</td>
+      <td style="text-align: left">A label for the output file name.  This is used internally to map to a particular output file in the IRIDA database.</td>
+      <td style="text-align: left">yes</td>
+      <td style="text-align: left"><code>name="my-output-1"</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>fileName</strong></td>
+      <td style="text-align: left">string</td>
+      <td style="text-align: left">The name of an output file from the Galaxy workflow.  This is used to find the particular output file when transferring results back to IRIDA.</td>
+      <td style="text-align: left">yes</td>
+      <td style="text-align: left"><code>fileName="output-file.txt"</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="example-16">Example</h3>
+
+<p>If the <strong>Rename Dataset</strong> action is set on a tool to give an output file the name <code>phylogeneticTree.tre</code></p>
+
+<p><img src="images/galaxy-workflow-action-output.png" alt="galaxy-workflow-action-output" /></p>
+
+<p>then the corresponding dataset will appear with this name in the Galaxy History.</p>
+
+<p><img src="images/galaxy-workflow-dataset-output.png" alt="galaxy-workflow-dataset-output" /></p>
+
+<p>This name must then correspond to the <code>fileName</code> in the workflow description file.</p>
+
+<h4 id="workflow-description-file-3">Workflow Description File</h4>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;output</span> <span class="na">name=</span><span class="s">&quot;tree&quot;</span> <span class="na">fileName=</span><span class="s">&quot;phylogeneticTree.tre&quot;</span> <span class="nt">/&gt;</span></code></pre></div>
+
+<h1 id="toolrepositories-elements"><strong><code>&lt;toolRepositories&gt;</code></strong> Elements</h1>
+
+<h2 id="repository"><code>&lt;repository&gt;</code></h2>
+
+<p>Contained within a <code>&lt;toolRepositories&gt;</code> element tag.  Defines a particular repository storing a dependency for the workflow.  This must correspond to the information within some Galaxy ToolShed containing this repository.  For example, for SPAdes <a href="https://toolshed.g2.bx.psu.edu/view/lionelguy/spades/21734680d921">https://toolshed.g2.bx.psu.edu/view/lionelguy/spades/21734680d921</a>.</p>
+
+<h3 id="attributes-17">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-17">Example</h3>
+
+<p>For the version of SPAdes stored within the main Galaxy ToolShed, <a href="https://toolshed.g2.bx.psu.edu/view/lionelguy/spades/21734680d921">https://toolshed.g2.bx.psu.edu/view/lionelguy/spades/21734680d921</a>, the following information should be defined.</p>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;repository&gt;</span>
+    <span class="nt">&lt;name&gt;</span>spades<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;owner&gt;</span>lionelguy<span class="nt">&lt;/owner&gt;</span>
+    <span class="nt">&lt;url&gt;</span>https://toolshed.g2.bx.psu.edu/<span class="nt">&lt;/url&gt;</span>
+    <span class="nt">&lt;revision&gt;</span>21734680d921<span class="nt">&lt;/revision&gt;</span>
+<span class="nt">&lt;/repository&gt;</span></code></pre></div>
+
+<h2 id="name-1"><code>&lt;name&gt;</code></h2>
+
+<p>Contained in the <code>&lt;repository&gt;</code> element tag.  Defines the name of the tool repository.</p>
+
+<h3 id="attributes-18">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-18">Example</h3>
+
+<p>For SPAdes, <a href="https://toolshed.g2.bx.psu.edu/view/lionelguy/spades/21734680d921">https://toolshed.g2.bx.psu.edu/view/lionelguy/spades/21734680d921</a>, the name would be <code>spades</code>.</p>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;name&gt;</span>spades<span class="nt">&lt;/name&gt;</span></code></pre></div>
+
+<h2 id="owner"><code>&lt;owner&gt;</code></h2>
+
+<p>Contained in the <code>&lt;repository&gt;</code> element tag.  Defines the owner of the tool repository.</p>
+
+<h3 id="attributes-19">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-19">Example</h3>
+
+<p>For SPAdes, <a href="https://toolshed.g2.bx.psu.edu/view/lionelguy/spades/21734680d921">https://toolshed.g2.bx.psu.edu/view/lionelguy/spades/21734680d921</a>, the owner would be <code>lionelguy</code>.</p>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;owner&gt;</span>lionelguy<span class="nt">&lt;/owner&gt;</span></code></pre></div>
+
+<h2 id="url"><code>&lt;url&gt;</code></h2>
+
+<p>Contained in the <code>&lt;repository&gt;</code> element tag.  Defines the url of the tool repository.</p>
+
+<h3 id="attributes-20">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-20">Example</h3>
+
+<p>For SPAdes on the main Galaxy ToolShed, <a href="https://toolshed.g2.bx.psu.edu/view/lionelguy/spades/21734680d921">https://toolshed.g2.bx.psu.edu/view/lionelguy/spades/21734680d921</a>, the url would be <code>https://toolshed.g2.bx.psu.edu/</code>.</p>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;url&gt;</span>https://toolshed.g2.bx.psu.edu/<span class="nt">&lt;/url&gt;</span></code></pre></div>
+
+<h2 id="revision"><code>&lt;revision&gt;</code></h2>
+
+<p>Contained in the <code>&lt;repository&gt;</code> element tag.  Defines the revision number of tool.</p>
+
+<h3 id="attributes-21">Attributes</h3>
+
+<p>None.</p>
+
+<h3 id="example-21">Example</h3>
+
+<p>For the version of SPAdes on the main Galaxy ToolShed, <a href="https://toolshed.g2.bx.psu.edu/view/lionelguy/spades/21734680d921">https://toolshed.g2.bx.psu.edu/view/lionelguy/spades/21734680d921</a>, the revision would be <code>21734680d921</code>.</p>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;revision&gt;</span>21734680d921<span class="nt">&lt;/revision&gt;</span></code></pre></div>
+
+<h1 id="workflow-description-example">Workflow Description Example</h1>
+
+<p>An example workflow description XML file is given below.</p>
+
+<div class="highlight"><pre><code class="language-xml"><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+
+<span class="nt">&lt;iridaWorkflow&gt;</span>
+        <span class="nt">&lt;id&gt;</span>79872edb-4f3b-4a51-aff7-33ddbc05ec5e<span class="nt">&lt;/id&gt;</span>
+        <span class="nt">&lt;name&gt;</span>MyPipeline<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;version&gt;</span>1.0<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;analysisType&gt;</span>phylogenomics<span class="nt">&lt;/analysisType&gt;</span>
+        <span class="nt">&lt;inputs&gt;</span>
+                <span class="nt">&lt;sequenceReadsPaired&gt;</span>sequence_reads_paired<span class="nt">&lt;/sequenceReadsPaired&gt;</span>
+                <span class="nt">&lt;reference&gt;</span>reference<span class="nt">&lt;/reference&gt;</span>
+                <span class="nt">&lt;requiresSingleSample&gt;</span>false<span class="nt">&lt;/requiresSingleSample&gt;</span>
+        <span class="nt">&lt;/inputs&gt;</span>
+        <span class="nt">&lt;parameters&gt;</span>
+            <span class="nt">&lt;parameter</span> <span class="na">name=</span><span class="s">&quot;myparameter&quot;</span> <span class="na">defaultValue=</span><span class="s">&quot;HKY85&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;toolParameter</span> <span class="na">toolId=</span><span class="s">&quot;irida.corefacility.ca/galaxy-shed/repos/irida/phyml/phyml1/3.1&quot;</span>
+                    <span class="na">parameterName=</span><span class="s">&quot;datatype_condition.model&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/parameter&gt;</span>
+        <span class="nt">&lt;/parameters&gt;</span>
+        <span class="nt">&lt;outputs&gt;</span>
+                <span class="nt">&lt;output</span> <span class="na">name=</span><span class="s">&quot;tree&quot;</span> <span class="na">fileName=</span><span class="s">&quot;phylogeneticTree.tre&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/outputs&gt;</span>
+        <span class="nt">&lt;toolRepositories&gt;</span>
+            <span class="nt">&lt;repository&gt;</span>
+                <span class="nt">&lt;name&gt;</span>spades<span class="nt">&lt;/name&gt;</span>
+                <span class="nt">&lt;owner&gt;</span>lionelguy<span class="nt">&lt;/owner&gt;</span>
+                <span class="nt">&lt;url&gt;</span>https://toolshed.g2.bx.psu.edu/<span class="nt">&lt;/url&gt;</span>
+                <span class="nt">&lt;revision&gt;</span>21734680d921<span class="nt">&lt;/revision&gt;</span>
+            <span class="nt">&lt;/repository&gt;</span>
+            <span class="nt">&lt;repository&gt;</span>
+                <span class="nt">&lt;name&gt;</span>phyml<span class="nt">&lt;/name&gt;</span>
+                <span class="nt">&lt;owner&gt;</span>irida<span class="nt">&lt;/owner&gt;</span>
+                <span class="nt">&lt;url&gt;</span>https://irida.corefacility.ca/galaxy-shed<span class="nt">&lt;/url&gt;</span>
+                <span class="nt">&lt;revision&gt;</span>b5867c5c7674<span class="nt">&lt;/revision&gt;</span>
+            <span class="nt">&lt;/repository&gt;</span>
+        <span class="nt">&lt;/toolRepositories&gt;</span>
+<span class="nt">&lt;/iridaWorkflow&gt;</span></code></pre></div>
+
+:ET

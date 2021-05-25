@@ -1,0 +1,60 @@
+I"x<h1 id="automated-galaxy-data-cleanup">Automated Galaxy Data Cleanup</h1>
+
+<p>IRIDA stores and manages both the input files to an analysis workflow as well as the output files and provenance information from a workflow run through Galaxy.  In the process of running an analysis, many intermediate files are produced by Galaxy (SAM/BAM files, log files, etc), as well as intermediate data structures (Galaxy Data Libraries for storing input files to Galaxy, and the workflow uploaded to Galaxy).  These additional files and data structures are not stored or used by IRIDA following the completion of an analysis.</p>
+
+<p>By default IRIDA will <strong>not</strong> remove any of the data generated and stored in Galaxy.  This provides additional resources beyond the output files and provenance information stored by IRIDA for each analysis.</p>
+
+<p>However, some of the files produced by Galaxy can be quite large and may quickly fill up the storage capacity of the Galaxy server.  IRIDA can be instructed to clean up this data after a period of time by adjusting the parameter <code>irida.analysis.cleanup.days</code> in the main IRIDA configuration file <code>/etc/irida/irida.conf</code>.  This controls the number of days before IRIDA will remove analysis files from Galaxy.  This can be used to reduce the storage requirements for each analysis at the expense of not having any intermediate analysis files available.</p>
+
+<p>Once the parameter <code>irida.analysis.cleanup.days</code> is set, IRIDA will periodically (once every hour) check for any analyses that have expired and clean up the necessary files in Galaxy.  However, these files will only be marked as <strong>deleted</strong> in Galaxy, not permanently removed.  To permanently remove these files, please do the following:</p>
+
+<h2 id="step-1-create-a-galaxy-cleanup-script">Step 1: Create a Galaxy Cleanup script</h2>
+
+<p>The following is an example script that can be used to clean up <strong>deleted</strong> files in Galaxy.  Please save this script to <code>galaxy/galaxy_cleanup.sh</code>, make executable with <code>chmod u+x galaxy/galaxy_cleanup.sh</code>, and then make any necessary modifications to the variables.  In particular, please set <code>$GALAXY_ROOT_DIR</code> and <code>$CONDA_ROOT</code> to point to the <code>galaxy/</code> directory, and the <code>~/miniconda3</code> directory. We assume the conda installation has an environment <strong>galaxy</strong> containing dependencies needed for starting Galaxy.  Modify this as appropriate (e.g., if you use a Galaxy virtual environment instead).</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="ch">#!/bin/bash</span>
+
+<span class="nv">GALAXY_ROOT_DIR</span><span class="o">=</span>/path/to/galaxy-dist
+<span class="nv">CLEANUP_LOG</span><span class="o">=</span><span class="nv">$GALAXY_ROOT_DIR</span>/galaxy_cleanup.log
+<span class="nv">CONDA_ROOT</span><span class="o">=</span>/path/to/conda/for/galaxy
+
+<span class="nb">source</span> <span class="nv">$CONDA_ROOT</span>/bin/activate galaxy
+
+<span class="nb">cd</span> <span class="nv">$GALAXY_ROOT_DIR</span>
+
+<span class="nb">echo</span> -e <span class="s2">&quot;\nBegin cleanup at `date`&quot;</span> &gt;&gt; <span class="nv">$CLEANUP_LOG</span>
+<span class="nb">echo</span> -e <span class="s2">&quot;Individual log files in scripts/cleanup_datasets/*.log&quot;</span> &gt;&gt; <span class="nv">$CLEANUP_LOG</span>
+
+<span class="nb">echo</span> -e <span class="s2">&quot;Begin delete userless histories&quot;</span> &gt;&gt; <span class="nv">$CLEANUP_LOG</span>
+sh scripts/cleanup_datasets/delete_userless_histories.sh <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> &gt;&gt; <span class="nv">$CLEANUP_LOG</span>
+
+<span class="nb">echo</span> -e <span class="s2">&quot;\nBegin purge deleted histories&quot;</span> &gt;&gt; <span class="nv">$CLEANUP_LOG</span>
+sh scripts/cleanup_datasets/purge_histories.sh <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> &gt;&gt; <span class="nv">$CLEANUP_LOG</span>
+
+<span class="nb">echo</span> -e <span class="s2">&quot;\nBegin purge deleted libraries&quot;</span> &gt;&gt; <span class="nv">$CLEANUP_LOG</span>
+sh scripts/cleanup_datasets/purge_libraries.sh <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> &gt;&gt; <span class="nv">$CLEANUP_LOG</span>
+
+<span class="nb">echo</span> -e <span class="s2">&quot;\nBegin purge deleted folders&quot;</span> &gt;&gt; <span class="nv">$CLEANUP_LOG</span>
+sh scripts/cleanup_datasets/purge_folders.sh <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> &gt;&gt; <span class="nv">$CLEANUP_LOG</span>
+
+<span class="nb">echo</span> -e <span class="s2">&quot;\nBegin delete datasets&quot;</span> &gt;&gt; <span class="nv">$CLEANUP_LOG</span>
+sh scripts/cleanup_datasets/delete_datasets.sh <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> &gt;&gt; <span class="nv">$CLEANUP_LOG</span>
+
+<span class="nb">echo</span> -e <span class="s2">&quot;\nBegin purge deleted datasets&quot;</span> &gt;&gt; <span class="nv">$CLEANUP_LOG</span>
+sh scripts/cleanup_datasets/purge_datasets.sh <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> &gt;&gt; <span class="nv">$CLEANUP_LOG</span>
+
+<span class="nb">echo</span> -e <span class="s2">&quot;\nEnd cleanup at `date`&quot;</span> &gt;&gt; <span class="nv">$CLEANUP_LOG</span></code></pre></div>
+
+<p>The particular cleanup scripts (e.g., <code>scripts/cleanup_datasets/delete_userless_histories.sh</code>) default to removing only items &gt; 10 days old. If you wish to adjust this time, please modify the <code>-d 10</code> parameter within these scripts.</p>
+
+<h2 id="step-2-schedule-script-to-run-using-cron">Step 2: Schedule script to run using cron</h2>
+
+<p>Once this script is installed, it can be scheduled to run periodically by adding a cron job for the Galaxy user.  To do this, please run <code>crontab -e</code> and past the following line (replacing <code>galaxy/</code> with the proper directory):</p>
+
+<div class="highlight"><pre><code>0 2 * * * galaxy/galaxy_cleanup.sh
+</code></pre></div>
+
+<p>This will clean up any <strong>deleted</strong> files every day at 2:00 am.  Log files will be stored in <code>galaxy/galaxy_cleanup.log</code> and <code>galaxy/cleanup_datasets/*.log</code>.</p>
+
+<p>For more information please see the <a href="https://galaxyproject.org/admin/config/performance/purge-histories-and-datasets/">Purging Histories and Datasets</a> document.  <strong><em>Note: the metadata about each analysis will still be stored and available in Galaxy, but the data file contents will be permanently removed.</em></strong></p>
+:ET

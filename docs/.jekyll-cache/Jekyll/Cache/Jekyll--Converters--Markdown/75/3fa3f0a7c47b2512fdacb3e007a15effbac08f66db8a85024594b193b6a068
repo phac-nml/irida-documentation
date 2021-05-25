@@ -1,0 +1,330 @@
+I"a:<h1 class="no_toc" id="refseq_masher-whats-in-your-sequence-data">refseq_masher: What’s in your sequence data?</h1>
+
+<p><a href="https://github.com/phac-nml/refseq_masher">refseq_masher</a> searches your sequence data against a <a href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-0997-x">Mash</a> database of 54,925 <a href="https://www.ncbi.nlm.nih.gov/genome">NCBI RefSeq Genomes</a> to find what NCBI RefSeq genomes match or are contained within your sequence data.</p>
+
+<p>This tutorial will run <a href="https://github.com/phac-nml/refseq_masher">refseq_masher</a> against a publicly available reads set.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#get-tutorial-reads-data" id="markdown-toc-get-tutorial-reads-data">Get tutorial reads data</a></li>
+  <li><a href="#initial-data" id="markdown-toc-initial-data">Initial Data</a>    <ul>
+      <li><a href="#add-sample-to-cart" id="markdown-toc-add-sample-to-cart">Add Sample to Cart</a></li>
+      <li><a href="#select-refseq_masher-pipeline" id="markdown-toc-select-refseq_masher-pipeline">Select refseq_masher Pipeline</a></li>
+      <li><a href="#configure-and-launch-refseq_masher-analysis" id="markdown-toc-configure-and-launch-refseq_masher-analysis">Configure and Launch refseq_masher Analysis</a></li>
+      <li><a href="#monitoring-analysis-status" id="markdown-toc-monitoring-analysis-status">Monitoring Analysis Status</a></li>
+      <li><a href="#viewing-and-interpreting-the-results" id="markdown-toc-viewing-and-interpreting-the-results">Viewing and Interpreting the Results</a>        <ul>
+          <li><a href="#matches---srr1203042-refseq-masher-matchestsv" id="markdown-toc-matches---srr1203042-refseq-masher-matchestsv">Matches - <code>SRR1203042-refseq-masher-matches.tsv</code></a></li>
+          <li><a href="#contains---srr1203042-refseq-masher-containstsv" id="markdown-toc-contains---srr1203042-refseq-masher-containstsv">Contains - <code>SRR1203042-refseq-masher-contains.tsv</code></a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#viewing-provenance-information" id="markdown-toc-viewing-provenance-information">Viewing Provenance Information</a></li>
+  <li><a href="#viewing-pipeline-details" id="markdown-toc-viewing-pipeline-details">Viewing Pipeline Details</a></li>
+</ul>
+
+<h2 id="get-tutorial-reads-data">Get tutorial reads data</h2>
+
+<p>Let’s get the WGS data for <code>SRR1203042</code> from <a href="https://www.ebi.ac.uk/ena/data/view/SRR1203042&amp;display=html">EBI</a>:</p>
+
+<blockquote>
+  <p>Illumina MiSeq paired end sequencing; Whole genome shotgun sequencing of Salmonella enterica subsp. enterica serovar Abony str. FNW19H84 by Illumina MiSeq</p>
+</blockquote>
+
+<p>Download forward and reverse reads for <code>SRR1203042</code>:</p>
+
+<ul>
+  <li><a href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR120/002/SRR1203042/SRR1203042_1.fastq.gz">SRR1203042_1.fastq.gz</a></li>
+  <li><a href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR120/002/SRR1203042/SRR1203042_2.fastq.gz">SRR1203042_2.fastq.gz</a></li>
+</ul>
+
+<h1 id="initial-data">Initial Data</h1>
+
+<p>It is assumed the sequence files (forward and reverse) <code>SRR1203042_1.fastq.gz</code> and <code>SRR1203042_2.fastq.gz</code> have been uploaded into a sample as described in the <a href="../web-upload/">Web Upload Tutorial</a>. Before starting this tutorial you should have a project with a sample as seen below:</p>
+
+<p><img src="images/refseq-masher-samples.png" alt="refseq-masher-samples" /></p>
+
+<h2 id="add-sample-to-cart">Add Sample to Cart</h2>
+
+<p>Select sample “SRR1203042” and add it to your Cart:</p>
+
+<p><img src="images/add-to-cart.png" alt="add-to-cart" /></p>
+
+<p>Once the samples have been added to the cart, the samples can be reviewed by clicking on the <strong>Cart</strong> button at the top.</p>
+
+<p><img src="images/cart-button.png" alt="cart-button" /></p>
+
+<h2 id="select-refseq_masher-pipeline">Select refseq_masher Pipeline</h2>
+
+<p>Once inside the cart all available pipelines will be listed in the main area of the page.</p>
+
+<p><img src="images/pipeline-select.png" alt="pipeline-select" /></p>
+
+<h2 id="configure-and-launch-refseq_masher-analysis">Configure and Launch refseq_masher Analysis</h2>
+
+<p><img src="images/refseq-pipeline-page.png" alt="refseq-pipeline-page" /></p>
+
+<p>Modify the parameters to run <code>refseq_masher</code> if desired:</p>
+
+<p><img src="images/refseq-pipeline-customize.png" alt="refseq-pipeline-customize" /></p>
+
+<p>Click the “Launch” button to submit the analysis.</p>
+
+<p><img src="../../../images/tutorials/common/pipelines/ready-to-launch-button.png" alt="launch-button" /></p>
+
+<h2 id="monitoring-analysis-status">Monitoring Analysis Status</h2>
+
+<p>To monitor the status of the launched pipeline, please select the <strong>Analysis &gt; Your Analyses</strong> menu or click the <strong>Let’s see how this pipeline is doing</strong> button.</p>
+
+<p><img src="images/view-your-analyses.png" alt="view-your-analyses" /></p>
+
+<p>The will bring you to a page where you can monitor the status of each launched workflow.</p>
+
+<p><img src="images/monitor-analyses.png" alt="monitor-analyses" /></p>
+
+<p>Clicking the pipeline name will bring you to a page for that analysis pipeline. It will take a while for the RefSeqMasher analysis pipeline to complete. Along the top of the page you can check the current step of the analysis and at the bottom of the <strong>Details</strong> tab you can select if you would like to receive an email upon pipeline completion. The email option is only available if the analysis is not in <code>COMPLETED</code> or <code>ERROR</code> state.</p>
+
+<p><img src="images/analysis-in-progress.png" alt="analysis-in-progress" /></p>
+
+<p>When the <code>Ref Seq Masher</code>analysis has completed, you will be able to view the results of the analysis. Note that not all files have an available preview and as such are not displayed in the Output File Preview but are downloaded when selecting the <code>Download All Files</code> button.</p>
+
+<p><img src="images/refseq-results.png" alt="refseq-results" /></p>
+
+<p>You should see 2 files under “Output File Preview”:</p>
+
+<ul>
+  <li><code>SRR1203042-refseq-masher-matches.tsv</code>
+    <ul>
+      <li>Top matching NCBI Genomes to sample <code>SRR1203042</code></li>
+    </ul>
+  </li>
+  <li><code>SRR1203042-refseq-masher-contains.tsv</code>
+    <ul>
+      <li>NCBI Genomes contained in sample <code>SRR1203042</code></li>
+    </ul>
+  </li>
+</ul>
+
+<p>To download individual files select the <strong>…</strong> next to the Download All Files and select the file to download.</p>
+
+<p><img src="images/refseq-download-individual-files.png" alt="refseq-download-individual-files" /></p>
+
+<p>To download al the files generated by the analysis, please select the <strong>Download All Files</strong> button.</p>
+
+<p><img src="images/refseq-download-all-files.png" alt="refseq-download-all-files" /></p>
+
+<h2 id="viewing-and-interpreting-the-results">Viewing and Interpreting the Results</h2>
+
+<h3 id="matches---srr1203042-refseq-masher-matchestsv">Matches - <code>SRR1203042-refseq-masher-matches.tsv</code></h3>
+
+<p>Below is the top result from <code>SRR1203042-refseq-masher-matches.tsv</code> transposed for readability:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Field</td>
+      <td>Value</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>sample</td>
+      <td>SRR1203042</td>
+    </tr>
+    <tr>
+      <td>top_taxonomy_name</td>
+      <td>Salmonella enterica subsp. enterica serovar Abony str. 0014</td>
+    </tr>
+    <tr>
+      <td>distance</td>
+      <td>0.00650877</td>
+    </tr>
+    <tr>
+      <td>pvalue</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>matching</td>
+      <td>328/400</td>
+    </tr>
+    <tr>
+      <td>full_taxonomy</td>
+      <td>Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacterales; Enterobacteriaceae; Salmonella; enterica; subsp. enterica; serovar Abony; str. 0014</td>
+    </tr>
+    <tr>
+      <td>taxonomic_subspecies</td>
+      <td>Salmonella enterica subsp. enterica</td>
+    </tr>
+    <tr>
+      <td>taxonomic_species</td>
+      <td>Salmonella enterica</td>
+    </tr>
+    <tr>
+      <td>taxonomic_genus</td>
+      <td>Salmonella</td>
+    </tr>
+    <tr>
+      <td>taxonomic_family</td>
+      <td>Enterobacteriaceae</td>
+    </tr>
+    <tr>
+      <td>taxonomic_order</td>
+      <td>Enterobacterales</td>
+    </tr>
+    <tr>
+      <td>taxonomic_class</td>
+      <td>Gammaproteobacteria</td>
+    </tr>
+    <tr>
+      <td>taxonomic_phylum</td>
+      <td>Proteobacteria</td>
+    </tr>
+    <tr>
+      <td>taxonomic_superkingdom</td>
+      <td>Bacteria</td>
+    </tr>
+    <tr>
+      <td>subspecies</td>
+      <td>enterica</td>
+    </tr>
+    <tr>
+      <td>serovar</td>
+      <td>Abony</td>
+    </tr>
+    <tr>
+      <td>plasmid</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>bioproject</td>
+      <td>PRJNA224116</td>
+    </tr>
+    <tr>
+      <td>biosample</td>
+      <td>SAMN01823751</td>
+    </tr>
+    <tr>
+      <td>taxid</td>
+      <td>1029983</td>
+    </tr>
+    <tr>
+      <td>assembly_accession</td>
+      <td>GCF_000487615.2</td>
+    </tr>
+    <tr>
+      <td>match_id</td>
+      <td>./rcn/refseq-NZ-1029983-PRJNA224116-SAMN01823751-GCF_000487615.2-.-Salmonella_enterica_subsp._enterica_serovar_Abony_str._0014.fna</td>
+    </tr>
+  </tfoot>
+</table>
+
+<p>Given that our sample, <code>SRR1203042</code>, was from an Illumina MiSeq sequencing run of strain <code>Salmonella enterica subsp. enterica serovar Abony str. FNW19H84</code>, the top <code>refseq_masher</code> result confirms that the WGS is <em>Salmonella enterica</em> subsp. enterica serovar Abony.</p>
+
+<p><em>For more info on interpreting refseq_masher <strong>matches</strong> results, see <a href="https://github.com/phac-nml/refseq_masher#matches---find-the-closest-matching-ncbi-refseq-genomes-in-your-input-sequences">refseq_masher matches documentation</a></em></p>
+
+<h3 id="contains---srr1203042-refseq-masher-containstsv">Contains - <code>SRR1203042-refseq-masher-contains.tsv</code></h3>
+
+<blockquote>
+  <p>If a read set potentially has multiple genomes, it can be “screened” against the database to estimate how well each genome is contained in the read set.</p>
+</blockquote>
+
+<ul>
+  <li><a href="https://mash.readthedocs.io/en/latest/tutorials.html#screening-a-read-set-for-containment-of-refseq-genomes">Mash Screen</a> tutorial</li>
+</ul>
+
+<p>Below are the first 5 rows and columns of <code>SRR1203042-refseq-masher-contains.tsv</code>:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>sample</td>
+      <td>top_taxonomy_name</td>
+      <td>identity</td>
+      <td>shared_hashes</td>
+      <td>median_multiplicity</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>SRR1203042</td>
+      <td>Salmonella enterica subsp. enterica serovar Typhimurium</td>
+      <td>0.99953</td>
+      <td>397/400</td>
+      <td>36</td>
+    </tr>
+    <tr>
+      <td>SRR1203042</td>
+      <td>Salmonella enterica subsp. enterica serovar Typhimurium</td>
+      <td>0.997614</td>
+      <td>385/400</td>
+      <td>285</td>
+    </tr>
+    <tr>
+      <td>SRR1203042</td>
+      <td>Salmonella enterica subsp. enterica serovar Typhimurium</td>
+      <td>0.997614</td>
+      <td>385/400</td>
+      <td>285</td>
+    </tr>
+    <tr>
+      <td>SRR1203042</td>
+      <td>Salmonella enterica subsp. enterica serovar Choleraesuis</td>
+      <td>0.997614</td>
+      <td>385/400</td>
+      <td>284</td>
+    </tr>
+    <tr>
+      <td>SRR1203042</td>
+      <td>Salmonella enterica subsp. enterica serovar Choleraesuis</td>
+      <td>0.997614</td>
+      <td>385/400</td>
+      <td>284</td>
+    </tr>
+  </tfoot>
+</table>
+
+<p>We can see that <code>SRR1203042</code> mostly contains k-mers belonging to <em>Salmonella enterica</em> subsp. enterica NCBI RefSeq Genomes.</p>
+
+<p>About some of the fields in <code>SRR1203042-refseq-masher-contains.tsv</code>:</p>
+
+<ul>
+  <li><code>sample</code> - Your sample name</li>
+  <li><code>identity</code> - Proportion of identical hashes or k-mers between your sample and an NCBI RefSeq Genome in the Mash Sketch database</li>
+  <li><code>shared_hashes</code> - Number of hashes shared between your sample and an NCBI RefSeq Genome in the Mash Sketch database</li>
+  <li><code>median_multiplicity</code> - “median multiplicity is computed for shared hashes, based on the number of observations of those hashes within the pool” (from <code>mash screen -h</code> with Mash v2.0)</li>
+</ul>
+
+<p><em>For more info on interpreting refseq_masher <strong>contains</strong> results, see <a href="https://github.com/phac-nml/refseq_masher#contains---find-what-ncbi-refseq-genomes-are-contained-in-your-input-sequences">refseq_masher contains documentation</a></em> and the <a href="https://mash.readthedocs.io/en/latest/tutorials.html#screening-a-read-set-for-containment-of-refseq-genomes">Mash Screen</a> documentation.</p>
+
+<h1 id="viewing-provenance-information">Viewing Provenance Information</h1>
+
+<p>To view the pipeline provenance information, please select the <strong>Provenance</strong> tab.</p>
+
+<p><img src="images/refseq-provenance.png" alt="refseq-provenance" /></p>
+
+<p>The provenance is displayed on a per file basis. Clicking on <code>refseq-masher-matches.tsv</code> file will display it’s provenance. Expanding each tool will display the parameters that the tool was executed with.</p>
+
+<p><img src="images/refseq-provenance-tools.png" alt="refseq-provenance-tools" /></p>
+
+<h1 id="viewing-pipeline-details">Viewing Pipeline Details</h1>
+
+<p>To view analysis details, please select the <strong>Settings</strong> tab. From here you can view the analysis name, analysis description, analysis id, pipeline and pipeline version used by the analysis, analysis priority, when the analysis was created, and duration of the analysis.</p>
+
+<p><img src="images/refseq-settings.png" alt="refseq-settings" /></p>
+
+<p>To edit an analysis name, please select the Pencil icon next to the analysis name. Once you have edited the analysis name, pressing the <code>ENTER</code> key on your keyboard or clicking anywhere outside of the text box will update the name. To cancel editing a name you can either hit the <code>ESC</code> key on your keyboard or if the name has not been changed you can also click anywhere outside of the text box.</p>
+
+<p><img src="images/refseq-settings-edit-name.png" alt="refseq-settings-edit-name" /></p>
+
+<p>To view samples used by the analysis, please select the <strong>Samples</strong> tab.</p>
+
+<p><img src="images/refseq-settings-samples.png" alt="refseq-settings-samples" /></p>
+
+<p>To share analysis results with other projects, please select the <strong>Manage Results</strong> tab.</p>
+
+<p><img src="images/refseq-settings-share.png" alt="refseq-settings-share" /></p>
+
+<p>To delete an analysis, please select the <strong>Delete Analysis</strong> tab.</p>
+
+<p><img src="images/refseq-settings-delete.png" alt="refseq-settings-delete" /></p>
+
+:ET

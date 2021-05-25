@@ -1,0 +1,151 @@
+I",&<h1 class="no_toc" id="managing-sample-metadata">Managing Sample Metadata</h1>
+
+<p>Each <a href="../project">project</a> in IRIDA may contain a collection of samples that corresponds to an isolate. Each sample can contain an indefinite number of metadata terms.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#viewing-and-modifying-metadata-on-a-sample" id="markdown-toc-viewing-and-modifying-metadata-on-a-sample">Viewing and modifying metadata on a sample</a></li>
+  <li><a href="#bulk-import-of-metadata-for-samples-within-a-project" id="markdown-toc-bulk-import-of-metadata-for-samples-within-a-project">Bulk import of metadata for samples within a project</a>    <ul>
+      <li><a href="#example-upload" id="markdown-toc-example-upload">Example Upload</a></li>
+    </ul>
+  </li>
+  <li><a href="#project-metadata-line-list" id="markdown-toc-project-metadata-line-list">Project Metadata Line List</a>    <ul>
+      <li><a href="#sorting-columns" id="markdown-toc-sorting-columns">Sorting Columns</a></li>
+      <li><a href="#column-filtering" id="markdown-toc-column-filtering">Column Filtering</a></li>
+      <li><a href="#reorder-columns" id="markdown-toc-reorder-columns">Reorder Columns</a></li>
+      <li><a href="#toggle-metadata-columns" id="markdown-toc-toggle-metadata-columns">Toggle Metadata Columns</a></li>
+      <li><a href="#saving-column-order-and-visible-metadata" id="markdown-toc-saving-column-order-and-visible-metadata">Saving Column Order and Visible Metadata</a></li>
+      <li><a href="#exporting-data-from-metadata-table" id="markdown-toc-exporting-data-from-metadata-table">Exporting Data from Metadata Table</a></li>
+      <li><a href="#editing-metadata" id="markdown-toc-editing-metadata">Editing Metadata</a>        <ul>
+          <li><a href="#inline-editing" id="markdown-toc-inline-editing">Inline Editing</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="viewing-and-modifying-metadata-on-a-sample">Viewing and modifying metadata on a sample</h2>
+
+<p>Metadata can be <a href="{{site.baseurl}}/user/user/samples/#viewing-individual-sample-details">viewed and modified</a> on the individual sample.</p>
+
+<h2 id="bulk-import-of-metadata-for-samples-within-a-project">Bulk import of metadata for samples within a project</h2>
+
+<p>Administrators and project managers can directly upload Excel spreadsheets of metadata directly to a project.  It is expected that one of the columns in the spreadsheet will map to the sample <strong>name</strong> within IRIDA, this can be selected at upload time.</p>
+
+<p>Links to the upload page can be found:</p>
+
+<ol>
+  <li>
+    <p>On the <code>Project</code> &gt; <code>Samples</code> page, under the <code>Sample Tools</code> dropdown menu:<br />
+<img src="images/project_sample_metadata_import_link.png" alt="Bulk upload on project sample page under sample tools menu." /></p>
+  </li>
+  <li>
+    <p>On the <code>Project</code> &gt; <code>Linelist</code> page:<br />
+<img src="images/project_linelist_metadata_import_link.png" alt="Bulk upload on project linelist page using link." /></p>
+  </li>
+</ol>
+
+<p><strong style="background-color: rgba(240, 173, 78, 1.00); padding: 5px; font-weight: bold">Please note that this feature is still under development.</strong></p>
+
+<p><img src="images/spreadsheet.png" alt="Excel Spreadsheet Example" /></p>
+
+<p>Any excel spreadsheet containing metadata for samples in a project can be uploaded through the IRIDA web interface.  One of the column in the table <strong>must</strong> correspond to the sample name within the project.  In this example spreadsheet, the <code>NLEP #</code> column is the sample name.</p>
+
+<p>THe first step is to select the Excel file containing the data.  Either click on the square label <code>Click or drop Excel file containing metadata for samples in this project.</code> or drag and drop the file from your file browser.</p>
+
+<p><img src="images/upload-selection.png" alt="Select spreadsheet" /></p>
+
+<p>After uploading a spreadsheet, the column corresponding to the sample name must be selected.  After selecting the column heading, press the <code>Preivew metadata to be uploaded</code> button.</p>
+
+<p><img src="images/upload-column.png" alt="Select name column." /></p>
+
+<p>Before the metadata upload is completed, metadata that matches sample names and ones that don’t are presented.</p>
+
+<p><img src="images/upload-preview.png" alt="Preview Upload" /></p>
+
+<p>Metadata that has a matching sample name are listed in the table <code>Rows matcthings samples</code> with the number of matching samples.  Clicking on the <code>Save valid metadata</code> button will add the metadata to it’s sample and redirect to the linelist page.</p>
+
+<p><img src="images/upload-preview-success.png" alt="Upload Preview Success" /></p>
+
+<p>Metadata that do not have matching sample names are listed in the table <code>Rows not matching samples</code> with the number of non-matching samples.  Currently nothing can be done about these.  Try to check the sample names and re-importing the spreadsheet.</p>
+
+<p><img src="images/upload-preview-errors.png" alt="Upload Preview Errors" /></p>
+
+<h3 id="example-upload">Example Upload</h3>
+
+<p><img src="images/upload_bulk_metadata.gif" alt="Demonstration of uploading Excel Spreadsheet" /></p>
+
+<h2 id="project-metadata-line-list">Project Metadata Line List</h2>
+
+<p>A Metadata Line List is a table that summarizes all metadata associated with samples in a project.</p>
+
+<p><img src="images/linelist_base.png" alt="Basic Line List" /></p>
+
+<h3 id="sorting-columns">Sorting Columns</h3>
+
+<p>The initial sort is on the <code>Sample Name</code> column in ascending order.</p>
+
+<p>Columns can be sorted by clicking on the column headers and the sort direction is indicated by an arrow next to the label.   Multiple columns can be sorted simultaneously by holding down the <code>Shift</code> key while clicking on the column header.</p>
+
+<p><img src="images/linelist_column_sort.gif" alt="Line List column sorting by clicking on the column headers" /></p>
+
+<h3 id="column-filtering">Column Filtering</h3>
+
+<p>Data within individual columns can be filtered.  Hovering the cursor over the column header displays a menu icon that, when clicked, displays filtering options.</p>
+
+<p><img src="images/column_filter.gif" alt="Line List column filters" /></p>
+
+<p>Filters can be set to be:</p>
+<ul>
+  <li>Equals: the text entered must exactly match the value in the column</li>
+  <li>Not equal: if the text entered matches the value in the column, the sample will be hidden</li>
+  <li>Start with: column value must start with the value entered</li>
+  <li>Ends with: column value must end with the value entered</li>
+  <li>Contains: the text entered can be found anywhere in the value in the column</li>
+  <li>Not contains: the text entered cannot ve found anywhere in the value in the column.</li>
+</ul>
+
+<p>Up to 2 separate filters can be applied to a column at a time.</p>
+
+<p><img src="images/columns_two_filters.gif" alt="Line List column filters" /></p>
+
+<h3 id="reorder-columns">Reorder Columns</h3>
+
+<p>To make it easier to see related information, columns can be re-ordered by dragging the the column header to the required position.</p>
+
+<p><img src="images/linelist_reorder.gif" alt="Line List Reorder" /></p>
+
+<h3 id="toggle-metadata-columns">Toggle Metadata Columns</h3>
+
+<p>Some columns might not have information that is useful in a particular analysis.  Columns can be toggled on and off in the right hand side panel of the table.  If the panel is closed, or needs to be opened, click the <code>Columns</code> button on the right hand side of the table.</p>
+
+<p><img src="images/toggle_metadata_button.gif" alt="Line List Metadata Toggle" /></p>
+
+<p>Columns can be toggled on and off by selecting the checkbox with the column name in it.  If the checkbox is checked, the column will be visible.</p>
+
+<p><img src="images/toggle_metadata_column.gif" alt="Line List Toggle Columns using checkbox" /></p>
+
+<h3 id="saving-column-order-and-visible-metadata">Saving Column Order and Visible Metadata</h3>
+
+<p>Updating the column order and which metadata is visible can be saved as a <strong>Template</strong> so that the next time the line list is viewed the same settings can be applied quickly.  Click the <code>Save Template</code> button which will open a dialog window.  Add a name for the template (this cannot match the name of another template within the project).</p>
+
+<p><img src="images/linelist_save_template.gif" alt="Save Template Dialog" /></p>
+
+<p>A template can up updated by selecting its name in the dropdown.  The checkbox must be selected stating that the existing template will be overwritten.</p>
+
+<p>After a template is created it can me modified or deleted under <a href="../sample-metadata-templates">Project Settings &gt; Sample Metadata Templates</a></p>
+
+<h3 id="exporting-data-from-metadata-table">Exporting Data from Metadata Table</h3>
+
+<p>Data can be exported as either Excel or CSV formats.  Ony the fields currently in the table will be exported.</p>
+
+<p>Hovering over the <code>Export</code> button which will reveal a dropdown where you can select from either <code>Export as Excel</code> or <code>Export as CSV</code>, the download will begin automatically.</p>
+
+<p><img src="images/linelist_export.png" alt="Export Buttons" /></p>
+
+<h3 id="editing-metadata">Editing Metadata</h3>
+
+<h4 id="inline-editing">Inline Editing</h4>
+
+<p>Values within the metadata table can be updated by double clicking on the cell you want to modify, enter the new value and press enter.  The new value will be automatically saved.  Once a cell has been edited, a notification will display with a “undo” button, that will revert the value back to the original.</p>
+
+:ET

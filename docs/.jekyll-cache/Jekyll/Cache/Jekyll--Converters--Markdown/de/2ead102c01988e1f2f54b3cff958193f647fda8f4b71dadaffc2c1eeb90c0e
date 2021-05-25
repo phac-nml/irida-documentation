@@ -1,0 +1,19 @@
+I"<h1 class="no_toc" id="user-guide">User Guide</h1>
+
+<p>The user guide for IRIDA describes the major concepts of IRIDA and demonstrates how to manage data in IRIDA, including launching new analytical workflows. Please follow the links below to the section of the user guide that you’re interested in viewing, or follow the links from top to bottom to read through.</p>
+
+<ul>
+  <li><a href="system-overview/">System overview</a></li>
+  <li><a href="login/">Logging in</a></li>
+  <li><a href="dashboard/">Dashboard overview</a></li>
+  <li><a href="user-groups/">Managing user groups</a></li>
+  <li><a href="project/">Managing projects</a></li>
+  <li><a href="samples/">Managing samples</a></li>
+  <li><a href="sample-metadata/">Managing sample metadata</a></li>
+  <li><a href="sample-metadata-templates/">Managing sample metadata templates</a></li>
+  <li><a href="pipelines/">Launching pipelines</a></li>
+  <li><a href="sistr/">Using the SISTR pipeline</a></li>
+  <li><a href="analysis-visualizations/">Analysis Visualizations</a></li>
+</ul>
+
+:ET

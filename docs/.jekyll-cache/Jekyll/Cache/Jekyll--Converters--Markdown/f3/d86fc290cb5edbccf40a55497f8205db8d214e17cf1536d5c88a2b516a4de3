@@ -1,0 +1,57 @@
+I"<h1 class="no_toc" id="setup-of-galaxy-for-irida">Setup of Galaxy for IRIDA</h1>
+
+<p>These instructions describe the necessary steps for the integration of <a href="https://wiki.galaxyproject.org/FrontPage">Galaxy</a> with IRIDA as well as using Galaxy and <a href="https://wiki.galaxyproject.org/ToolShed">Galaxy ToolSheds</a> to install workflows.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<p>Before proceeding with the integration of Galaxy and IRIDA, the following requirements need to be met.</p>
+
+<ol>
+  <li><a href="https://docs.galaxyproject.org/en/master/releases/index.html">Galaxy version &gt;= <strong>v16.01</strong></a> is required as IRIDA makes use of <a href="https://docs.galaxyproject.org/en/master/admin/conda_faq.html">conda with Galaxy</a>.  Earlier versions were supported previously, but are now deprecated. A method to get newer conda-based tools to work with older Galaxy versions is described in our <a href="../faq/#4-installing-conda-dependencies-in-galaxy-versions--v1601">FAQ</a>, however this option will not be supported and is not recommended.</li>
+  <li>The filesystem is shared between the machines serving IRIDA and Galaxy under the same paths (e.g., <code>/path/to/irida-data</code> on the IRIDA server is available as <code>/path/to/irida-data</code> on the Galaxy server).</li>
+</ol>
+
+<h2 id="quick-start">Quick Start</h2>
+
+<p>The easiest way to get Galaxy up and running for use with IRIDA is to use a custom-built <a href="https://www.docker.com/">Docker</a> image.  To start this image, please do the following:</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="c1"># (Optional) Install Docker</span>
+<span class="c1"># curl -sSL https://get.docker.com/ | sh</span>
+
+<span class="c1"># Run IRIDA/Galaxy docker</span>
+docker run -d -p <span class="m">48888</span>:80 -v /path/to/irida/data:/path/to/irida/data phacnml/galaxy-irida-20.05</code></pre></div>
+
+<p>Where <code>48888</code> is the port on your local system where Galaxy should be accessible, and <code>/path/to/irida/data</code> should point to the location where the sequencing data for IRIDA is stored (i.e., the parent directory of <code>{sequence,reference,output}.file.base.directory</code> in <a href="../web/#core-configuration">/etc/irida/irida.conf</a>).</p>
+
+<p>Now proceed to installing the <a href="../web/">IRIDA web interface</a>, making sure to set the following Galaxy connection parameters in <code>/etc/irida/irida.conf</code>.</p>
+
+<div class="highlight"><pre><code>galaxy.execution.url=http://localhost:48888
+galaxy.execution.apiKey=fakekey
+galaxy.execution.email=admin@galaxy.org
+</code></pre></div>
+
+<h2 id="detailed-instructions">Detailed Instructions</h2>
+
+<p>For more detailed instructions on installing Galaxy please refer to the following.</p>
+
+<ol>
+  <li><a href="existing-galaxy/">Integration with existing Galaxy</a>: If you already have a Galaxy instance installed, this will describe the necessary changes to the configuration needed in order for IRIDA to communicate with Galaxy.</li>
+  <li><a href="setup/">Setup of a new Galaxy instance</a>: If you do not have a Galaxy instance installed, this will walk through the general procedure of setting up a new Galaxy instance.</li>
+  <li><a href="cleanup/">Automated Cleanup of Galaxy files</a>: Many intermediate files are produced when executing an IRIDA workflow in Galaxy. These instructions destribe setting up automated cleanup of these files.</li>
+</ol>
+
+<p>If you encounter errors while installing Galaxy you may want to look over the <a href="../faq">IRIDA/Galaxy FAQ</a>.</p>
+
+<h2 id="architecture">Architecture</h2>
+
+<p>The overall architecture of IRIDA and Galaxy is as follows:</p>
+
+<p><img src="images/irida-galaxy.jpg" alt="irida-galaxy.jpg" /></p>
+
+<ol>
+  <li>IRIDA manages all input files for a workflow.  This includes sequencing reads, reference files, and the Galaxy workflow definition file.  On execution of a workflow, references to these files are sent to a Galaxy instance using the <a href="https://wiki.galaxyproject.org/Learn/API">Galaxy API</a>.  It is assumed that these files exist on a file system shared between IRIDA and Galaxy.</li>
+  <li>All tools used by a workflow are assumed to have been installed in Galaxy during the setup of IRIDA.  The Galaxy workflow is uploaded to Galaxy and the necessary tools are executed by Galaxy.  Galaxy can be setup to either execute tools on a local machine, or submit jobs to a cluster.</li>
+  <li>Once the workflow execution is complete, a copy of the results are downloaded into IRIDA and stored in the shared filesystem.</li>
+</ol>
+
+:ET

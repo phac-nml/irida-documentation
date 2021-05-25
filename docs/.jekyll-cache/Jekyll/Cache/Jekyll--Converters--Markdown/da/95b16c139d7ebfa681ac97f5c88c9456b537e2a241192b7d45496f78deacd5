@@ -1,0 +1,66 @@
+I"�<h1 class="no_toc" id="downloading-irida">Downloading IRIDA</h1>
+
+<p>You can find individual download links, and links to corresponding documentation in the sections below.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#irida-virtual-appliance" id="markdown-toc-irida-virtual-appliance">IRIDA Virtual Appliance</a>    <ul>
+      <li><a href="#using-the-virtual-appliance" id="markdown-toc-using-the-virtual-appliance">Using the Virtual Appliance</a></li>
+    </ul>
+  </li>
+  <li><a href="#irida-web-interface" id="markdown-toc-irida-web-interface">IRIDA Web Interface</a></li>
+  <li><a href="#irida-uploader" id="markdown-toc-irida-uploader">IRIDA Uploader</a></li>
+  <li><a href="#sample-data" id="markdown-toc-sample-data">Sample Data</a></li>
+</ul>
+
+<h2 id="irida-virtual-appliance">IRIDA Virtual Appliance</h2>
+
+<p>Documentation for installing IRIDA can be found <a href="../administrator/">here</a>, but is time consuming and must be adjusted to the quirks of your environment. We provide a fully-configured virtual appliance that can be opened with <a href="https://www.virtualbox.org/">Oracle VirtualBox</a> for demonstration purposes. You can download the complete package at:</p>
+
+<p><a href="https://irida.corefacility.ca/downloads/virtual/irida-vm-virtualbox-latest.zip">https://irida.corefacility.ca/downloads/virtual/irida-vm-virtualbox-latest.zip</a></p>
+
+<h3 id="using-the-virtual-appliance">Using the Virtual Appliance</h3>
+
+<p>The virtual appliance is currently configured to use 8 CPU cores and requires <strong>at least</strong> 8GB of RAM. You <em>may</em> reduce the number of CPU cores allocated to the virtual appliance, however, we do not recommend that you use any less than 4 CPU cores.</p>
+
+<p>Once you start the virtual appliance, you can connect to IRIDA in several ways: using your web browser, using an uploader tool, or using SSH. Please see “<a href="./using-the-virtual-appliance.html">Using the Virtual Appliance</a>” for more information about how to use the IRIDA virtual appliance.</p>
+
+<h2 id="irida-web-interface">IRIDA Web Interface</h2>
+
+<p>The IRIDA web interface is distributed as a <code>war</code> archive. You can access the latest stable release of IRIDA at:</p>
+
+<p><a href="https://github.com/phac-nml/irida/releases/latest">https://github.com/phac-nml/irida/releases/latest</a></p>
+
+<p>You may also see all releases of the IRIDA web interface at:</p>
+
+<p><a href="https://github.com/phac-nml/irida/releases">https://github.com/phac-nml/irida/releases</a></p>
+
+<p>The documentation for installing and configuring the IRIDA web interface (and Galaxy!) can be found at:</p>
+
+<p><a href="http://irida.corefacility.ca/documentation/administrator/">http://irida.corefacility.ca/documentation/administrator/</a></p>
+
+<h2 id="irida-uploader">IRIDA Uploader</h2>
+
+<p>The IRIDA Uploader is an application used to submit sequencing data from a variety of sequencers to an instance of IRIDA. You can access the latest stable release of the IRIDA Uploader at:</p>
+
+<p><a href="https://github.com/phac-nml/irida-uploader/releases/latest">https://github.com/phac-nml/irida-uploader/releases/latest</a></p>
+
+<p>The Uploader is available as a stand alone application with user interface, and as a command line utility.</p>
+
+<p>A tutorial for the stand alone application can be found here: <a href="https://github.com/phac-nml/irida-uploader-tutorial">https://github.com/phac-nml/irida-uploader-tutorial</a></p>
+
+<p>The command line utility is available via source code on <a href="https://github.com/phac-nml/irida-uploader">Github</a> as well as a package on <a href="https://anaconda.org/bioconda/irida-uploader">bioconda</a></p>
+
+<p>The documentation for using the IRIDA Uploader is included in the package, but can also be found at:</p>
+
+<p><a href="https://irida-uploader.readthedocs.io/en/stable/">https://irida-uploader.readthedocs.io/en/stable/</a></p>
+
+<h2 id="sample-data">Sample Data</h2>
+
+<p>Sample data for testing IRIDA can be found at:</p>
+
+<p><a href="https://irida.corefacility.ca/downloads/data/irida-sample-data.zip">https://irida.corefacility.ca/downloads/data/irida-sample-data.zip</a></p>
+
+<p>The sample data package consists of <em>simulated</em> Illumina MiSeq read data for three publicly available Listeria Monocytogenes genomes. You can find more information about the simulated data at:</p>
+
+<p><a href="https://irida.corefacility.ca/downloads/data/README.txt">https://irida.corefacility.ca/downloads/data/README.txt</a></p>
+:ET

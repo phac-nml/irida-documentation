@@ -1,0 +1,70 @@
+I"2<h1 id="user-interface-testing-using-selenium-and-chromedriver">User interface testing using <a href="http://www.seleniumhq.org/">Selenium</a> and <a href="http://chromedriver.chromium.org/">chromedriver</a></h1>
+
+<p>In order to run the UI tests with <a href="http://www.seleniumhq.org/">Selenium</a>, you will need the appropriate version of <a href="http://chromedriver.chromium.org/">chromedriver</a> for your version of <a href="https://www.google.com/chrome/">Chrome</a> or <a href="https://www.chromium.org/">Chromium</a>, or you can use a <a href="https://hub.docker.com/r/selenium/standalone-chrome">selenium/standalone-chrome</a> docker image.</p>
+
+<h2 id="initialize-db-with-liquibase-and-run-ui-test-server">Initialize DB with Liquibase and run UI test server</h2>
+
+<h3 id="create-integration-test-db">Create integration test DB</h3>
+
+<p>MariaDB/MySQL SQL for dropping and creating <code>irida_integration_test</code> database and granting user <code>test</code> all privileges on that DB:</p>
+<div class="highlight"><pre><code class="language-sql"><span class="n">sudo</span> <span class="n">mysql</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
+<span class="k">DROP</span> <span class="k">DATABASE</span> <span class="n">irida_integration_test</span><span class="p">;</span>
+<span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="n">irida_integration_test</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">ALL</span> <span class="k">PRIVILEGES</span> <span class="k">ON</span> <span class="n">irida_integration_test</span><span class="p">.</span><span class="o">*</span> <span class="k">TO</span> <span class="s1">&#39;test&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="p">;</span>
+<span class="n">EOF</span></code></pre></div>
+
+<h3 id="db-initialization-with-liquibase">DB initialization with Liquibase</h3>
+
+<p>You’ll need the DB in the proper state to run the UI tests. To do this, you will need to run Liquibase in order to apply all of the necessary DB migration scripts. This can be done with the following command:</p>
+
+<div class="highlight"><pre><code>mvn clean jetty:run -B -Pui_testing \
+  -Dspring.profiles.active=it \ # run IRIDA with the `it` Spring profile active
+  -Djdbc.url=jdbc:mysql://localhost:3306/irida_integration_test \
+  -Dirida.it.rootdirectory=/tmp/irida/ \
+  -Dhibernate.hbm2ddl.import_files="" \
+  -Dhibernate.hbm2ddl.auto="" \
+  -Dliquibase.update.database.schema=true
+</code></pre></div>
+
+<p><strong>NOTE:</strong></p>
+<ul>
+  <li>Running Liquibase is required to get the DB into the right state! <code>-Dhibernate.hbm2ddl.import_files=""</code>, <code>-Dhibernate.hbm2ddl.auto=""</code> and <code>-Dliquibase.update.database.schema=true</code> are required to run Liquibase. You might need to wipe the integration test DB and create it again.</li>
+  <li><strong>BEWARE:</strong> <code>-Djdbc.url=jdbc:mysql://localhost:3306/irida_integration_test</code> is VERY IMPORTANT. Specify explicitly so you don’t point at your development DB and have it accidentally wiped…</li>
+  <li>You don’t need to specify <code>-Dsequence.file.base.directory</code> and <code>*reference*</code> and <code>*output*</code> if they all have the same root and dirnames of <code>sequence</code>, <code>reference</code> and <code>output</code>. It’s automatically implied.</li>
+  <li>Set <code>-Dirida.it.headless=false</code> so you can see the UI tests in action!</li>
+</ul>
+
+<h3 id="chromedriver-and-chromechromium"><a href="http://chromedriver.chromium.org/">chromedriver</a> and <a href="https://www.google.com/chrome/">Chrome</a>/<a href="https://www.chromium.org/">Chromium</a></h3>
+
+<p>You need to match up the version of <a href="https://www.google.com/chrome/">Chrome</a> with <a href="http://chromedriver.chromium.org/">chromedriver</a>. For example, <a href="https://www.google.com/chrome/">Chrome</a> v66 needs <a href="http://chromedriver.chromium.org/">chromedriver</a> v2.39 or v2.40 (see https://sites.google.com/a/chromium.org/chromedriver/downloads)</p>
+
+<p>You can specify which <a href="http://chromedriver.chromium.org/">chromedriver</a> to use with <code>-Dwebdriver.chrome.driver=/PATH/TO/chromedriver</code> otherwise, the <code>node_modules</code> version of <a href="http://chromedriver.chromium.org/">chromedriver</a> is used for running UI tests.</p>
+
+<h3 id="using-seleniumstandalone-chrome">Using <a href="https://hub.docker.com/r/selenium/standalone-chrome">selenium/standalone-chrome</a></h3>
+
+<p>To use <a href="https://hub.docker.com/r/selenium/standalone-chrome">selenium/standalone-chrome</a> you will need to have docker installed on your machine.</p>
+
+<p>Then when running the ui tests make sure to specify the <code>--selenium-docker</code> option otherwise, the <code>node_modules</code> version of <a href="http://chromedriver.chromium.org/">chromedriver</a> is used for running UI tests.</p>
+
+<h2 id="running-specific-ui-tests-through-intellij-idea">Running specific UI tests through <a href="https://www.jetbrains.com/idea/">IntelliJ</a> IDEA</h2>
+
+<p><em>Recommended <a href="https://www.jetbrains.com/idea/">IntelliJ</a> Default/Template JUnit VM Options Configuration:</em></p>
+
+<div class="highlight"><pre><code>-ea 
+-Dspring.profiles.active=it 
+-Djdbc.url=jdbc:mysql://localhost:3306/irida_integration_test 
+-Dirida.it.rootdirectory=/tmp/irida/ 
+-Dirida.it.nosandbox=true 
+-Dirida.it.headless=false
+-Dwebdriver.chrome.driver=/PATH/TO/chromedriver
+</code></pre></div>
+
+<p><img src="images/intellij-ui-tests-default-junit.png" alt="" /></p>
+
+<p>After starting the IRIDA UI test server (i.e. <code>mvn clean jetty:run -B -Pui_testing ...</code>), you can run the specific integration tests you’re interested in through your IDE by going to the <code>*IT.java</code> file of interest and clicking the <strong>Run Test</strong> icon in the left gutter beside the first line of the class or function of interest.</p>
+
+<p><img src="images/intellij-ui-tests-run-in-ide.png" alt="" /></p>
+
+<p><strong>TIP:</strong> Re-build (Ctrl+Shift+F9) to register changes to tests rather than re-building whole project!</p>
+
+:ET

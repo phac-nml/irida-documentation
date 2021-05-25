@@ -1,0 +1,161 @@
+I"J<<h1 class="no_toc" id="upgrade-notes">Upgrade Notes</h1>
+<ul id="markdown-toc">
+  <li><a href="#2005" id="markdown-toc-2005">20.05</a>    <ul>
+      <li><a href="#assemblies-data" id="markdown-toc-assemblies-data">Assemblies data</a></li>
+      <li><a href="#fast5-data" id="markdown-toc-fast5-data">FAST5 data</a></li>
+    </ul>
+  </li>
+  <li><a href="#2001" id="markdown-toc-2001">20.01</a>    <ul>
+      <li><a href="#configured-redirect-token-in-rest-api-client-details" id="markdown-toc-configured-redirect-token-in-rest-api-client-details">Configured redirect token in REST API client details</a>        <ul>
+          <li><a href="#performing-the-changes" id="markdown-toc-performing-the-changes">Performing the changes</a></li>
+        </ul>
+      </li>
+      <li><a href="#updating-galaxy-importer-clients" id="markdown-toc-updating-galaxy-importer-clients">Updating Galaxy importer clients</a></li>
+    </ul>
+  </li>
+  <li><a href="#1905" id="markdown-toc-1905">19.05</a>    <ul>
+      <li><a href="#fastqc-translation-to-filesystem" id="markdown-toc-fastqc-translation-to-filesystem">FastQC translation to filesystem</a>        <ul>
+          <li><a href="#database-timeout-error" id="markdown-toc-database-timeout-error">Database timeout error</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>The majority of IRIDA’s upgrade notes can be seen at <a href="https://github.com/phac-nml/irida/blob/master/UPGRADING.md">https://github.com/phac-nml/irida/blob/master/UPGRADING.md</a>.  When there are more significant upgrades to the IRIDA system, database, deployment, etc. this page will go further in depth about how to properly back up your system, perform the upgrade, and recover from problems.</p>
+
+<h1 id="2005">20.05</h1>
+<h2 id="assemblies-data">Assemblies data</h2>
+
+<p>The 20.05 version of IRIDA includes support for uploading your own assemblies along with storing assembly results from analysis pipelines.  Uploaded assemblies are expected to be of <code>.fasta</code> format.  Current support for .<code>fastq</code> assembly files includes data storage and REST API support.  REST API support includes uploading assemblies, exporting to Galaxy, and command line export via the NGSArchive Linker.  Currently IRIDA does not support running analyses with assembly data.</p>
+
+<p>See more about working with assemblies in the IRIDA UI in our <a href="https://irida.corefacility.ca/documentation/user/user/samples/#sequence-files--assemblies">sample management guide</a>.</p>
+
+<h2 id="fast5-data">FAST5 data</h2>
+
+<p>The 20.05 version of IRIDA includes beta support for FAST5 data.  At the moment, IRIDA accepts both single <code>.fast5</code> files, and directories of <code>.fast5.tar.gz</code> files.  Support is stronger for the individual <code>.fast5</code> files and are recommended for use, but this will be reviewed in future IRIDA versions.  Current support for FAST5 files includes data storage and REST API support.   REST API support includes uploading files, exporting to Galaxy, and command line export via the NGSArchive Linker.  Currently IRIDA does not support running analyses with FAST5 data.</p>
+
+<p>Uploads of <code>.fast5</code> files will be treated similar to an unpaired sequence file, including FastQC analysis.</p>
+
+<p>Uploads of <code>.fast5.tar.gz</code> files are currently for storage only.  FastQC results will not be available.</p>
+
+<p>See more about working with FAST5 data in the IRIDA UI in our <a href="https://irida.corefacility.ca/documentation/user/user/samples/#sequence-files--assemblies">sample management guide</a>.</p>
+
+<h1 id="2001">20.01</h1>
+<h2 id="configured-redirect-token-in-rest-api-client-details">Configured redirect token in REST API client details</h2>
+
+<p>The 20.01 version of IRIDA includes some significant upgrades to some of the key software libraries used to build the application including <a href="https://spring.io/">Spring</a> &amp; <a href="https://spring.io/projects/spring-security">Spring Security</a>.  Part of the REST API security changes included enforcing a good practice in setting up a configured redirect URI for OAuth2 <code>authorization_code</code> clients.  This means that for any web application that will be connecting to IRIDA via the REST API, IRIDA must know the address of the website that is going to be requesting data.  This is a good security practice to ensure that client credentials are only being used for the appropriate web applications.</p>
+
+<h3 id="performing-the-changes">Performing the changes</h3>
+
+<p>The downside of this change is that it will require IRIDA system administrators to register a redirect URI for all <code>authorization_code</code> clients.  This is a manual change and must be performed through the IRIDA user interface.  In order to update these clients, an admin must go into the clients list under the ⚙ icon, and click <code>Clients</code>.  This will list all the system clients for your IRIDA installation.</p>
+
+<p>The clients which must be edited in this list will have <code>authorization_code</code> listed in the “Grant Types” column.</p>
+
+<p><img src="images/client-update-authcode.png" alt="Client list page authorization_code" /></p>
+
+<p>After clicking on an authorization code client, you can verify it needs updated by viewing the details panel.  The client should have <code>authorization_code</code> listed under “Grant Types”, and should have no entry in the “Redirect URI”.</p>
+
+<p><img src="images/client-update-details-empty.png" alt="Client details empty redirect" /></p>
+
+<p>To update the redirect URI, click the “Edit” button.  On this edit page you can fill in the appropriate redirect URI for the client.  For IRIDA servers this will typically be the server URL + <code>/api/oauth/authorization/token</code>. Ex: <code>http://irida.ca/irida/api/oauth/authorization/token</code>.  Note that this is <strong>not the address of your IRIDA server</strong>.  This will be the address of the IRIDA server using this client to synchronized data from your server.</p>
+
+<p>For non-IRIDA applications, you must refer to the application’s API documentation for what to use for a redirect URI.  After entering the URI, click the “Update Client” button.</p>
+
+<p><img src="images/client-update-edit-page.png" alt="Client edit page" /></p>
+
+<p>After completing this process, you should see the redirect URI listed in the client details page.  To test that this process was completed successfully, you can follow the instructions on the <a href="http://localhost:4000/user/administrator/#adding-a-remote-irida-installation">Remote API</a> page to test a remote connection.</p>
+
+<p>Note that if this process is not completed correctly for a Remote API, data will no longer synchronize and will result in an error.</p>
+
+<p>See the section under “authorization code” in our documentation for more details about entering the redirect URI at <a href="https://irida.corefacility.ca/documentation/user/administrator/#grant-types">https://irida.corefacility.ca/documentation/user/administrator/#grant-types</a>.</p>
+
+<h2 id="updating-galaxy-importer-clients">Updating Galaxy importer clients</h2>
+
+<p>Clients for the <a href="https://github.com/phac-nml/irida-galaxy-importer">Galaxy IRIDA importer</a> must undergo a similar process, but with slightly different values.  The Galaxy importer targets your local IRIDA installation so the redirect URL points at your own IRIDA.  Redirect URLs for Galaxy will be the following:</p>
+
+<p>Your IRIDA server URL + <code>/galaxy/auth_code</code>.  Ex: <code>http://irida.ca/irida/galaxy/auth_code</code>.</p>
+
+<p>To test this change, try importing some data from Galaxy.  If it works, you’ve updated everything correctly!</p>
+
+<h1 id="1905">19.05</h1>
+<h2 id="fastqc-translation-to-filesystem">FastQC translation to filesystem</h2>
+
+<p>This upgrade was built to greatly reduce the size of IRIDA’s database (and database backups).  Before this upgrade, any time FastQC was run the output files were saved in the database <code>analysis_fastqc</code> table as <code>longblob</code> objects.  This worked fine when IRIDA had a smaller number of files, but as some installations are growing larger this is increasing the database size at an alarming rate.  The upgrade will move the FastQC images out of the database and store them in the configured <code>output.file.base.directory</code> alongside the other analysis output files.</p>
+
+<p>We do not expect issues with this upgrade, but out of an abundance of caution recovery notes are listed below.</p>
+
+<h3 class="no_toc" id="precautions-to-take-before-undertaking-this-update">Precautions to take before undertaking this update</h3>
+
+<ul>
+  <li>Back up your database.  The FastQC images will be permanently removed from the database during this update so a backup should be performed in case anything goes wrong.</li>
+  <li>The update will add a large number of small image files to your <code>output.file.base.directory</code>.  For each sequence file in your database, 3 files totaling approximately 50KB will be created.  Ensure your filesystem will be able to handle this increase in files.</li>
+  <li>If you want to be extra cautious, you can backup your configured <code>output.file.base.directory</code>.</li>
+</ul>
+
+<h3 class="no_toc" id="performing-the-upgrade">Performing the upgrade</h3>
+
+<p>This upgrade will proceed as a normal database upgrade handled by Liquibase.  You shouldn’t need to do anything special, just ensure you’ve taken your database backups.</p>
+
+<h3 class="no_toc" id="in-case-of-an-error">In case of an error</h3>
+
+<p>First step in case of an error should always be to stop Tomcat.</p>
+
+<p>This database upgrade works in 2 stages:</p>
+
+<ol>
+  <li>Copy all the FastQC images into a temporary directory within your <code>output.file.base.directory</code>.</li>
+  <li>Move all the images from the temporary directory to their final resting spot inside <code>output.file.base.directory</code>.</li>
+</ol>
+
+<p>What to do for recovery if something goes wrong will be different depending on the stage.</p>
+
+<h4 class="no_toc" id="stage-1---creating-temporary-files">Stage 1 - Creating temporary files</h4>
+
+<p>If a problem occurs during stage 1 you’re probably going to see the following error message:</p>
+
+<blockquote>
+  <p>There was a problem moving the FastQC images from the database to the filesystem.  The directory (<strong>YOUR TEMP DIRECTORY</strong>) contains the temporary FastQC images that should have been moved to the analysis output directory.  In order to re-apply this update, please restore the database from a backup, and then re-start IRIDA.  You do <em>not</em> have to cleanup existing FastQC images on the filesystem as they will be re-written.  Once your upgrade has completed successfully, you can safely remove the temp directory.</p>
+</blockquote>
+
+<p>As the error message states, this means there was a problem while creating the temporary files.  If you look inside (<strong>YOUR TEMP DIRECTORY</strong>) you should see a directory with lots of numbered subdirectories with some <code>.png</code> files with the FastQC images inside.  To recover from this point:</p>
+
+<ol>
+  <li>Restore your database backup</li>
+  <li>Remove the temporary directory created during the upgrade.  It will be included in the error message.</li>
+  <li>Retry the upgrade by starting Tomcat again.</li>
+</ol>
+
+<h4 class="no_toc" id="stage-2---moving-files-to-output-directory">Stage 2 - Moving files to output directory</h4>
+
+<p>Issues with this step will be much more rare, but If a problem occurs here it’s a bit more of a process to clean up.  You’ll see the following message:</p>
+
+<blockquote>
+  <p>There was a problem moving the FastQC images from the temporary file location (<strong>YOUR TEMP DIRECTORY</strong>) to their final output file location.  This is going to involve some manual cleanup.  We recommend first creating a backup of (<strong>YOUR OUTPUT DIRECTORY</strong>).  The previous max file ID was (<strong>PREVIOUS MAX ID</strong>).  Any files in (<strong>YOUR OUTPUT DIRECTORY</strong>) with an ID greater than (<strong>PREVIOUS MAX ID</strong>) were created during this process and can be deleted.  The directory (<strong>YOUR TEMP DIRECTORY</strong>) contains the temporary FastQC images that should have been moved to the analysis output directory.  In order to re-apply this update, please restore the database from a backup, and then re-start IRIDA.  Once your upgrade has completed successfully, you can safely remove the temp directory.</p>
+</blockquote>
+
+<p>What’s happened at this point is an error occurred while moving the temporary files to their output location.  As stated in the message above you’ll need to manually delete some files to clean up from here.</p>
+
+<ol>
+  <li>(optional but recommended) Back up your analysis output files directory <code>output.file.base.directory</code>.</li>
+  <li>Restore your database backup.</li>
+  <li>Check the error message.  It will note the pre-upgrade largest output file id “The previous max file ID was (<strong>PREVIOUS MAX ID</strong>)”.</li>
+  <li>Remove all directories from your <code>output.file.base.directory</code> with an ID <strong>GREATER THAN</strong> the above noted ID.  These files were created as part of the upgrade process.</li>
+  <li>Retry the upgrade by starting Tomcat again.</li>
+  <li>Remove the temporary directory created during the failed upgrade.  It will be included in the error message. “… temporary file location (<strong>YOUR TEMP DIRECTORY</strong>)”.</li>
+</ol>
+
+<h4 id="database-timeout-error">Database timeout error</h4>
+
+<p>If you have lots of sequence files stored in IRIDA, this upgrade can take a while to write all the FastQC results to the filesystem. This could lead to database connection timeout issues (the default timeout is 8 hours for MySQL/MariaDB). You should see a message in your log like below if this error were to occur:</p>
+
+<div class="highlight"><pre><code>Error: The last packet successfully received from the server was 38,881,098 milliseconds ago.  The last packet sent successfully to the server was 38,885,372 milliseconds ago. is longer than the server configured value of 'wait_timeout'. You should consider either expiring and/or testing connection validity before use in your application, increasing the server configured values for client timeouts, or using the Connector/J connection property 'autoReconnect=true' to avoid this problem. [Failed SQL: ALTER TABLE irida_prod_test.analysis_output_file MODIFY file_path VARCHAR(255) NOT NULL]
+</code></pre></div>
+
+<p>If you encounter this error, you can increase the database <code>wait_timeout</code> value by modifying the database connection string in <code>/etc/irida/irida.conf</code> by appending <code>?sessionVariables=wait_timeout=57600</code> like below:</p>
+
+<div class="highlight"><pre><code>jdbc.url=jdbc:mysql://localhost:3306/irida_prod_test?sessionVariables=wait_timeout=57600
+</code></pre></div>
+
+<p>Modify <code>57600</code> to some appropriate timeout value (in seconds). Once you’ve made this modification, you will have to go through the instructions above on recovering from an error before restarting the upgrade. Once the upgrade is complete, you can remove this variable from the connection string and restart IRIDA to reset to the default database timeout value.</p>
+:ET

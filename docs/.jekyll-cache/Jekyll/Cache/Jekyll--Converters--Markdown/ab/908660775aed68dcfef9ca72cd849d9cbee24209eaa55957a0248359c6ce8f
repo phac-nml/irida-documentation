@@ -1,0 +1,119 @@
+I"g<h1 class="no_toc" id="managing-user-groups">Managing User Groups</h1>
+
+<p>User accounts can be organized into a collection called a user group. User groups can be used to assign <a href="../project/#project-members">project permissions</a> to collections of user accounts. This section of the user guide descibes how you can view projects, edit project metadata (including uploading reference files), search for projects by name, and create new projects.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#viewing-existing-user-groups" id="markdown-toc-viewing-existing-user-groups">Viewing existing user groups</a></li>
+  <li><a href="#creating-a-new-user-group" id="markdown-toc-creating-a-new-user-group">Creating a new User Group</a></li>
+  <li><a href="#viewing-user-group-details" id="markdown-toc-viewing-user-group-details">Viewing user group details</a></li>
+  <li><a href="#editing-user-group-details" id="markdown-toc-editing-user-group-details">Editing user group details</a></li>
+  <li><a href="#user-group-members" id="markdown-toc-user-group-members">User group members</a>    <ul>
+      <li><a href="#adding-a-project-member" id="markdown-toc-adding-a-project-member">Adding a project member</a></li>
+      <li><a href="#changing-a-user-group-member-role" id="markdown-toc-changing-a-user-group-member-role">Changing a user group member role</a></li>
+      <li><a href="#removing-a-user-from-a-user-group" id="markdown-toc-removing-a-user-from-a-user-group">Removing a user from a user group</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="viewing-existing-user-groups">Viewing existing user groups</h2>
+
+<p>You can access the list of user groups that have already been created by clicking on the “Settings” menu at the top of the dashboard and selecting “Groups”:</p>
+
+<p><img src="images/groups-menu.png" alt="Groups dashboard location." /></p>
+
+<p>The user groups list shows all user groups in IRIDA:</p>
+
+<p><img src="../../../images/tutorials/common/users/user-groups-list.png" alt="List of user groups." /></p>
+
+<p>The projects list provides a high-level overview of project details, including:</p>
+
+<ul>
+  <li>The name of the group,</li>
+  <li>The group description,</li>
+  <li>The date that the group was created,</li>
+  <li>The date that the group was last modified, and</li>
+  <li>(if you are permitted) group deletion buttons.</li>
+</ul>
+
+<h2 id="creating-a-new-user-group">Creating a new User Group</h2>
+
+<p>All users are permitted to create user groups in IRIDA.</p>
+
+<p>To create a user group, start from the <a href="#viewing-existing-user-groups">user groups list</a> page and click on the “Create New User Group” button:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/add-user-groups-button.png" alt="Create user group button." /></p>
+
+<p>This will open a modal window which will allow you to fill in the group details fields. Only the group name is required, but you can optionally provide a more detailed description of what the user group is:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-group-details-form.png" alt="User group details form." /></p>
+
+<p>On successfully creating a new user group, you will see the user group details that you entered:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-group-details-page.png" alt="User group details page." /></p>
+
+<p>By default, your user account is assigned to the group as the group owner.</p>
+
+<h2 id="viewing-user-group-details">Viewing user group details</h2>
+
+<p>To view user group details, start from the <a href="#viewing-existing-user-groups">user groups list</a> and click on the <strong>Name</strong> of the user group:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-group-details-link.png" alt="User group name link." /></p>
+
+<p>The user group details page shows a summary of the user group details and provides a view of the user accounts that have membership in the group:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-group-details.png" alt="User group details page." /></p>
+
+<h2 id="editing-user-group-details">Editing user group details</h2>
+
+<p>If you are a group owner, you can edit the details of a user group. To edit user group details, start by <a href="#viewing-user-group-details">viewing the user group details</a>, then click on the pencil icon beside the field you wish to edit:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/edit-user-group-details.png" alt="Edit group details button." /></p>
+
+<p>When you’ve finished editing the user group field, you may click out of the input box or press enter, and it will save right away.</p>
+
+<h2 id="user-group-members">User group members</h2>
+
+<p>All users in IRIDA can see all user groups. A user can have one of two different roles in a user group: a group member (used only for project membership permissions) and a group owner (used for project membership permissions <em>and</em> group editing permissions).</p>
+
+<h3 id="adding-a-project-member">Adding a project member</h3>
+
+<p>If you are a group <strong>owner</strong>, you can add new members to the group.</p>
+
+<p>You can add other users to the group by clicking on the “Add Group Member” button:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-group-add-member-button.png" alt="Add group member button." /></p>
+
+<p>In the dialog that appears, choose the user that you want to add and the group role that the user should have. Group owners are allowed to add new members to the group. Group members are not allowed to add new members to the group.</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-group-add-member-dialog.png" alt="Add group member dialog." /></p>
+
+<h3 id="changing-a-user-group-member-role">Changing a user group member role</h3>
+
+<p>You may want to change a user group member role if you wish to remove permissions for an individual user account to modify user group details, but still want to allow that user account to view the project data that the user group is assigned to. You can only change a user group member role if you have the group <strong>owner</strong> role on the user group.</p>
+
+<p>Start by <a href="#viewing-user-group-details">viewing the user group details</a>.</p>
+
+<p>To change the role of a project member, click on the drop-down menu in the “Role” column on the table for the user you would like to change:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-group-details-role.png" alt="User group role drop-down menu." /></p>
+
+<p>The user group role is saved as soon as you make a selection – you <strong>do not</strong> need to click a “Save” button.</p>
+
+<h3 id="removing-a-user-from-a-user-group">Removing a user from a user group</h3>
+
+<p>You may want to completely remove all permissions for a user to access data in any project that the group is assigned to. To remove those permissions, you must remove the user account from the user group.</p>
+
+<p>Start by <a href="#viewing-user-group-details">viewing the user group details</a>.</p>
+
+<p>To remove a user group member, click on the “X” button on the right-hand side of the table:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-group-details-remove-user.png" alt="Remove user group member button." /></p>
+
+<p>When you click the remove button, you will be asked to confirm the user group member removal:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-group-details-remove-user-modal.png" alt="Remove user group member confirmation dialog." /></p>
+
+<p>To confirm, click the “OK” button.</p>
+
+<p><a href="../dashboard/">Previous: Dashboard overview</a><a href="../project/" style="float: right;">Next: Managing projects</a></p>
+:ET

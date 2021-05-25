@@ -1,0 +1,427 @@
+I"r<h1 class="no_toc" id="administrator-user-guide">Administrator User Guide</h1>
+
+<p>This guide shows how to use the administrative features of the IRIDA web interface.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#accessing-the-administrative-panel" id="markdown-toc-accessing-the-administrative-panel">Accessing the Administrative Panel</a></li>
+  <li><a href="#administrative-panel-overview" id="markdown-toc-administrative-panel-overview">Administrative Panel Overview</a></li>
+  <li><a href="#managing-user-accounts" id="markdown-toc-managing-user-accounts">Managing User Accounts</a>    <ul>
+      <li><a href="#creating-a-new-user-account" id="markdown-toc-creating-a-new-user-account">Creating a New User Account</a></li>
+      <li><a href="#updating-an-existing-user-account" id="markdown-toc-updating-an-existing-user-account">Updating an Existing User Account</a></li>
+      <li><a href="#resetting-a-password" id="markdown-toc-resetting-a-password">Resetting a Password</a></li>
+      <li><a href="#disabling-a-user-account" id="markdown-toc-disabling-a-user-account">Disabling a User Account</a></li>
+    </ul>
+  </li>
+  <li><a href="#managing-user-groups" id="markdown-toc-managing-user-groups">Managing User Groups</a>    <ul>
+      <li><a href="#viewing-existing-user-groups" id="markdown-toc-viewing-existing-user-groups">Viewing existing user groups</a></li>
+    </ul>
+  </li>
+  <li><a href="#managing-system-clients" id="markdown-toc-managing-system-clients">Managing System Clients</a>    <ul>
+      <li><a href="#creating-a-new-system-client" id="markdown-toc-creating-a-new-system-client">Creating a New System Client</a></li>
+      <li><a href="#updating-an-existing-system-client" id="markdown-toc-updating-an-existing-system-client">Updating an Existing System Client</a>        <ul>
+          <li><a href="#generating-a-new-client-secret" id="markdown-toc-generating-a-new-client-secret">Generating a New Client Secret</a></li>
+        </ul>
+      </li>
+      <li><a href="#removing-a-system-client" id="markdown-toc-removing-a-system-client">Removing a System Client</a></li>
+    </ul>
+  </li>
+  <li><a href="#managing-remote-irida-connections" id="markdown-toc-managing-remote-irida-connections">Managing Remote IRIDA Connections</a>    <ul>
+      <li><a href="#allowing-access-to-your-irida-installation" id="markdown-toc-allowing-access-to-your-irida-installation">Allowing access to your IRIDA installation</a></li>
+      <li><a href="#adding-a-remote-irida-installation" id="markdown-toc-adding-a-remote-irida-installation">Adding a Remote IRIDA installation</a></li>
+      <li><a href="#removing-a-remote-connection" id="markdown-toc-removing-a-remote-connection">Removing a Remote Connection</a></li>
+    </ul>
+  </li>
+  <li><a href="#setting-analysis-submission-priority" id="markdown-toc-setting-analysis-submission-priority">Setting Analysis Submission Priority</a></li>
+  <li><a href="#viewing-sequencing-runs" id="markdown-toc-viewing-sequencing-runs">Viewing Sequencing Runs</a></li>
+  <li><a href="#uploading-data-to-irida-using-the-irida-uploader" id="markdown-toc-uploading-data-to-irida-using-the-irida-uploader">Uploading Data to IRIDA using the IRIDA Uploader</a></li>
+  <li><a href="#displaying-irida-platform-updatesannouncements" id="markdown-toc-displaying-irida-platform-updatesannouncements">Displaying IRIDA Platform Updates/Announcements</a></li>
+  <li><a href="#viewing-all-project-exports" id="markdown-toc-viewing-all-project-exports">Viewing All Project Exports</a></li>
+  <li><a href="#troubleshooting" id="markdown-toc-troubleshooting">Troubleshooting</a></li>
+</ul>
+
+<h1 id="accessing-the-administrative-panel">Accessing the Administrative Panel</h1>
+
+<p>The administrative features of IRIDA are accessed within the administrative panel.</p>
+
+<p>To navigate to the administrative panel, click the button on the top right of the navbar.<br />
+The button is only present if you have the <strong>Administrator</strong> system role.</p>
+
+<p><img src="images/admin-panel-navbar-button.png" alt="Admin panel navbar button." /></p>
+
+<h1 id="administrative-panel-overview">Administrative Panel Overview</h1>
+
+<p>The administrative panel contains a side menu with a menu option for each administrative feature.</p>
+
+<p>The panel has a top navbar with a “Return” button to return to the main application plus a “Profile” dropdown menu for viewing the current user’s account and logging out.</p>
+
+<p><img src="images/admin-panel.png" alt="Admin panel." /></p>
+
+<h1 id="managing-user-accounts">Managing User Accounts</h1>
+
+<p>Only one account is created for a new instance of IRIDA by default: the administrator account.</p>
+
+<p>This section of the guide describes how to create, modify, and remove local user accounts from IRIDA.</p>
+
+<h2 id="creating-a-new-user-account">Creating a New User Account</h2>
+
+<p>First navigate to the users page via the admin panel side menu:</p>
+
+<p><img src="images/users-side-menu.png" alt="Users side menu link." /></p>
+
+<p>Then click the “Add User” button:</p>
+
+<p><img src="images/add-user-button.png" alt="Add user button." /></p>
+
+<p>{% include tutorials/common/creating-a-user-account.md %}</p>
+
+<h2 id="updating-an-existing-user-account">Updating an Existing User Account</h2>
+
+<p>{% include_relative includes/start-from-the-user-list.md %}</p>
+
+<p>To edit a user account, click on the “Edit” button at the top of the “User Details” table:</p>
+
+<p><img src="images/user-details-edit-button.png" alt="User details edit button." /></p>
+
+<p>All of the fields that were available to modify when creating a user account are available for editing:</p>
+
+<p><img src="images/edit-user-details.png" alt="Edit user details." /><br />
+When you’re finished updating the user account, you can click the “Update User” button at the bottom of the form to save the changes.</p>
+
+<h2 id="resetting-a-password">Resetting a Password</h2>
+
+<p>{% include_relative includes/start-from-the-user-list.md %}</p>
+
+<p>To reset the password for a user account, click on the “Reset Password” button at the top of the “User Details” table:</p>
+
+<p><img src="images/user-details-reset-password-button.png" alt="User details reset password button." /></p>
+
+<p>When you click the button, you will be asked to confirm if you would like to reset the password for the user account:</p>
+
+<p><img src="images/reset-password-confirm.png" alt="Reset password confirmation dialog." /></p>
+
+<p>You should see a success notification at the top of your browser window when you confirm:</p>
+
+<p><img src="images/reset-password-success.png" alt="Reset password success notification." /></p>
+
+<p><strong>Note</strong>: Clicking the password reset button does <em>not</em> create a new password for the user, rather issues a reset request. The reset request will send an e-mail to the user with an account activation link (like when a user account is initially created), where the user will be allowed to create a new password.</p>
+
+<h2 id="disabling-a-user-account">Disabling a User Account</h2>
+
+<p>Start from the users list, by clicking on the “Users List” side menu link:</p>
+
+<p><img src="images/users-side-menu.png" alt="Users side menu link." /></p>
+
+<p>The users list shows all users currently registered in the system:</p>
+
+<p><img src="images/users-list.png" alt="Users list." /></p>
+
+<p>A user’s account can be quickly disabled by unchecking the checkbox beside the username of the user to disable.</p>
+
+<p>You can view the details of an existing user account by clicking on the username of the account your’re interested in:</p>
+
+<p><img src="images/user-details-page.png" alt="User details page." /></p>
+
+<p>To edit a user account, click on the “Edit” button at the top of the “User Details” table:</p>
+
+<p><img src="images/user-details-edit-button.png" alt="User details edit button." /></p>
+
+<p>To disable a user account, uncheck the “Enabled” field, and click “Update User”:</p>
+
+<p><img src="images/uncheck-enabled.png" alt="Uncheck the &quot;Enabled&quot; field." /></p>
+
+<p><strong>Note</strong>: A user account that is not “Enabled” is <strong>not</strong> deleted from the system, but that user can no longer log in to IRIDA.</p>
+
+<h1 id="managing-user-groups">Managing User Groups</h1>
+
+<p>User accounts can be organized into a collection called a user group. User groups can be used to assign <a href="../project/#project-members">project permissions</a> to collections of user accounts. This section of the user guide descibes how you can view projects, edit project metadata (including uploading reference files), search for projects by name, and create new projects.</p>
+
+<h2 id="viewing-existing-user-groups">Viewing existing user groups</h2>
+
+<p>First click on “User Groups List” via the admin panel side menu:</p>
+
+<p><img src="images/user-groups-side-menu.png" alt="Groups dashboard location." /></p>
+
+<p>The user groups list shows all user groups in IRIDA:</p>
+
+<p><img src="../../images/tutorials/common/users/user-groups-list.png" alt="List of user groups." /></p>
+
+<p>The projects list provides a high-level overview of project details, including:</p>
+
+<ul>
+  <li>The name of the group,</li>
+  <li>The group description,</li>
+  <li>The date that the group was created,</li>
+  <li>The date that the group was last modified, and</li>
+  <li>(if you are permitted) group deletion buttons.</li>
+</ul>
+
+<p>{% include tutorials/common/managing-user-groups.md %}</p>
+
+<h1 id="managing-system-clients">Managing System Clients</h1>
+
+<p>External tools can interact with IRIDA using the IRIDA REST API. External tools are required to use the OAuth2 framework for authorization. You must create an entry in the IRIDA database for each external tool that wants to interact with the IRIDA REST API. The tool author requires a client ID and a client secret. In addition to the client ID and secret, you are responsible for deciding what type of access a client should have (read, write, or both) and <em>how</em> the client should be allowed to interact with the REST API using user credentials.</p>
+
+<h2 id="creating-a-new-system-client">Creating a New System Client</h2>
+
+<p>{% include tutorials/clients/creating-a-client.md %}</p>
+
+<h3 class="no_toc" id="client-id">Client ID</h3>
+<p>The client ID must be unique in IRIDA, no two clients can share the same client ID. A client ID is required, and must be shorter than 255 characters, but no other validation is applied to client IDs.</p>
+
+<h3 class="no_toc" id="token-validity">Token Validity</h3>
+<p>When a client first interacts with the IRIDA REST API, it must provide its client ID, client secret, and user credentials. On successful authentication, the authorization server provides the client with an access token. The access token has a limited lifetime and expires after a certain period of time.</p>
+
+<p>You should choose an access token lifetime similar to the amount of time that the client needs to interact with the REST API. For example, when a sequencer requires less than one hour of time to upload a sequencing run, so the lifetime of the access token should be around 1 hour.</p>
+
+<h3 class="no_toc" id="grant-types">Grant Types</h3>
+<p>You may also choose <em>how</em> a client is allowed to provide authentication details from a user. IRIDA currently supports two grant types:</p>
+
+<ol>
+  <li>Password, and</li>
+  <li>Authorization code.</li>
+</ol>
+
+<p>You should choose the password grant type for applications that <strong>are not</strong> web-based applications, usually desktop or command-line clients. The password grant type requires the application to collect the user name and password directly from the user and submits the user name and password over HTTPS.</p>
+
+<p>You should choose the authorization code grant type for applications that <strong>are</strong> web-based applications. In the authorization code grant type the user’s web browser is redirected to IRIDA to allow the user to authorize the client’s interaction with IRIDA. In the authorization code grant type, the user’s username and password are <em>never</em> provided to the client.</p>
+
+<p>If you choose an authorization code grant, you must register a redirect URI for the service you expect to use this client.  This is the location which the token should be sent in the web application’s API to set up an OAuth2 connection.  In the case of IRIDA, this is generally the IRIDA installation’s base URL + <code>/api/oauth/authorization/token</code> (ex: <code>https://irida.ca/irida/api/oauth/authorization/token</code>).  In the case of the <a href="https://github.com/phac-nml/irida-galaxy-importer">IRIDA Galaxy Importer</a>, this will be your local server’s base URL + <code>/galaxy/auth_code</code>.  Ex: <code>http://irida.ca/irida/galaxy/auth_code</code>.</p>
+
+<h3 class="no_toc" id="refresh-tokens">Refresh Tokens</h3>
+<p>Refresh tokens allow client applications to generate a new authorization token without input from the user.  Because refresh tokens are valid for much longer than authorization tokens, refresh tokens can be used to ensure a connection can be made to an IRIDA API for longer running jobs.  Refresh tokens should be used for instances that a client application will require a long term connection to the IRIDA API where users may not be able to validate their connection.</p>
+
+<p>You should choose a refresh token validity suitable for the client application.  Once a refresh token expires it will require a user to log in and reconnect to the IRIDA API.  It is suggested to use refresh tokens for clients which will be used for project synchronization.</p>
+
+<h3 class="no_toc" id="scopes">Scopes</h3>
+
+<p>Finally, you must decide what the client is allowed to do once it’s been authorized to use the REST API. You must choose <em>at least one</em> scope, otherwise the client will not be allowed to do anything once it’s been authorized to use the REST API.</p>
+
+<p>If you choose <em>only</em> read scope, the client will have read-only access to the REST API (it will not be allowed to create new resources). The read scope is typically the only scope that should be enabled for a client.</p>
+
+<p>If a client is going to be adding or modifying data in IRIDA, you should also enable the write scope. One specific example of a client that <em>must</em> be able to write to the REST API is the sequencer uploader tool.</p>
+
+<h2 id="updating-an-existing-system-client">Updating an Existing System Client</h2>
+
+<p>{% include_relative includes/select-a-specific-client.md %}</p>
+
+<p>To modify the client details, you can click on the “Edit” button, in the top, right-hand corner of the “Client Details” panel:</p>
+
+<p><img src="images/client-details-edit-button.png" alt="Client details edit button." /></p>
+
+<p>From the client details page you can modify the client ID, the length of time that an authorization token is valid for, the grant type that the client uses, and the scopes (read or write) that the client is allowed to use:</p>
+
+<p><img src="images/edit-client-details.png" alt="Edit client details panel." /></p>
+
+<p>After you have made the modifications that you want to the existing client, click on the “Update Client” button.</p>
+
+<h3 id="generating-a-new-client-secret">Generating a New Client Secret</h3>
+
+<p>You may want to generate a new client secret for a client if, for example, the client secret has been accidentally leaked by the client and someone is abusing your API.</p>
+
+<p>Client secrets are generated randomly by IRIDA. You can have IRIDA issue a new client secret by navigating to the <a href="#updating-an-existing-system-client">“Edit Client Details”</a> page (as above), and checking “Generate a new client secret”:</p>
+
+<p><img src="images/edit-client-details-generate-new-secret.png" alt="Generate new client secret checkbox." /></p>
+
+<p>To generate the new secret, click on the “Update Client” button. The new client secret will be listed in the “Client Details” panel.</p>
+
+<h2 id="removing-a-system-client">Removing a System Client</h2>
+
+<p>{% include_relative includes/select-a-specific-client.md %}</p>
+
+<p>To remove a client, click on the “Remove” button at the top, right-hand corner of the “Client Details” panel:</p>
+
+<p><img src="images/client-details-delete-button.png" alt="Client details panel delete button." /></p>
+
+<p>You will be asked to confirm the deletion:</p>
+
+<p><img src="images/delete-client-confirm.png" alt="Delete client confirmation dialog." /></p>
+
+<p>Click “OK” to confirm, or “Cancel” to decline the deletion.</p>
+
+<p>After deleting a client, you will be returned to the list of clients.</p>
+
+<h1 id="managing-remote-irida-connections">Managing Remote IRIDA Connections</h1>
+<p>Remote instances of IRIDA can be used as data sources for associated projects and workflows.  Users will be able to view an aggregated view of samples from the local project along with all local and associated projects.  Administrators can create connections to remote instances of IRIDA using OAuth2 similar to how external tool developers can connect to the IRIDA REST API.</p>
+
+<p><img src="images/api-diagram.png" alt="Remote API connection" /></p>
+
+<p>See the <a href="../../user/user/dashboard#managing-remote-irida-connections">user guide</a> for information on connecting to remote instances of IRIDA.</p>
+
+<h2 id="allowing-access-to-your-irida-installation">Allowing access to your IRIDA installation</h2>
+
+<p>A Remote Connection is granted with the same process as remote clients.  To allow a remote IRIDA instance to access your IRIDA instance, an OAuth2 client must be created with the following specifications:</p>
+
+<ul>
+  <li>Token Validity: 12 hours recommended.  A short token validity will require users to reauthorize the API more often.</li>
+  <li>Grant Type: <code>authorization_code</code></li>
+  <li>Remote URI: The URI of the OAuth2 token endpoint (typically the server URL + “/api/oauth/authorization/token”. Ex: “http://irida.ca/api/oauth/authorization/token”) for the IRIDA installation connecting to yours.</li>
+  <li>Scopes: <code>read</code></li>
+</ul>
+
+<p><strong>Note:</strong> In order for a remote client to communicate with the REST API, the client must be able to access the REST API via HTTP.  This may involve opening access in a firewall or setting up a VPN connection between sites.</p>
+
+<p>For more information about creating OAuth2 clients see the <a href="#managing-system-clients">managing system clients</a> section.</p>
+
+<h2 id="adding-a-remote-irida-installation">Adding a Remote IRIDA installation</h2>
+
+<p>Before a user can use a remote instance of IRIDA as a data source for associated projects and workflows, an administrator must create a connection to that remote instance (similar to how external tool developers can connect to the REST API).  To add a Remote Connection, an administrator will need the following information from the remote installation:</p>
+
+<ul>
+  <li>An OAuth2 client ID which has been set up on the remote installation.</li>
+  <li>An OAuth2 client secret.</li>
+  <li>The root address of the IRIDA REST API of the remote installation.</li>
+</ul>
+
+<p>After being given the client credentials, access “Remote IRIDA Connections” via the admin panel side menu.</p>
+
+<p><img src="images/remote-api-side-menu.png" alt="Remote API page" /></p>
+
+<p>The Remote Connections page will display all currently available Remote Connections, and their connection status with an IRIDA instance.</p>
+
+<p>To add a new connection, click the “Add Remote Connection” button:</p>
+
+<p><img src="images/add-api.png" alt="Add api" /></p>
+
+<p>Enter a suitable name for the remote installation.  This name will be visible to users connecting and accessing data from that instance.  Also enter the “Client ID”, “Client Secret”, and “Service URL” of the Remote Connection as given by the remote administrator.</p>
+
+<p><img src="images/create-api-details.png" alt="Create API" /></p>
+
+<p>After adding the Remote Connection you should be directed to the details page for that API.</p>
+
+<p>To test the Remote Connection, click the “Connect” button.  You should be directed to a login page for the remote connection.  To connect to the remote instance of IRIDA you must have been given a username and password for the remote installation.  See <a href="../user/dashboard/#remote-instances-of-irida">Remote instances of IRIDA</a> for more details.</p>
+
+<p><img src="images/api-details.png" alt="API Details" /></p>
+
+<h2 id="removing-a-remote-connection">Removing a Remote Connection</h2>
+<p>From the Remote Connections list page, click on the name of the connection you wish to delete.  This will bring you to the API details page.  Click the “Remove” button on that page and confirm.</p>
+
+<p><img src="images/remove-api.png" alt="Remove API" /></p>
+
+<h1 id="setting-analysis-submission-priority">Setting Analysis Submission Priority</h1>
+
+<p>Administrators have the ability to set the priority of analysis submissions in IRIDA.  This feature can be used to ensure important analyses are run in a timely fashion when the analysis queue is filled by routine or other low priority analyses.  By default all manually submitted submissions will have a priority of <code>MEDIUM</code>, whereas all automated submissions (such as automated assemblies and automated SISTR) will have <code>LOW</code> priority.</p>
+
+<p>To update the priority of a submission, first view the analysis page.  The current priority will be displayed on the <code>Details</code> page. To edit the priority, click the select box under <strong>Priority</strong>:</p>
+
+<p><img src="images/analysis-priority-edit.png" alt="Analysis edit button." /></p>
+
+<p>Note that a priority change will only effect analyses in the <code>Queued</code> state.  The analysis engine will pick higher priority analyses to begin running first, but currently running jobs will not be bumped by a higher priority analysis.</p>
+
+<h1 id="viewing-sequencing-runs">Viewing Sequencing Runs</h1>
+<p>First navigate to the sequencing runs page via the admin panel side menu:</p>
+
+<p><img src="images/sequencing-runs-side-menu.png" alt="Sequencing runs menu." /></p>
+
+<p>The “Sequencing Runs” page lists all of the sequencing runs uploaded to IRIDA:</p>
+
+<p><img src="images/sequencing-runs-list.png" alt="Sequencing runs list." /></p>
+
+<p>You can view the specific details about a sequencing run by clicking on the ID of the sequencing run:</p>
+
+<p><img src="images/sequencing-runs-details-link.png" alt="Select a specific run." /></p>
+
+<p>The sequencing run details page shows information that was captured from the sequencing run file, and provides you a method to view a complete collection of files that were uploaded as part of a run:</p>
+
+<p><img src="images/sequencing-run-details.png" alt="Sequencing run details page." /></p>
+
+<p>To delete a sequencing run, click the <code>Remove</code> button on the details page.  Note: This will remove the sequencing run and all assocaited sequence files.  If this operation results in a sample being empty, the sample will also be removed.</p>
+
+<p><img src="images/remove-run.png" alt="Sequencing run remove." /></p>
+
+<p>To view the collection of files that were uploaded as part of the run, click on the “Files” tab, above the quick-details pane:</p>
+
+<p><img src="images/sequencing-run-details-files-tab.png" alt="Sequencing run details file tab." /></p>
+
+<p>On the sequencing run files list you can download individual files by clicking on the <img src="images/file-download-icon.png" alt="download icon" /> button, or you can view the quality control results produced by FastQC by clicking on the filename in the table:</p>
+
+<p><img src="images/sequencing-run-files-list.png" alt="Sequencing run files list." /></p>
+
+<p>On the quality control report page you can view individual quality control metrics, like quality constrol charts and some statistics about the file:</p>
+
+<p><img src="images/sequencing-run-file-qc.png" alt="Sequencing run file quality control page." /></p>
+
+<p>You can also view the overrepresented sequences detected by FastQC by clicking on the “Overrepresented Sequences” tab on the top, left-hand corner of the page:</p>
+
+<p><img src="images/sequencing-run-file-qc-overrepresented-sequences-tab.png" alt="Sequencing run file overrepresented sequences tab." /></p>
+
+<p>The overrepresented sequences page displays all of the overrepresented sequences detected by FastQC:</p>
+
+<p><img src="images/sequencing-run-overrepresented-sequences.png" alt="Sequencing run file overrepresented sequences page." /></p>
+
+<h1 id="uploading-data-to-irida-using-the-irida-uploader">Uploading Data to IRIDA using the IRIDA Uploader</h1>
+
+<p>The IRIDA Uploader is an application used to submit sequencing data from a variety of sequencers to an instance of IRIDA. You can access the latest stable release of the IRIDA Uploader at:</p>
+
+<p><a href="https://github.com/phac-nml/irida-uploader/releases/latest">https://github.com/phac-nml/irida-uploader/releases/latest</a></p>
+
+<p>The Uploader is available as a stand alone application with user interface, and as a command line utility.</p>
+
+<p>A tutorial for the stand alone application can be found here: <a href="https://github.com/phac-nml/irida-uploader-tutorial">https://github.com/phac-nml/irida-uploader-tutorial</a></p>
+
+<p>The command line utility is available via source code on <a href="https://github.com/phac-nml/irida-uploader">Github</a> as well as a package on <a href="https://anaconda.org/bioconda/irida-uploader">bioconda</a></p>
+
+<p>The documentation for using the IRIDA Uploader is included in the package, but can also be found at:</p>
+
+<p><a href="https://irida-uploader.readthedocs.io/en/stable/">https://irida-uploader.readthedocs.io/en/stable/</a></p>
+
+<h1 id="displaying-irida-platform-updatesannouncements">Displaying IRIDA Platform Updates/Announcements</h1>
+<p>Announcements and updates can be displayed to users after they log in:</p>
+
+<p><img src="images/announcements-home-page.png" alt="Announcements home page display" /></p>
+
+<p>Administrators can create new announcements or view existing ones by clicking on the “Announcements” side menu link:</p>
+
+<p><img src="images/announcements-side-menu.png" alt="Announcements side menu link" /></p>
+
+<p>New Announcements can be created by clicking on the “Create New Announcement” button at the top-left.</p>
+
+<p><img src="images/add-announcement-button.png" alt="Announcements create button" /></p>
+
+<p>These announcements are rendered as markdown. Saving the new announcement will allow users to see this on the front page of IRIDA.</p>
+
+<p><img src="images/add-announcement.png" alt="Announcements create modal" /></p>
+
+<p>To edit an announcement, or to see who has read the announcement, you can click on the announcement’s title:</p>
+
+<p><img src="images/announcement-details-link.png" alt="Announcements details link" /></p>
+
+<p>The announcement can be edited and saved, or deleted from this page. You can also view a list of users who have marked this particular announcement as read, as well as see when they did so:</p>
+
+<p><img src="images/announcement-details.png" alt="Announcements edit or view details page" /></p>
+
+<h1 id="viewing-all-project-exports">Viewing All Project Exports</h1>
+<p>Administrators have the ability to view the status of all exports to NCBI in the system.  First navigate to the NCBI export uploads page via the admin panel side menu:</p>
+
+<p><img src="images/ncbi-exports-side-menu.png" alt="NCBI exports menu." /></p>
+
+<p>You will be displayed all the NCBI exports that have been created sorted by the date they were created.</p>
+
+<p><img src="images/ncbi-exports-list.png" alt="NCBI exports list." /></p>
+
+<p>The exports will have one of the following states:</p>
+
+<ul>
+  <li><code>NEW</code>: Newly created submission that has not yet been uploaded</li>
+  <li><code>UPLOADING</code>: Submission currently being uploaded</li>
+  <li><code>UPLOADED</code>: Submission has been successfully uploaded</li>
+  <li><code>UPLOAD_ERROR</code>: An error occurred while uploading</li>
+  <li><code>created</code>: Submission created and being populated</li>
+  <li><code>failed</code>: Failed immediately after submission</li>
+  <li><code>queued</code>: Queued for processing by NCBI’s processing pipeline</li>
+  <li><code>processing</code>: Processing started by NCBI’s processing pipeline</li>
+  <li><code>processed-ok</code>: Processing completed successfully</li>
+  <li><code>processed-error</code>: Processing completed with error(s)</li>
+  <li><code>waiting</code>: Waiting for other files to continue</li>
+  <li><code>submitted</code>: Submitted to NCBI</li>
+  <li><code>Submission deleted</code>: Submission deleted</li>
+  <li><code>retried</code>: Retried processing of failed action(s)</li>
+</ul>
+
+<h1 id="troubleshooting">Troubleshooting</h1>
+
+<p>To troubleshoot common problems in IRIDA, please see the <strong>Troubleshooting</strong> guides.</p>
+
+<ol>
+  <li><a href="troubleshooting/pipelines">Troubleshooting Pipelines</a></li>
+</ol>
+:ET

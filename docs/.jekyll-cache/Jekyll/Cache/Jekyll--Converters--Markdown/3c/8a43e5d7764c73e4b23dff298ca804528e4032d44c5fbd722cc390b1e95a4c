@@ -1,0 +1,51 @@
+I"�<h1 class="no_toc" id="exporting-data-to-galaxy">Exporting data to Galaxy</h1>
+
+<p>Samples can also be exported directly to Galaxy. Samples exported from IRIDA into Galaxy are loaded into a <a href="https://galaxyproject.org/data-libraries/">Galaxy data library</a> that can be easily shared with multiple Galaxy users.</p>
+
+<p><em>Note: The Galaxy tool being used by this tutorial is located on GitHub <a href="https://github.com/phac-nml/irida-galaxy-importer">https://github.com/phac-nml/irida-galaxy-importer</a>. Please see the GitHub page for installation instructions (if the tool is not already installed in your Galaxy instance).</em></p>
+
+<p>To export data from IRIDA to Galaxy, start in Galaxy and find the “IRIDA server” tool in the “Get Data” section:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/galaxy-export-inside-galaxy.png" alt="IRIDA server import tool." /></p>
+
+<p>If you are not already logged into IRIDA, you will be required to log in using your IRIDA username and password:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/galaxy-irida-login.png" alt="IRIDA login." /></p>
+
+<p>After you log in to IRIDA (or if you were already logged in), you will be directed to the list of projects that you have permission to view. Choose the project containing the samples you wish to export:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/galaxy-irida-projects-list.png" alt="Galaxy IRIDA projects list." /></p>
+
+<p>When you are connected to Galaxy from within IRIDA, there will be a notification at the top of the page. This will be there for the duration of your session. If you want to end you Galaxy session without exporting samples, click on the <code>Cancel Galaxy Export</code> link at the top right.</p>
+
+<p>Navigate to the project that contains the samples that you’re interested in exporting by clicking on the project name. Then, <a href="/documentation/user/user/samples/#selecting-samples">select the samples</a> that you want to export and click the Add to Cart button to add the samples to the cart. Samples can be added from any project that you have access to. Once all the samples have been added to the cart, click on the cart icon on the top menu bar. This will take you to the cart galaxy export page.</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/cart-galaxy-page.png" alt="Galaxy IRIDA Cart." /></p>
+
+<p>On this page you will fill in a few options about your Galaxy export:</p>
+<ul>
+  <li>Galaxy User Email: This email must exactly match the email of your Galaxy account.  Incorrectly adding your Galaxy email will result in a failed export.</li>
+  <li>Include assemblies: Whether to include assemlies in the Galaxy export.  If this box is checked, any assemblies associated with the samples in the cart will be included.</li>
+  <li>Include FAST5: Whether to include FAST5 data in the Galaxy export.  If this box is checked, any FAST5 files associated with the samples in the cart will be included.</li>
+  <li>Automatically create collection: If this box is checked, a collection will be created in Galaxy with the contents of this export.</li>
+</ul>
+
+<p>After selecting your options, click the <code>Export Samples to Galaxy</code> button to start the export.</p>
+
+<p>After clicking this button, if it is your first time exporting data to Galaxy you may recieve an authentication page.  Read the disclaimer, then click  “Authorize” to begin the import.</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/cart-galaxy-oauth2.png" alt="Galaxy IRIDA Oauth2." /></p>
+
+<p>After authorizing, you will be redirected back to Galaxy and should see your files begin to import into the current history.</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/galaxy-history-item.png" alt="Export to Galaxy history item." /></p>
+
+<p>Additionally, if you opted to organize your data into collections of paired items, you will see the collections in your history:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/galaxy-history-collections.png" alt="Export to Galaxy history item." /></p>
+
+<p>You can view a report of the exported samples by clicking on the name of the history item. You can find your data library by clicking on “Shared Data” at the top of Galaxy and clicking on “Data Libraries”:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/galaxy-data-libraries-button.png" alt="Galaxy data libraries button." /></p>
+
+:ET

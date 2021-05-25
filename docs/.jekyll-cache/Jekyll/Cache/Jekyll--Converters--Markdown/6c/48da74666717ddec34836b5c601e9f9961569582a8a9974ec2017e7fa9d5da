@@ -1,0 +1,177 @@
+I"�2<h1 class="no_toc" id="sharing-data-in-irida">Sharing data in IRIDA</h1>
+
+<p>Once you’ve got data into IRIDA, either by <a href="../web-upload/">web upload</a> or from a sequencing facility with the <a href="https://github.com/phac-nml/irida-uploader">IRIDA Uploader</a>, you’re probably going to want to share that data with collaborators.</p>
+
+<p>In order to share data from a project, you <strong>must</strong> have the <strong>Manager</strong> role on the project. The <strong>Manager</strong> role implies ownership of the data contained in the project. You can find out if you have the <strong>Manager</strong> role by looking at the <a href="/documentation/user/user/project/index.html#project-members">project members section</a>.</p>
+
+<p>You can share data with collaborators in IRIDA in two ways: to an individual user account, or to a group of user accounts.</p>
+
+<p>If the individual person you want to share with within IRIDA does not have a user account, you must also have permission to create a user account for that user. If you do not, then you’ll need to contact someone who has permissions to create user accounts.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#creating-a-user-account" id="markdown-toc-creating-a-user-account">Creating a User Account</a></li>
+  <li><a href="#creating-a-user-group" id="markdown-toc-creating-a-user-group">Creating a User Group</a></li>
+  <li><a href="#adding-a-project-member" id="markdown-toc-adding-a-project-member">Adding a Project Member</a>    <ul>
+      <li><a href="#adding-an-individual-member" id="markdown-toc-adding-an-individual-member">Adding an Individual Member</a></li>
+      <li><a href="#adding-a-group-member" id="markdown-toc-adding-a-group-member">Adding a Group Member</a></li>
+    </ul>
+  </li>
+  <li><a href="#downloading-sample-data" id="markdown-toc-downloading-sample-data">Downloading Sample Data</a>    <ul>
+      <li><a href="#downloading-multiple-samples" id="markdown-toc-downloading-multiple-samples">Downloading Multiple Samples</a></li>
+      <li><a href="#downloading-individual-files" id="markdown-toc-downloading-individual-files">Downloading Individual Files</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="creating-a-user-account">Creating a User Account</h2>
+
+<p>If the person you would like to share data with within IRIDA does not have a user account, you’ll need to make an account for them.</p>
+
+<p>You may create a new user account in IRIDA if you have the <strong>Manager</strong> or <a href="../../administrator/#creating-a-new-user-account">Administrator</a> system role.</p>
+
+<p>After logging in to IRIDA, click the gear icon on the top right-hand side of the navbar and click <strong>Create User</strong>:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/create-user-menu.png" alt="Create user menu." /></p>
+
+<p>Fill in the user details fields. All fields are required for a user account in IRIDA:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-details-form.png" alt="User details form." /></p>
+
+<p>By default, a user will be issued a randomly-generated, one-time-use key to activate their account. The first time the user logs in, they will be required to change their password. You may manually enter a user password by unchecking “Require User Activation”:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/manual-user-password.png" alt="Manual password entry." /></p>
+
+<p>Passwords must meet the following requirements:</p>
+
+<ul>
+  <li>Have at least 8 characters (Admin passwords should be at least 11 characters)</li>
+  <li>Include at least 1 upper-case character</li>
+  <li>Include at least 1 lower-case character</li>
+  <li>Include at least 1 number</li>
+  <li>Include at least 1 special character (ex: <code>!@#$%^&amp;*()+?/&lt;&gt;=.\\{}</code>)</li>
+  <li>Passwords should not form words</li>
+  <li>Passwords should not include any personal information</li>
+  <li>Passwords may not be reused</li>
+</ul>
+
+<p>If you manually set a password for a new user account, the user will not be required to change their password on first log in.</p>
+
+<p>When you click “Create User”, an e-mail will be sent to the user (to the e-mail address you entered) including the URL for IRIDA (as configured in the <a href="/documentation/administrator/web/#web-configuration">Administrator Install Guide</a>). If you did not manually set a password for the user, the e-mail will include a link to activate the user account:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-welcome-email.png" alt="User welcome e-mail." /></p>
+
+<p>On successfully creating a new user account, you will see the user details that you entered:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-details-page.png" alt="User details page." /></p>
+
+<h2 id="creating-a-user-group">Creating a User Group</h2>
+
+<p>You may share data with groups of users in IRIDA by creating a user group.</p>
+
+<p>All users are permitted to create user groups in IRIDA.</p>
+
+<p>To create a user group, start from the <a href="#viewing-existing-user-groups">user groups list</a> page and click on the “Create New User Group” button:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/add-user-groups-button.png" alt="Create user group button." /></p>
+
+<p>This will open a modal window which will allow you to fill in the group details fields. Only the group name is required, but you can optionally provide a more detailed description of what the user group is:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-group-details-form.png" alt="User group details form." /></p>
+
+<p>On successfully creating a new user group, you will see the user group details that you entered:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-group-details-page.png" alt="User group details page." /></p>
+
+<p>By default, your user account is assigned to the group as the group owner.</p>
+
+<p>You can add other users to the group by clicking on the “Add Group Member” button:</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-group-add-member-button.png" alt="Add group member button." /></p>
+
+<p>In the dialog that appears, choose the user that you want to add and the group role that the user should have. Group owners are allowed to add new members to the group. Group members are not allowed to add new members to the group.</p>
+
+<p><img src="/documentation/images/tutorials/common/users/user-group-add-member-dialog.png" alt="Add group member dialog." /></p>
+
+<h2 id="adding-a-project-member">Adding a Project Member</h2>
+
+<p>Once the user account or group is created, go to the project containing the data you want to share with this user, and select the <strong>Members</strong> tab.</p>
+
+<p><img src="/documentation/images/tutorials/common/projects/project-details-members-tab.png" alt="Project details members tab." /></p>
+
+<h3 id="adding-an-individual-member">Adding an Individual Member</h3>
+
+<p>To add an individual project member, click on the “Add Member” button:</p>
+
+<p><img src="/documentation/images/tutorials/common/projects/add-member-button.png" alt="Add project member button." /></p>
+
+<p>You can use the dialog that appears to select a user account, and choose the <strong>Project Role</strong> that the new member should have:</p>
+
+<p><img src="/documentation/images/tutorials/common/projects/add-member-modal.png" alt="Add project member dialog." /></p>
+
+<p><strong>Remember</strong>: a project collaborator has <em>read-only</em> permissions, and a project <em>manager</em> is allowed to modify project details.</p>
+
+<p>Once you’ve selected the user and role to add to the project, click on the “OK” button.</p>
+
+<h3 id="adding-a-group-member">Adding a Group Member</h3>
+
+<p>To add a group to the project, click on the “Groups” button on the left-side of the page, then click on “Add Group”:</p>
+
+<p><img src="/documentation/images/tutorials/common/projects/add-group-member-button.png" alt="Add project group member button." /></p>
+
+<p>You can use the dialog that appears to select a user group, and choose the <strong>Project Role</strong> that the new group member should have:</p>
+
+<p><img src="/documentation/images/tutorials/common/projects/add-group-member-modal.png" alt="Add project group member dialog." /></p>
+
+<p><strong>Remember</strong>: a project collaborator has <em>read-only</em> permissions, and a project <em>manager</em> is allowed to modify project details. When adding a user group, <strong>all</strong> members of the user group will have that project role on this project.</p>
+
+<p><strong>Note</strong>: If a user is added <em>both</em> as an individual member and as part of a group, the individual user project role takes precedence over the group project role. For example, if Bob is added to Project 5 as a Project Owner as an individual member, and is in a Group that’s on Project 5 as a Project Member, Bob would be given Project Owner permissions to Project 5.</p>
+
+<p>Once you’ve selected the user group and role to add to the project, click on the “OK” button.</p>
+
+<h2 id="downloading-sample-data">Downloading Sample Data</h2>
+
+<p>All project members are allowed to export the samples in a project to the command line (add a link to the command line tutorial), to Galaxy (add a link to the Galaxy tutorial) or to download sample data. External collaborators will most likely want to download sample data to their own computer so that they can manage the data locally. External collaborators can use IRIDA to download <a href="#downloading-multiple-samples">multiple samples in a zip package</a> or they can <a href="#downloading-individual-files">download individual files</a> by examining each sample.</p>
+
+<h3 id="downloading-multiple-samples">Downloading Multiple Samples</h3>
+
+<p>You may download <strong>all</strong> of the files in a sample, or even download the files from multiple samples, by <a href="/documentation/user/user/samples/#selecting-samples">selecting the samples</a> that you want to download, clicking on the “Export” button just above the samples list and clicking on “Download”:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/samples-download-button.png" alt="Samples download button." /></p>
+
+<p>IRIDA will provide you with a <code>zip</code> file containing the sequencing data for all of the selected samples. You can extract the files from the zip archive using the command-line program <code>unzip</code>, using the built-in Windows extractor tool, or using a program like <a href="http://7-zip.org">7-zip</a></p>
+
+<blockquote>
+<b>WARNING</b>: sequencing data can make for a very large download, especially when downloading <i>all</i> of the sequencing data for a project. We strongly recommend that you <i>do not</i> download data to your PC, especially if you are going to be using Linux command-line tools and the <a href="/documentation/user/user/samples/#command-line-export">command-line export tool</a> option is available.
+</blockquote>
+
+<h3 id="downloading-individual-files">Downloading Individual Files</h3>
+
+<p>To view details about an individual sample, start by <a href="/documentation/user/user/samples/#viewing-samples-in-a-project">viewing the samples in a project</a>, then click on the sample name in the samples table:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/sample-name-button.png" alt="Sample name button." /></p>
+
+<p>The sample details page shows all of the details that are currently known about a sample:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/sample-details.png" alt="Sample details page." /></p>
+
+<p>Start by <a href="/documentation/user/user/samples/#viewing-individual-sample-details">viewing the details of an individual sample</a>. On the sample details page, click on the “Files” tab, just above the sample details panel:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/sample-details-file-tab.png" alt="Sample details file tab." /></p>
+
+<p>Sequence files may have been uploaded as paired-end files or as single-end files, depending on how the isolate was sequenced.</p>
+
+<p>Single-end files will appear in the sample alone:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/sample-sequence-file-single-end.png" alt="Single-end sequencing file." /></p>
+
+<p>Paired-end files will appear in a pair:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/sample-sequence-file-paired-end.png" alt="Paired-end sequencing file." /></p>
+
+<p>Quality control information for a sequence file may appear below the file:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/sequence-file-qc.png" alt="File QC" /></p>
+
+<p>You can download a sequence file by clicking on the <span class="fa fa-fw fa-download"></span> icon, on the right-hand side of the row for the sequence file.</p>
+
+:ET

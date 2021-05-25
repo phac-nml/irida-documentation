@@ -1,0 +1,75 @@
+I"<h1 class="no_toc" id="sharing-data-in-irida">Sharing data in IRIDA</h1>
+
+<p>Once you’ve got data into IRIDA, either by <a href="../web-upload/">web upload</a> or from a sequencing facility with the <a href="https://github.com/phac-nml/irida-uploader">IRIDA Uploader</a>, you’re probably going to want to share that data with collaborators.</p>
+
+<p>In order to share data from a project, you <strong>must</strong> have the <strong>Manager</strong> role on the project. The <strong>Manager</strong> role implies ownership of the data contained in the project. You can find out if you have the <strong>Manager</strong> role by looking at the <a href="{{ site.baseurl }}/user/user/project/index.html#project-members">project members section</a>.</p>
+
+<p>You can share data with collaborators in IRIDA in two ways: to an individual user account, or to a group of user accounts.</p>
+
+<p>If the individual person you want to share with within IRIDA does not have a user account, you must also have permission to create a user account for that user. If you do not, then you’ll need to contact someone who has permissions to create user accounts.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#creating-a-user-account" id="markdown-toc-creating-a-user-account">Creating a User Account</a></li>
+  <li><a href="#creating-a-user-group" id="markdown-toc-creating-a-user-group">Creating a User Group</a></li>
+  <li><a href="#adding-a-project-member" id="markdown-toc-adding-a-project-member">Adding a Project Member</a>    <ul>
+      <li><a href="#adding-an-individual-member" id="markdown-toc-adding-an-individual-member">Adding an Individual Member</a></li>
+      <li><a href="#adding-a-group-member" id="markdown-toc-adding-a-group-member">Adding a Group Member</a></li>
+    </ul>
+  </li>
+  <li><a href="#downloading-sample-data" id="markdown-toc-downloading-sample-data">Downloading Sample Data</a>    <ul>
+      <li><a href="#downloading-multiple-samples" id="markdown-toc-downloading-multiple-samples">Downloading Multiple Samples</a></li>
+      <li><a href="#downloading-individual-files" id="markdown-toc-downloading-individual-files">Downloading Individual Files</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="creating-a-user-account">Creating a User Account</h2>
+
+<p>If the person you would like to share data with within IRIDA does not have a user account, you’ll need to make an account for them.</p>
+
+<p>You may create a new user account in IRIDA if you have the <strong>Manager</strong> or <a href="../../administrator/#creating-a-new-user-account">Administrator</a> system role.</p>
+
+<p>After logging in to IRIDA, click the gear icon on the top right-hand side of the navbar and click <strong>Create User</strong>:</p>
+
+<p><img src="{{ site.baseurl }}/images/tutorials/common/users/create-user-menu.png" alt="Create user menu." /></p>
+
+<p>{% include tutorials/common/creating-a-user-account.md %}</p>
+
+<h2 id="creating-a-user-group">Creating a User Group</h2>
+
+<p>You may share data with groups of users in IRIDA by creating a user group.</p>
+
+<p>{% include tutorials/common/creating-a-user-group.md %}<br />
+{% include tutorials/common/adding-a-member-to-a-group.md %}</p>
+
+<h2 id="adding-a-project-member">Adding a Project Member</h2>
+
+<p>Once the user account or group is created, go to the project containing the data you want to share with this user, and select the <strong>Members</strong> tab.</p>
+
+<p><img src="{{ site.baseurl }}/images/tutorials/common/projects/project-details-members-tab.png" alt="Project details members tab." /></p>
+
+<h3 id="adding-an-individual-member">Adding an Individual Member</h3>
+
+<p>{% include tutorials/common/project-add-member.md %}</p>
+
+<h3 id="adding-a-group-member">Adding a Group Member</h3>
+
+<p>{% include tutorials/common/project-add-member-group.md %}</p>
+
+<h2 id="downloading-sample-data">Downloading Sample Data</h2>
+
+<p>All project members are allowed to export the samples in a project to the command line (add a link to the command line tutorial), to Galaxy (add a link to the Galaxy tutorial) or to download sample data. External collaborators will most likely want to download sample data to their own computer so that they can manage the data locally. External collaborators can use IRIDA to download <a href="#downloading-multiple-samples">multiple samples in a zip package</a> or they can <a href="#downloading-individual-files">download individual files</a> by examining each sample.</p>
+
+<h3 id="downloading-multiple-samples">Downloading Multiple Samples</h3>
+
+<p>{% include tutorials/common/samples/download-samples.md %}</p>
+
+<h3 id="downloading-individual-files">Downloading Individual Files</h3>
+
+<p>{% include tutorials/common/samples/view-individual-sample.md %}</p>
+
+<p>{% include tutorials/common/samples/view-sequence-files.md %}</p>
+
+<p>{% include tutorials/common/samples/download-sequence-file.md %}</p>
+
+:ET

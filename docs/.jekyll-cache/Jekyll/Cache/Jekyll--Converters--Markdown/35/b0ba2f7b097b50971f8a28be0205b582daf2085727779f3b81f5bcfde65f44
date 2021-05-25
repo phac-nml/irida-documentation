@@ -1,0 +1,133 @@
+I"�'<h1 class="no_toc" id="integration-with-an-existing-galaxy">Integration with an existing Galaxy</h1>
+
+<p>IRIDA can be setup to use an existing Galaxy installation assuming a few conditions are met:</p>
+
+<ol>
+  <li>Galaxy version &gt;= <strong>16.01</strong> is required as IRIDA makes use of <a href="https://docs.galaxyproject.org/en/master/admin/conda_faq.html">conda with Galaxy</a>.  A method to get newer conda-based tools to work with older Galaxy versions is described in our <a href="../../faq/#installing-conda-dependencies-in-galaxy-versions--v1601">FAQ</a>, however this option will not be supported and is not recommended.</li>
+  <li>The filesystem is shared between the machines serving IRIDA and Galaxy under the same paths (e.g., <code>/path/to/irida-data</code> on IRIDA is available as <code>/path/to/irida-data</code> on the Galaxy server).</li>
+  <li>Galaxy is setup to use <a href="https://www.postgresql.org/">PostgreSQL</a> or <a href="https://mariadb.org/">MySQL/MariaDB</a> as it’s database.  The default installation uses SQLite, but this is insufficient for the complex workflows used by IRIDA.</li>
+  <li>Some modifications to the configuration settings (see below) are made to enable IRIDA to communicate with Galaxy.</li>
+</ol>
+
+<p>The following describes the procedures needed to get IRIDA setup with an existing Galaxy installation.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#dependencies" id="markdown-toc-dependencies">Dependencies</a></li>
+  <li><a href="#configuration-settings" id="markdown-toc-configuration-settings">Configuration settings</a>    <ul>
+      <li><a href="#settings-in-configgalaxyini" id="markdown-toc-settings-in-configgalaxyini">Settings in <code>config/galaxy.ini</code></a></li>
+    </ul>
+  </li>
+  <li><a href="#setup-of-a-galaxy-user-and-api-key" id="markdown-toc-setup-of-a-galaxy-user-and-api-key">Setup of a Galaxy user and API key</a></li>
+  <li><a href="#setup-irida-tools-in-galaxy" id="markdown-toc-setup-irida-tools-in-galaxy">Setup IRIDA tools in Galaxy</a>    <ul>
+      <li><a href="#automated-installation-of-tools" id="markdown-toc-automated-installation-of-tools">Automated installation of tools</a></li>
+      <li><a href="#manual-installation-of-tools" id="markdown-toc-manual-installation-of-tools">Manual installation of tools</a></li>
+    </ul>
+  </li>
+  <li><a href="#link-up-galaxy-with-irida" id="markdown-toc-link-up-galaxy-with-irida">Link up Galaxy with IRIDA</a></li>
+</ul>
+
+<h2 id="dependencies">Dependencies</h2>
+
+<p>Some tools will need to be built from source, and so require the standard Linux build environment to be installed on the Galaxy server. For CentOS this will include the following packages:</p>
+
+<div class="highlight"><pre><code class="language-bash">yum groupinstall <span class="s2">&quot;Development tools&quot;</span>
+yum install mercurial zlib-devel ncurses-devel tcsh git db4-devel expat-devel java</code></pre></div>
+
+<p>Additionally, some tools assume certain dependencies are installed on the machines where the tools are to be run and do not install these dependencies automatically.  To handle these cases, you can create a specific conda environment which is loaded up each time a tool is run (via the <code>env.sh</code> file).  Assuming <a href="https://conda.io/miniconda.html">conda is installed</a> these dependencies can be installed into a conda environment, <strong>galaxy</strong>, with:</p>
+
+<div class="highlight"><pre><code class="language-bash">conda create --name galaxy samtools perl-xml-simple perl-time-piece perl-bioperl openjdk gnuplot libjpeg-turbo</code></pre></div>
+
+<p>To load up this conda environment before each tool is run, please add the following to the <code>galaxy/env.sh</code> file:</p>
+
+<div class="highlight"><pre><code>source activate galaxy
+</code></pre></div>
+
+<p>Some Galaxy tool installation instructions for IRIDA may require the installation of additional dependencies which can be added to this conda <strong>galaxy</strong> environment.</p>
+
+<p><em>Note: the location of <code>galaxy/env.sh</code> is defined by the property <code>environment_setup_file</code> in <code>config/galaxy.ini</code>.</em></p>
+
+<h2 id="configuration-settings">Configuration settings</h2>
+
+<h3 id="settings-in-configgalaxyini">Settings in <code>config/galaxy.ini</code></h3>
+
+<p>The following is a list of other necessary configuration settings within the file <code>config/galaxy.ini</code> for IRIDA to function with Galaxy.</p>
+
+<ol>
+  <li>Change <code>allow_library_path_paste</code> to allow direct linking of files in Galaxy to the IRIDA file locations (as opposed to making copies). E.g.,
+    <ul>
+      <li>Change <code>#allow_library_path_paste = False</code> to <code>allow_library_path_paste = True</code>.</li>
+    </ul>
+  </li>
+  <li>Set the Galaxy <code>id_secret</code> for encoding database ids. E.g.,
+    <ul>
+      <li>Change <code>#id_secret = USING THE DEFAULT IS NOT SECURE!</code> to <code>id_secret = some secure password</code>
+        <ul>
+          <li>The command <code>pwgen --secure -N 1 56</code> may be useful for picking a hard-to-guess key.</li>
+          <li><strong><em>Note: Once this key is set, please do not change it.  This key is used to translate database ids in Galaxy to API ids used by IRIDA to access datasets, histories, and workflows.  IRIDA does store some of these API ids internally for debugging and tracking purposes and changing this value will render any of the API ids stored in IRIDA useless.</em></strong></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Setup <a href="https://conda.io/miniconda.html">Conda</a> for installing tool dependencies via Galaxy’s automated dependency management system. E.g.,
+    <ul>
+      <li>Set <code>conda_prefix = /home/galaxy-irida/miniconda3</code>, or wherever conda is installed for Galaxy.</li>
+      <li>Set <code>conda_ensure_channels = iuc,bioconda,r,defaults,conda-forge</code>.</li>
+    </ul>
+  </li>
+  <li>Add Galaxy/IRIDA user to <code>admin_users</code> list (see below).</li>
+</ol>
+
+<h2 id="setup-of-a-galaxy-user-and-api-key">Setup of a Galaxy user and API key</h2>
+
+<p>As IRIDA communicates with Galaxy through the <a href="https://wiki.galaxyproject.org/Learn/API">API</a> it is necessary to setup a Galaxy API key which will be used by IRIDA. It is recommended (though not required) to use a separate user for this purpose.</p>
+
+<p>This user must also have Galaxy admin privileges in order to allow IRIDA to link directly to the sequence files when sharing with Galaxy (avoids creating copies of fastq files each time a workflow is run). Admin privileges can be assigned by adding the user’s email to <code>admin_users</code> in the configuration file <code>config/galaxy.ini</code>.</p>
+
+<h2 id="setup-irida-tools-in-galaxy">Setup IRIDA tools in Galaxy</h2>
+
+<h3 id="automated-installation-of-tools">Automated installation of tools</h3>
+
+<p>The tool <a href="https://ephemeris.readthedocs.io">Ephemeris</a> can be used to automate installing of tools in Galaxy. A list of tools to install is provided with the <code>irida-[version].zip</code> download on the <a href="https://github.com/phac-nml/irida/releases">IRIDA releases</a> page.  Instructions can be accessed on the <a href="https://github.com/phac-nml/irida/tree/development/packaging#automated-processupgrading">Automated tools install</a> page.</p>
+
+<p>The short version is to:</p>
+
+<ol>
+  <li>
+    <p>Install Ephemeris</p>
+
+    <div class="highlight"><pre><code class="language-bash">conda install -c bioconda ephemeris</code></pre></div>
+  </li>
+  <li>
+    <p>Install tools</p>
+
+    <div class="highlight"><pre><code class="language-bash">shed-tools install --toolsfile tools-list.yml --galaxy <span class="o">[</span>http://url-to-galaxy<span class="o">]</span> --api_key <span class="o">[</span>api key<span class="o">]</span></code></pre></div>
+
+    <p>Please replace <strong>url-to-galaxy</strong> and <strong>api key</strong> with appropriate values for your Galaxy instance.</p>
+  </li>
+</ol>
+
+<p>You may want to monitor the Galaxy log files (e.g., <code>galaxy/*.log</code>) as the installation is proceeding.  This may take a while to download, build, and install all tools.</p>
+
+<p><em>Note: Please take a look through the <strong>Manual installation of tools</strong> instructions to see if there are any additional setup instructions needed (such as environment variables that need to be set).</em></p>
+
+<h3 id="manual-installation-of-tools">Manual installation of tools</h3>
+
+<p>Alternatively, the necessary tools can be installed manually through the following instructions specific to each pipeline in IRIDA:</p>
+
+<ul>
+  <li><a href="../pipelines/phylogenomics/">SNVPhyl Whole Genome Phylogeny</a></li>
+  <li><a href="../pipelines/assembly-annotation/">Assembly and Annotation</a></li>
+  <li><a href="../pipelines/assembly-annotation-collection/">Assembly and Annotation Collection</a></li>
+  <li><a href="../pipelines/sistr/">SISTR Salmonella Typing</a></li>
+  <li><a href="../pipelines/refseq_masher/">refseq_masher</a></li>
+  <li><a href="../pipelines/mentalist/">MentaLiST MLST</a></li>
+  <li><a href="../pipelines/bio_hansel/">Bio_Hansel</a></li>
+</ul>
+
+<h2 id="link-up-galaxy-with-irida">Link up Galaxy with IRIDA</h2>
+
+<p>In order to connect IRIDA to this Galaxy instance you will need to modify the parameters <strong>galaxy.execution.url</strong>, <strong>galaxy.execution.email</strong>, and <strong>galaxy.execution.apikey</strong> in the file <code>/etc/irida/irida.conf</code> and restart IRIDA. Additional details for configuring IRIDA can be found in the instructions to <a href="../../web">install and configure the IRIDA web interface</a>.</p>
+
+<p>Once you have configured IRIDA to connect to Galaxy you can attempt to execute a workflow by adding some data to your cart, selecting  <strong>Pipelines</strong> from the main menu, then selecting a particular pipeline.  You will have to have some data uploaded into IRIDA before testing.  An example set of data can be found at <a href="https://irida.corefacility.ca/downloads/data/irida-sample-data.zip">irida-sample-data.zip</a>.  Currently all workflows assume you are using paired-end sequence reads.</p>
+
+:ET

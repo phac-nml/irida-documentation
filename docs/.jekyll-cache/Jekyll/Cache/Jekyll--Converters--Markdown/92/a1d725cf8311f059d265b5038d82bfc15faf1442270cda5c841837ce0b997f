@@ -1,0 +1,195 @@
+I"�0<h1 id="frequently-asked-questions">Frequently Asked Questions</h1>
+
+<ul id="markdown-toc">
+  <li><a href="#frequently-asked-questions" id="markdown-toc-frequently-asked-questions">Frequently Asked Questions</a></li>
+  <li><a href="#galaxy-install" id="markdown-toc-galaxy-install">Galaxy Install</a>    <ul>
+      <li><a href="#1-tbl2asn-out-of-date" id="markdown-toc-1-tbl2asn-out-of-date">1. <code>tbl2asn</code> out of date</a></li>
+      <li><a href="#2-spades-python-version-36-not-supported" id="markdown-toc-2-spades-python-version-36-not-supported">2. SPAdes Python version 3.6 not supported.</a></li>
+      <li><a href="#3-cant-locate-bioseqiopm" id="markdown-toc-3-cant-locate-bioseqiopm">3. Can’t locate <code>Bio/SeqIO.pm</code></a></li>
+      <li><a href="#4-installing-conda-dependencies-in-galaxy-versions--v1601" id="markdown-toc-4-installing-conda-dependencies-in-galaxy-versions--v1601">4. Installing conda dependencies in Galaxy versions &lt; v16.01</a>        <ul>
+          <li><a href="#step-1-install-conda" id="markdown-toc-step-1-install-conda">Step 1: Install <code>conda</code></a></li>
+          <li><a href="#step-2-install-sistr_cmd" id="markdown-toc-step-2-install-sistr_cmd">Step 2: Install <code>sistr_cmd</code></a></li>
+          <li><a href="#step-3-write-a-wrapper-around-sistr" id="markdown-toc-step-3-write-a-wrapper-around-sistr">Step 3: Write a wrapper around <code>sistr</code></a></li>
+          <li><a href="#step-4-load-up-sistr-wrapper-during-tool-execution" id="markdown-toc-step-4-load-up-sistr-wrapper-during-tool-execution">Step 4: Load up <code>sistr</code> wrapper during tool execution</a></li>
+          <li><a href="#step-5-test-sistr" id="markdown-toc-step-5-test-sistr">Step 5: Test <code>sistr</code></a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#irida-web-install" id="markdown-toc-irida-web-install">IRIDA Web Install</a>    <ul>
+      <li><a href="#1-mariadb" id="markdown-toc-1-mariadb">1. MariaDB</a>        <ul>
+          <li><a href="#max-key-length-was-too-long" id="markdown-toc-max-key-length-was-too-long">max key length was too long</a></li>
+          <li><a href="#only_full_group_by-error" id="markdown-toc-only_full_group_by-error">only_full_group_by error</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="galaxy-install">Galaxy Install</h1>
+
+<h2 id="1-tbl2asn-out-of-date">1. <code>tbl2asn</code> out of date</h2>
+
+<p>If you see the following message when running Prokka.</p>
+
+<div class="highlight"><pre><code>[tbl2asn] This copy of tbl2asn is more than a year old.  Please download the current version.
+[15:54:18] Could not run command: tbl2asn -V b -a r10k -l paired-ends -M n -N 1 -y 'Annotated using prokka 1.11 from http://www.vicbioinformatics.com' -Z outdir\/prokka\.err -i outdir\/prokka\.fsa 2&gt; /dev/null
+</code></pre></div>
+
+<p>Then the command <a href="//www.ncbi.nlm.nih.gov/genbank/tbl2asn2/">tbl2asn</a> may need to be updated.  This can be done as follows:</p>
+
+<ol>
+  <li>Download the new <code>tbl2asn</code> binary from <a href="ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools/converters/by_program/tbl2asn/">ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools/converters/by_program/tbl2asn/</a>.</li>
+  <li>
+    <p>Copy the binary over the previously installed locations in Galaxy.  These can be found with the command:</p>
+
+    <div class="highlight"><pre><code> find galaxy/database/dependencies -iname 'tbl2asn'
+</code></pre></div>
+
+    <p>Where <strong>galaxy/database/dependencies</strong> is the location of all the installed Galaxy tool dependencies.</p>
+  </li>
+</ol>
+
+<h2 id="2-spades-python-version-36-not-supported">2. SPAdes Python version 3.6 not supported.</h2>
+
+<p>If you get a message like the following for SPAdes in Galaxy.</p>
+
+<div class="highlight"><pre><code>== Error ==  python version 3.6 is not supported!
+Supported versions are 2.4, 2.5, 2.6, 2.7, 3.2, 3.3, 3.4, 3.5
+</code></pre></div>
+
+<p>Then you may need to set the Python version for the SPAdes instance.  If installed via conda, this can be done like:</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="nb">source</span> activate __spades@3.9.0
+conda install <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.5</code></pre></div>
+
+<p>Please run <code>conda info --envs</code> to see the exact name of the SPAdes conda environment.</p>
+
+<h2 id="3-cant-locate-bioseqiopm">3. Can’t locate <code>Bio/SeqIO.pm</code></h2>
+
+<p>If a message like the following appears for Galaxy tools.</p>
+
+<div class="highlight"><pre><code>Can't locate Bio/SeqIO.pm in @INC (you may need to install the Bio::SeqIO module) (@INC contains: /path/to/miniconda3/envs/__perl@_uv_/lib/perl5/site_perl/5.22.2/x86_64-linux-thread-multi ...
+</code></pre></div>
+
+<p>Then you may try uninstalling and re-installing the particular tool in Galaxy while monitoring the Galaxy log file (<code>main.log</code> or <code>paster.log</code>) to verify no error is occuring while installing the tool and all dependencies.</p>
+
+<p>Alternatively, you may attempt to manually install bioperl in the tool environment.  Here, one of the paths in <code>@INC</code> is <code>miniconda3/envs/__perl@_uv_</code>, which means you can use this conda environment to install bioperl.  This can be done with.</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="nb">source</span> activate __perl@_uv_
+conda install perl-bioperl</code></pre></div>
+
+<h2 id="4-installing-conda-dependencies-in-galaxy-versions--v1601">4. Installing conda dependencies in Galaxy versions &lt; v16.01</h2>
+
+<p>IRIDA uses Galaxy versions &gt;= v16.01 in order to take advantage of <a href="https://docs.galaxyproject.org/en/master/admin/conda_faq.html">conda dependency installation</a>.  However, it is still possible to integrate IRIDA with Galaxy versions &lt; v16.01 with a bit of manual work to get the proper dependencies loaded up.  This involves loading up the necessary environment variables from a file, <code>galaxy/env.sh</code>, which is sourced before each tool is run.  The location of this file defaults to <code>galaxy/env.sh</code>, but can be changed with the <strong>environment_setup_file</strong> parameter in the Galaxy configuration file <code>galaxy/conf/galaxy.ini</code>.</p>
+
+<p>An example of setting up the <code>sistr_cmd</code> dependency using this method is given below.  Please modify these steps for the particular tools in question (by e.g., installing different commands with conda, or adding appropriate binaries to the <code>PATH</code>).</p>
+
+<h3 id="step-1-install-conda">Step 1: Install <code>conda</code></h3>
+
+<p>If <code>conda</code> is not already installed, please download and install <a href="https://conda.io/miniconda.html">https://conda.io/miniconda.html</a>. Make sure to add the appropriate channels for installing software from bioconda:</p>
+
+<div class="highlight"><pre><code class="language-bash">conda config --add channels conda-forge
+conda config --add channels defaults
+conda config --add channels r
+conda config --add channels bioconda</code></pre></div>
+
+<h3 id="step-2-install-sistr_cmd">Step 2: Install <code>sistr_cmd</code></h3>
+
+<p>Install the <code>sistr_cmd</code> dependency to it’s own conda environment:</p>
+
+<div class="highlight"><pre><code class="language-bash">conda create -y --name sistr_cmd@1.0.2 <span class="nv">sistr_cmd</span><span class="o">=</span><span class="m">1</span>.0.2</code></pre></div>
+
+<h3 id="step-3-write-a-wrapper-around-sistr">Step 3: Write a wrapper around <code>sistr</code></h3>
+
+<p>Write a wrapper around the <code>sistr</code> command to load up the conda environment.  If conda is installed in the directory <code>~/miniconda3</code> this should look like the following:</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="ch">#!/bin/bash</span>
+
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>~/miniconda3/bin:<span class="nv">$PATH</span>
+<span class="nb">source</span> activate sistr_cmd@1.0.2
+
+sistr <span class="nv">$@</span></code></pre></div>
+
+<p>Save this file with the name <code>sistr</code>.</p>
+
+<h3 id="step-4-load-up-sistr-wrapper-during-tool-execution">Step 4: Load up <code>sistr</code> wrapper during tool execution</h3>
+
+<p>Copy <code>sistr</code> to a directory loaded up by the <code>galaxy/env.sh</code> file.  For example, if this file contains the following:</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>~/bin:<span class="nv">$PATH</span></code></pre></div>
+
+<p>Then, copy <code>sistr</code> to <code>~/bin</code> and make executable.  Otherwise, adjust <code>env.sh</code> as necessary to put <code>sistr</code> on the <code>PATH</code>.</p>
+
+<div class="highlight"><pre><code class="language-bash">cp sistr ~/bin
+chmod +x ~/bin/sistr</code></pre></div>
+
+<h3 id="step-5-test-sistr">Step 5: Test <code>sistr</code></h3>
+
+<p>You can test out <code>sistr</code> by running as follows:</p>
+
+<div class="highlight"><pre><code class="language-bash">./bin/sistr --version</code></pre></div>
+
+<p>You should see <code>sistr_cmd 1.0.2</code> as output of the above command.</p>
+
+<h1 id="irida-web-install">IRIDA Web Install</h1>
+
+<h2 id="1-mariadb">1. MariaDB</h2>
+
+<h3 id="max-key-length-was-too-long">max key length was too long</h3>
+
+<p>MariaDB Ubuntu users may encounter errors when deploying IRIDA due to character set requirements. If the application does not launch and you see the following message in the IRIDA logs:</p>
+
+<div class="highlight"><pre><code>Caused by: liquibase.exception.DatabaseException: Specified key was too long; max key length is 767 bytes [Failed SQL: CREATE TABLE irida_test.system_role (id BIGINT AUTO_INCREMENT NOT NULL, description VARCHAR(255) NOT NULL, name VARCHAR(255) NOT NULL, CONSTRAINT PK_SYSTEM_ROLE PRIMARY KEY (id), CONSTRAINT UK_3qbj4kdbey8f8wgabcel8i7io UNIQUE (name))]
+</code></pre></div>
+
+<p>you will need to make the following changes to MariaDB configurations files within the <code>/etc/mysql/mariadb.conf.d/</code> folder as described below:</p>
+
+<p><strong><code>50-mysql-clients.cnf</code></strong></p>
+
+<div class="highlight"><pre><code>default-character-set = utf8
+</code></pre></div>
+
+<p><strong><code>50-client.cnf</code></strong></p>
+
+<div class="highlight"><pre><code>default-character-set = utf8
+</code></pre></div>
+
+<p><strong><code>50-server.cnf</code></strong></p>
+
+<div class="highlight"><pre><code>character-set-server = utf8
+collation-server = utf8_general_ci
+</code></pre></div>
+
+<p>You will need to drop your databases, restart your mysql service, and then recreate your databases before re-running IRIDA for the changes to take effect.</p>
+
+<h3 id="only_full_group_by-error">only_full_group_by error</h3>
+
+<p>You may also run into the following error.</p>
+
+<div class="highlight"><pre><code>Reason: liquibase.exception.DatabaseException: Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'irida_uploader_test.ss.sample_id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+</code></pre></div>
+
+<p>To fix this on a running sql instance, you can remove the <code>only_full_group_by</code> mode from sql</p>
+
+<p>NOTE: This will not persist when restarting mysql/mariadb</p>
+
+<div class="highlight"><pre><code>mysql -e "SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));"
+</code></pre></div>
+
+<p>To make this a permanent setting, check your config file <code>/etc/mysql/my.cnf</code> and the config files listed there, for <code>sql_mode</code>. If it doesn’t exist you can add it to the config file.</p>
+
+<p>In mysql, check what sql_modes are currently enabled, and set your sql_mode to be the same, but with <code>only_full_group_by</code> removed.</p>
+
+<p>You can check your sql_mode in mysql with the command <code>SELECT @@sql_mode;</code></p>
+
+<p>Example: if you have <code>no_auto_create_user</code>, <code>no_engine_substitution</code>, and <code>only_full_group_by</code> enabled, you can add/change your mode in a config file to the following.</p>
+
+<div class="highlight"><pre><code>[mysqld]
+
+sql_mode = "NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+</code></pre></div>
+
+<p>Then restart mysql <code>sudo service mysql restart</code></p>
+
+:ET

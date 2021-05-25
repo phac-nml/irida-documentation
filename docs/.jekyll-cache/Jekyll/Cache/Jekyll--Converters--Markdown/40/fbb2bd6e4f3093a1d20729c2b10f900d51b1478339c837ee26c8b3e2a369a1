@@ -1,0 +1,55 @@
+I"�<h1 id="internationalization-for-irida">Internationalization for IRIDA</h1>
+
+<p>Adding internationalization’s for IRIDA is an easy but tedious task, and a very helpful way to contribute to the IRIDA project.  Internationalization files can be found under the <code>/src/main/resources/i18n</code> path in the IRIDA source code.  To add your language, all of the messages under <code>/src/main/resources/i18n/messages.properties</code> should be translated to your language, then saved to a new file with the language code.  For example: English = <code>messages_en.properties</code>, French = <code>messages_fr.properties</code>.  See a full list of language codes at <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes</a>.  Any messages which are not translated will fall back to the <code>messages.properties</code> file.</p>
+
+<p>After translating the messages file, your language must be enabled in IRIDA’s web configuration.  See the <a href="../../../administrator/web#web-configuration">web configuration guide</a> for more.</p>
+
+<h2 id="within-html-templates">Within HTML Templates</h2>
+
+<p><a href="https://www.thymeleaf.org">Thymeleaf</a> template engine is responsible for templating internationalized strings directly within HTML templates.</p>
+
+<p>Adding the html attribute <code>th:text</code> (where <code>th</code> is the prefix for Thymeleaf, and <code>text</code>  means you want to directly add text) with the value set to the key in the translation messages file.  Thymeleaf will update the content of the html element with the text from the messages file.</p>
+
+<p>###Example<br />
+In the Thymeleaf Template:</p>
+<div class="highlight"><pre><code class="language-html"><span class="p">&lt;</span><span class="nt">span</span> <span class="na">th:text</span><span class="o">=</span><span class="s">&quot;${messages.key}&quot;</span><span class="p">&gt;</span>This should be translated<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span></code></pre></div>
+
+<p>Sent to the client:</p>
+<div class="highlight"><pre><code class="language-html"><span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;</span>The message file value<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span></code></pre></div>
+
+<p>Please read the <a href="https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html">Thymeleaf docs</a>.</p>
+
+<h2 id="within-javascript-external-files">Within JavaScript External Files</h2>
+
+<p><a href="../webpack">Webpack</a> is used to compile and minify JavaScript assets.  Webpack’s output cannot be parsed by the Thymeleaf JavaScript parser.  To handle internationalized strings within these files, we have created a webpack plugin called <code>i18nThymeleafWebpackPlugin</code>.  This works by going through all the webpack entries and looking for all function calls to <code>i18n("term.to.translate")</code>, the argument to this method is the the string key in the messages file.</p>
+
+<p><em><strong>NOTE:</strong> Do not import the <code>i18n</code> method into the JavaScript file, webpack handles this dynamically</em>.</p>
+
+<p><strong>In <code>messages.properties</code></strong>:</p>
+
+<div class="highlight"><pre><code>feature_name_title=Interesting Modal
+</code></pre></div>
+
+<p><strong>In JavaScript file that needs the translation</strong></p>
+<div class="highlight"><pre><code class="language-js"> <span class="nx">i18n</span><span class="p">(</span><span class="s2">&quot;feature_name_title&quot;</span><span class="p">);</span></code></pre></div>
+
+<p>For each entry, webpack will gather all the internationalization keys in the related files and create a new html file (<code>dist/i18n/[entry_name].html</code>) that contains a Thymeleaf <code>fragment</code> which contains a script tag with the strings to be internationalized.</p>
+
+<p>###Example output for the analyses listing page:</p>
+
+<div class="highlight"><pre><code class="language-html"><span class="p">&lt;</span><span class="nt">script</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;analyses-translations&quot;</span> <span class="na">th:inline</span><span class="o">=</span><span class="s">&quot;javascript&quot;</span> <span class="na">th:fragment</span><span class="o">=</span><span class="s">&quot;i18n&quot;</span><span class="p">&gt;</span>
+      <span class="nb">window</span><span class="p">.</span><span class="nx">translations</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">translations</span> <span class="o">||</span> <span class="p">[];</span>
+      <span class="nb">window</span><span class="p">.</span><span class="nx">translations</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+        <span class="s2">&quot;analyses.analysis-name&quot;</span><span class="o">:</span> <span class="cm">/*[[#{analyses.analysis-name}]]*/</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;analyses.state&quot;</span><span class="o">:</span> <span class="cm">/*[[#{analyses.state}]]*/</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;analyses.type&quot;</span><span class="o">:</span> <span class="cm">/*[[#{analyses.type}]]*/</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;analyses.submitter&quot;</span><span class="o">:</span> <span class="cm">/*[[#{analyses.submitter}]]*/</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;analysis.duration&quot;</span><span class="o">:</span> <span class="cm">/*[[#{analysis.duration}]]*/</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;analyses.delete-confirm&quot;</span><span class="o">:</span> <span class="cm">/*[[#{analyses.delete-confirm}]]*/</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;analyses.delete&quot;</span><span class="o">:</span> <span class="cm">/*[[#{analyses.delete}]]*/</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;analyses.header&quot;</span><span class="o">:</span> <span class="cm">/*[[#{analyses.header}]]*/</span> <span class="s2">&quot;&quot;</span>
+      <span class="p">});</span>
+    <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span></code></pre></div>
+
+<p>At runtime, Thymeleaf will processes the html template and look for JavaScript entry points, if one is found that contains an entry, Thymeleaf will look to see if there is a translations file available.  If one is found, Thymeleaf will inject the translations into the page immediately before the entry tag.  This will exposes a JSON object called <code>translations</code> to the <code>window</code> object which is consumed by the <code>i18n.js</code> loaded through the application.</p>
+:ET

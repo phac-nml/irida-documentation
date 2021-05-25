@@ -1,0 +1,430 @@
+I"\u<h1 class="no_toc" id="managing-projects">Managing Projects</h1>
+
+<p>The main organizational tool in IRIDA is the project. This section of the user guide descibes how you can view projects, edit project metadata (including uploading reference files), search for projects by name, and create new projects.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#viewing-existing-projects" id="markdown-toc-viewing-existing-projects">Viewing existing projects</a></li>
+  <li><a href="#searching-the-projects-table" id="markdown-toc-searching-the-projects-table">Searching the Projects Table</a>    <ul>
+      <li><a href="#searching" id="markdown-toc-searching">Searching</a></li>
+    </ul>
+  </li>
+  <li><a href="#creating-a-new-project" id="markdown-toc-creating-a-new-project">Creating a new project</a></li>
+  <li><a href="#viewing-project-samples" id="markdown-toc-viewing-project-samples">Viewing project samples</a></li>
+  <li><a href="#project-analysis-results" id="markdown-toc-project-analysis-results">Project analysis results</a></li>
+  <li><a href="#project-details" id="markdown-toc-project-details">Project details</a></li>
+  <li><a href="#project-ncbi-exports" id="markdown-toc-project-ncbi-exports">Project NCBI Exports</a></li>
+  <li><a href="#viewing-recent-project-activity" id="markdown-toc-viewing-recent-project-activity">Viewing recent project activity</a></li>
+  <li><a href="#managing-project-settings" id="markdown-toc-managing-project-settings">Managing project settings</a>    <ul>
+      <li><a href="#processing" id="markdown-toc-processing">Processing</a>        <ul>
+          <li><a href="#automated-pipelines" id="markdown-toc-automated-pipelines">Automated pipelines</a></li>
+          <li><a href="#project-coverage" id="markdown-toc-project-coverage">Project coverage</a></li>
+        </ul>
+      </li>
+      <li><a href="#project-members" id="markdown-toc-project-members">Project members</a>        <ul>
+          <li><a href="#adding-a-project-member" id="markdown-toc-adding-a-project-member">Adding a project member</a>            <ul>
+              <li><a href="#adding-an-individual-project-member" id="markdown-toc-adding-an-individual-project-member">Adding an individual project member</a></li>
+              <li><a href="#adding-a-group-project-member" id="markdown-toc-adding-a-group-project-member">Adding a group project member</a></li>
+            </ul>
+          </li>
+          <li><a href="#changing-a-project-member-role" id="markdown-toc-changing-a-project-member-role">Changing a project member role</a></li>
+          <li><a href="#removing-a-user-from-a-project" id="markdown-toc-removing-a-user-from-a-project">Removing a user from a project</a></li>
+        </ul>
+      </li>
+      <li><a href="#associated-projects" id="markdown-toc-associated-projects">Associated Projects</a>        <ul>
+          <li><a href="#viewing-associated-projects" id="markdown-toc-viewing-associated-projects">Viewing associated projects</a></li>
+          <li><a href="#adding-or-removing-associated-projects" id="markdown-toc-adding-or-removing-associated-projects">Adding or removing associated projects</a></li>
+        </ul>
+      </li>
+      <li><a href="#reference-files" id="markdown-toc-reference-files">Reference files</a></li>
+      <li><a href="#remote-project-settings" id="markdown-toc-remote-project-settings">Remote project settings</a></li>
+    </ul>
+  </li>
+  <li><a href="#synchronizing-a-remote-project" id="markdown-toc-synchronizing-a-remote-project">Synchronizing a remote project</a>    <ul>
+      <li><a href="#connecting-to-a-remote-instance-of-irida" id="markdown-toc-connecting-to-a-remote-instance-of-irida">Connecting to a remote instance of IRIDA</a></li>
+      <li><a href="#creating-a-remote-synchronized-project" id="markdown-toc-creating-a-remote-synchronized-project">Creating a remote synchronized project</a></li>
+      <li><a href="#reconnecting-after-token-expiry" id="markdown-toc-reconnecting-after-token-expiry">Reconnecting after token expiry</a></li>
+    </ul>
+  </li>
+  <li><a href="#deleting-a-project" id="markdown-toc-deleting-a-project">Deleting a project</a></li>
+</ul>
+
+<h2 id="viewing-existing-projects">Viewing existing projects</h2>
+
+<p>You can access the list of projects that you have permission to view and modify by clicking on the “Projects” menu at the top of the dashboard and selecting “Your Projects”:</p>
+
+<p><img src="images/your-projects.png" alt="Your projects dashboard location." /></p>
+
+<p>The projects list shows all projects that you are permitted to view or modify:</p>
+
+<p><img src="images/projects-list.png" alt="List of projects." /></p>
+
+<p>The projects list provides a high-level overview of project details, including:</p>
+
+<ul>
+  <li>The IRIDA-generated identifier for the project,</li>
+  <li>The name of the project,</li>
+  <li>The project organism,</li>
+  <li>The number of samples created in the project,</li>
+  <li>The number of other user accounts with permissions to view or edit the project,</li>
+  <li>The date that the project was created in IRIDA,</li>
+  <li>The time that the project was last modified.</li>
+</ul>
+
+<p>To enter into a project click the <strong>Name</strong> of the project:</p>
+
+<p><img src="images/project-name-button.png" alt="Project name button." /></p>
+
+<h2 id="searching-the-projects-table">Searching the Projects Table</h2>
+
+<p>There are two ways to find a specific project in the projects table - filtering and searching.</p>
+
+<h3 id="searching">Searching</h3>
+
+<p><img src="images/project-search.png" alt="Project search entry." /></p>
+
+<p>Search is always available in the text field directly above and to the right of the table.  This search across the project’s id, name, and organism.</p>
+
+<p>Example searching the projects table for <code>O157</code> results in 2 items.</p>
+
+<p><img src="images/projects-search-outbreak.png" alt="Projects search by out" /></p>
+
+<h2 id="creating-a-new-project">Creating a new project</h2>
+
+<p>{% include tutorials/common/creating-a-project.md %}</p>
+
+<h2 id="viewing-project-samples">Viewing project samples</h2>
+
+<p>The project samples page provides a view of the samples that belong to the project.  To view the samples for a project, click on the <strong>Samples</strong> tab on the project page:</p>
+
+<p><img src="images/project-samples-tab.png" alt="Project samples tab." /></p>
+
+<p>You can find out more about managing samples in a project by navigating to the <a href="../samples">managing samples</a> section.</p>
+
+<p><img src="images/project-details-samples.png" alt="Project samples panel." /></p>
+
+<h2 id="project-analysis-results">Project analysis results</h2>
+
+<p>To view the results of an analysis that has been shared with a project, click the <code>Analysis</code> tab at the top of the project page.</p>
+
+<p><img src="images/project-analyses-tab-highlight.png" alt="" /></p>
+
+<p>From this page you can view and monitor the progress of all analyses which have been shared with this project.  To view the results of an analysis click on the analysis name.  For more information on analysis results, see the <a href="../pipelines/#viewing-pipeline-results">pipeline documentation page</a>.</p>
+
+<p><img src="images/project-analyses.png" alt="" /></p>
+
+<p>If there are shared single sample analysis output files, you will see them in the <strong>Shared Single Sample Analysis Outputs</strong> tab:</p>
+
+<p><img src="images/project-shared-outputs.png" alt="" /></p>
+
+<p>If there are automated single sample analysis output files, you will see them in the <strong>Automated Single Sample Analysis Outputs</strong> tab:</p>
+
+<p><img src="images/project-automated-outputs.png" alt="" /></p>
+
+<p><em>There are no automated analysis output files for this project <code>test1</code>.</em></p>
+
+<p>From these tables you can select which files you wish to download by filtering based on values in certain columns (e.g. <code>contigs</code> in the <code>File</code> column), clicking on the rows for the files you wish to download while holding the <code>Ctrl</code> or <code>Shift</code> buttons, and clicking the <strong>Download</strong> button to download your selected files.</p>
+
+<p>For more information on using the single analysis output file tables, see the <a href="../pipelines/#downloading-single-sample-analysis-output-files-in-batch">pipeline documentation page</a>.</p>
+
+<h2 id="project-details">Project details</h2>
+
+<p>To view project details, click the <strong>Details</strong> tab on the project page:</p>
+
+<p><img src="images/project-details-tab.png" alt="Project details tab" /></p>
+
+<p>This view will display basic information about the project such as:</p>
+
+<ul>
+  <li>Project name - The given name of the project which will show up in the projects table.</li>
+  <li>Project description - A general description of the project.</li>
+  <li>Project organism - The organism expected to be stored within this project.</li>
+  <li>Project Wiki URL - An external URL where users can go to view more details about the project.</li>
+</ul>
+
+<p><img src="images/project-details-details.png" alt="Project details view" /></p>
+
+<p>To edit project details, from the project details page click on the “Edit” button:</p>
+
+<p><img src="images/project-details-edit-button.png" alt="Project metadata edit button." /></p>
+
+<p>The project details editing page provides the same form as when you <a href="#creating-a-new-project">created the project</a>, and all of the same descriptions apply. When you’ve finished editing the project details, you can click on the “Update” button at the bottom of the form.</p>
+
+<h2 id="project-ncbi-exports">Project NCBI Exports</h2>
+
+<p>To view exports from this project to NCBI, click on the <strong>NCBI Exports</strong> tab.</p>
+
+<p><img src="images/project-export-tab.png" alt="Project exports tab" /></p>
+
+<p>For more information on exporting to NCBI, see the <a href="../samples/#ncbi-upload">documentation on the samples page</a>.</p>
+
+<h2 id="viewing-recent-project-activity">Viewing recent project activity</h2>
+
+<p>Project data and metadata is changed over time. You can see a list of recent changes that have taken place by viewing the recent activity for a project.</p>
+
+<p>Starting from <a href="#viewing-project-details">viewing project details</a>, you can view recent project activity by clicking on the “Recent Activity” tab at the top of the projects page:</p>
+
+<p><img src="images/project-details-recent-activities-tab.png" alt="Project recent activities tab." /></p>
+
+<p>Recent activities include adding or modifying project members and adding new samples to a project:</p>
+
+<p><img src="images/project-recent-activities.png" alt="Project recent activities." /></p>
+
+<h2 id="managing-project-settings">Managing project settings</h2>
+
+<p>If you are a manager on a project you can manage settings on individual projects.  These settings can be found in the <strong>Settings</strong> tab at the top of the project page.</p>
+
+<p><img src="images/project-settings-tab.png" alt="Project settings tab." /></p>
+
+<h3 id="processing">Processing</h3>
+
+<p>Project processing settings can be found in the <strong>Processing</strong> tab in the project settings page.</p>
+
+<p><img src="images/project-settings-processing.png" alt="Processing tab" /></p>
+
+<h4 id="automated-pipelines">Automated pipelines</h4>
+
+<p>A project can be setup to automatically trigger the execution of a pipeline on upload of new data.  Any installed pipeline that analyzes individual sample files may be launched on upload (including plugin pipelines).  This setting is enabled on a project-by-project basis and must be enabled by a project <strong>manager</strong>.</p>
+
+<p>To set up a new automated pipeline, click the <em>Add Automated Pipeline</em> button on the processing page.</p>
+
+<p><img src="images/project-settings-no-auto-pipelines.png" alt="Automated pipelines check" /></p>
+
+<p>After clicking the <em>Add Automated Pipeline</em> button you’ll be brought to the pipeline list page similar to launching a regular pipeline with data in your cart.  From here you can follow the same process for launching a pipeline including selecting the pipeline, customizing parameters, sharing results, etc.  See more about this process in the <a href="../pipelines/#selecting-a-pipeline">pipelines documentation</a>.</p>
+
+<p>When you have successfully set up your automated analysis pipeline, you’ll be returned to the project settings processing page.  Any new data uploaded to the project will now trigger the execution of the selected pipelines.</p>
+
+<p><img src="images/project-settings-with-auto-pipeline.png" alt="Automated pipelines check" /></p>
+
+<p>To remove an automated pipeline, click the <em>Remove</em> button below the pipeline description and confirm.  Automated pipelines can only be removed by a project <strong>manager</strong>.</p>
+
+<p>Note that automated pipeline parameters cannot currently be modified after the pipeline has been created.  To modify the parameters for an automated pipeline, you should remove the original automated pipeline and create a new one with the new desired parameters.</p>
+
+<p>Administrators can change the priority of automated pipelines for a given project.  The default setting for a project is “LOW”.</p>
+
+<h4 id="project-coverage">Project coverage</h4>
+
+<p>IRIDA can calculate the coverage of uploaded sequencing data for a sample.  To enable this a genome size and expected coverage must be set for a project in the project settings page.</p>
+
+<ul>
+  <li><strong>Minimum Coverage</strong> - The minimum coverage expected by any sequencing data being uploaded to the project.</li>
+  <li><strong>Maximum Coverage</strong> - The maximum coverage expected by any sequencing data being uploaded to the project.</li>
+  <li><strong>Genome Size</strong> - The size of the genome of the organism being targeted by the project.</li>
+</ul>
+
+<p>To edit coverage settings, click the <code>Edit</code> button.</p>
+
+<p><img src="images/project-settings-coverage-edit-button.png" alt="Coverage Edit Button" /></p>
+
+<p>You can then enter your coverage settings and click <code>Update</code>.</p>
+
+<p><img src="images/project-settings-coverage-update.png" alt="Coverage Update" /></p>
+
+<p>When these options are set IRIDA will flag any samples which do not meet the expected coverage requirement in the <a href="../samples/#viewing-samples-in-a-project">project/samples list</a>.  It will also display the coverage for a sample when you <a href="../samples/#viewing-sequence-files">view sequence files for a sample</a>.</p>
+
+<h3 id="project-members">Project members</h3>
+
+<p>Project member settings can be found in the <strong>Members</strong> tab in the project settings page.</p>
+
+<p><img src="{{ site.baseurl }}/images/tutorials/common/projects/project-details-members-tab.png" alt="Project details members tab." /></p>
+
+<p>Project members are users who have permissions to view or edit project metadata. Project members can also view, download, and submit pipelines using sequencing data that’s contained in a project. Project members can have two different roles: a project collaborator (<em>read-only</em> permissions), and a project manager (<em>read</em> and <em>modify</em> permissions).  A user must be a <strong>Manager</strong> on a project to add or remove members.</p>
+
+<p>A project <strong>Collaborator</strong> will only be able to <em>view</em> the project members:</p>
+
+<p><img src="images/project-members-collaborator.png" alt="Project members (as a collaborator)." /></p>
+
+<p>A project <strong>Manager</strong> will be able to <em>modify</em> the project members:</p>
+
+<p><img src="images/project-members-manager.png" alt="Project members (as a manager)." /></p>
+
+<p>Similar to project members, user groups can also be added to projects to manage collections of users.</p>
+
+<p><img src="{{ site.baseurl }}/images/tutorials/common/projects/project-details-groups-tab.png" alt="Project details groups tab." /></p>
+
+<h4 id="adding-a-project-member">Adding a project member</h4>
+
+<h5 id="adding-an-individual-project-member">Adding an individual project member</h5>
+
+<p>{% include tutorials/common/project-add-member.md %}</p>
+
+<h5 id="adding-a-group-project-member">Adding a group project member</h5>
+
+<p>{% include tutorials/common/project-add-member-group.md %}</p>
+
+<h4 id="changing-a-project-member-role">Changing a project member role</h4>
+
+<p>You may want to change a project member role if you wish to remove permissions for an individual user account to modify project details, but still want to allow that user account to view the project data. You can only change a project member role if you have the <strong>Manager</strong> role on the project.</p>
+
+<p>Start by <a href="#project-members">viewing the project members</a>.</p>
+
+<p>To change the role of a project member, click on the role drop-down menu of the user that you would like to change:</p>
+
+<p><img src="images/edit-project-role-button.png" alt="Edit project role button." /></p>
+
+<p>The project role is saved as soon as you make a selection – you <strong>do not</strong> need to click a “Save” button.</p>
+
+<h4 id="removing-a-user-from-a-project">Removing a user from a project</h4>
+
+<p>You may want to completely remove all permissions for a user to access data in a project. To remove those permissions, you must remove the user account from the project members list.</p>
+
+<p>Start by <a href="#project-members">viewing the project members</a>.</p>
+
+<p>To remove a project member, click on the remove button on the right-hand side of the table:</p>
+
+<p><img src="images/remove-project-member-button.png" alt="Remove project member button." /></p>
+
+<p>When you click the remove button, you will be asked to confirm the project member removal:</p>
+
+<p><img src="images/remove-project-member-confirm.png" alt="Remove project member confirmation dialog." /></p>
+
+<p>To confirm, click the “Ok” button.</p>
+
+<h3 id="associated-projects">Associated Projects</h3>
+
+<p>Associated projects can be used to help manage related sample data across multiple projects.  Samples from associated projects can be viewed seamlessly with samples from the local project and used together in analysis pipelines.</p>
+
+<p>To view associated projects click the <strong>Associated Projects</strong> tab in the project settings page.</p>
+
+<p><img src="images/associated-tab.png" alt="Associated projects tab" /><br />
+<em>This is how the table will look for a Collaborator on the project</em></p>
+
+<h4 id="viewing-associated-projects">Viewing associated projects</h4>
+
+<p>The “Associated Projects” list will display the projects associated with this project.  Projects in this view will be available in the <a href="../samples/#viewing-associated-samples">“Associated Projects” view on the project samples listing</a>.</p>
+
+<p><img src="images/associated-list.png" alt="Associated projects list" /></p>
+
+<h4 id="adding-or-removing-associated-projects">Adding or removing associated projects</h4>
+
+<p>Project Managers can add or remove associated projects for a project.  When going to the associated projects tab, managers will see the currently associated projects selected, as well as all projects they have access to.  Using the toggle</p>
+
+<p><strong>Note:</strong> To add or remove a project to the list of associated projects, the manager must <em>at least</em> be able to read the data in the project to be added in the associated projects list.</p>
+
+<p>Adding or removing an associated project can be accomplished by clicking on the toggle box in the first column of the table.  If the toggle is “On” (blue) then the project is associated.</p>
+
+<p><img src="images/associated-local.png" alt="Edit local associated projects" /></p>
+
+<h3 id="reference-files">Reference files</h3>
+
+<p>Reference files are required by at least one of the workflows that are installed in IRIDA by default. Reference files are stored on a project-by-project basis.</p>
+
+<p>You can view or add reference files by clicking on the “Reference Files” tab in the project settings page.</p>
+
+<p><img src="images/project-details-reference-files-tab.png" alt="Project details reference files tab." /></p>
+
+<p>You can upload a new reference file to the project by clicking on the “Upload Reference File” button:</p>
+
+<p><img src="images/upload-reference-file-button.png" alt="Upload reference file button." /></p>
+
+<p>Reference files <strong>must</strong> be in <code>fasta</code> format. Files containing <strong>ambiguous base calls</strong> will be rejected.</p>
+
+<p>Once you’ve uploaded a reference file, you can optionally download the reference file (useful if someone else uploaded the reference file for the project) by clicking on the <img src="images/download-icon.png" class="inline" alt="Download icon." /> download icon in the list of reference files.</p>
+
+<h3 id="remote-project-settings">Remote project settings</h3>
+
+<p>Settings for remote synchronized projects can also be managed from the project settings page.  <strong>Note:</strong> these settings will only appear for synchronized projects, and will be available within the ‘Remote’ menu item.</p>
+
+<p><img src="images/project-settings-sync.png" alt="Remote Project Settings" /></p>
+
+<ul>
+  <li><strong>Last Synchronization</strong> - The time the project was last synchronized or checked for updates.  Click the <strong>Sync Now</strong> button to mark the project for synchronization before it’s scheduled sync time.</li>
+  <li><strong>Remote Connections</strong> - Displays the remote IRIDA installation the project is hosted on and your connection status with that API.</li>
+  <li><strong>Synchronization Frequency</strong> - How often the project will be synchronized.  You can update this setting here.</li>
+  <li><strong>Synchronization User</strong> - The account which will be used to request project updates from the remote IRIDA installation.  This user account must have access to the project on the remote IRIDA instance in order for synchronization to proceed.  Click <strong>Become Synchronization User</strong> to set this to be your user account.</li>
+</ul>
+
+<h2 id="synchronizing-a-remote-project">Synchronizing a remote project</h2>
+
+<p>IRIDA allows you to synchronize projects between different IRIDA installations.  A remote project appears similar to a local project, but users are not allowed to add samples or sequencing data to a remote project.  Instead data associated with a remote project will be updated from a remote IRIDA instance on a regular schedule.  The only data that can be managed for a remote project is the members that are allowed to view the project and associated sample data.</p>
+
+<p>The following data will be synchronized:</p>
+<ul>
+  <li>Basic project metadata</li>
+  <li>FASTQ sequencing data associated with samples</li>
+  <li>Assemblies associated with samples (including both assemblies created by pipelines within IRIDA, and uploaded assemblies)</li>
+  <li>Sample metadata</li>
+</ul>
+
+<p>The following data <strong>will not</strong> be synchronized:</p>
+<ul>
+  <li>Analysis pipeline results</li>
+  <li>Users &amp; groups on a project</li>
+  <li>Analysis automation settings</li>
+  <li>Reference files</li>
+  <li>FAST5 data associated with samples</li>
+</ul>
+
+<p>Some of the above items that are not currently synchronized are expected to be available in future IRIDA versions.</p>
+
+<h4 id="connecting-to-a-remote-instance-of-irida">Connecting to a remote instance of IRIDA</h4>
+
+<p>Before a remote project can be synchronized a connection must be set up between the IRIDA project host installation and the receiving IRIDA installation.  The connection between installations is handled by the IRIDA client and the remote instance of IRIDA.</p>
+
+<p>First the IRIDA installation hosting the project must create a client which will be used to connect to the remote instance of IRIDA.  The client must be created with a grant type of <code>authorization_code</code> and scope of <code>read</code>.  It is also recommended to enable refresh tokens for clients which will be involved in project synchronization.  Documentation on creating system clients can be found in the administrator guide’s <a href="../../administrator/#managing-system-clients">managing system clients section</a> and it must be performed by a system administrator.</p>
+
+<p>Next the receiving IRIDA installation must set up a remote connection to the hosting IRIDA site.  Information on adding a remote instance of IRIDA connection can be found in the administrator guide’s <a href="../../administrator/#adding-a-remote-irida-installation">adding a remote connections section</a> and must also be perfomed by an administrator.</p>
+
+<h4 id="creating-a-remote-synchronized-project">Creating a remote synchronized project</h4>
+
+<p>Once the client and remote instance of IRIDA have been created a user can create a synchronized project.  Note that in order to synchronize a remote project, a user must have login credentials to the host IRIDA installation and be a project member on the project they wish to synchronize.</p>
+
+<p>To begin creating a synchronized project, click the <strong>Synchronize Remote Project</strong> option in the <strong>Projects</strong> menu.</p>
+
+<p><img src="images/synchronize-menu-option.png" alt="Synchronize menu option" /></p>
+
+<p>Once on the <strong>Synchronize New Remote Project</strong> page, you must select the required remote instance of IRIDA and verify your connection status.  If you don’t have a valid connection to the remote instance, you must click the <code>Connect</code> button and follow the instructions to connect in order to proceed.  For more information on connecting to remote instance of IRIDA see the <a href="../dashboard/#remote-instances-of-irida">remote instance of IRIDA documentation</a>.</p>
+
+<p><img src="images/synchronize-connect-api.png" alt="Synchronize api connect" /></p>
+
+<p>Once you have connected to the remote instance of IRIDA, you can select the project you wish to synchronize from the <strong>Project</strong> dropdown.  Here you wil be given a listing of all the projects you have access to on the remote IRIDA installation.</p>
+
+<p>After you have selected your project, you can select a synchronization frequency.  You should select a frequency that matches how often data will be added to the project.  This option can be updated later in the project settings panel.</p>
+
+<p><img src="images/synchronize-details.png" alt="Synchronize details" /></p>
+
+<p>If you know the URL of the project you want to synchronize, you can directly add the url by checking the <code>Set URL Manually</code> and entering it into the input field.</p>
+
+<p>Once your project and an appropriate synchronization frequency have been selected, click the <strong>Synchronize Project</strong> button to create your project.</p>
+
+<p>After the synchronized project has been created, you can view it’s synchronization status at the top of the project’s landing page.</p>
+
+<p><img src="images/synchronize-status.png" alt="Synchronization status" /></p>
+
+<p>The status section will be one of the following messages:</p>
+
+<ul>
+  <li><code>Marked for synchronization</code> - This project will be synchronized when the next project synchronization job runs.</li>
+  <li><code>Updating</code> - This project is currently being synchronized.</li>
+  <li><code>Synchronized</code> - This project is up to date since the last project synchronization job has been run.</li>
+  <li><code>Unauthorized</code> - The user who has created the synchronized project can no longer read the project on the host IRIDA installation.</li>
+  <li><code>Error</code> - An error occurred during the last project synchronization job.</li>
+  <li><code>Unsynchronized</code> - This project will no longer be synchronized.</li>
+</ul>
+
+<h4 id="reconnecting-after-token-expiry">Reconnecting after token expiry</h4>
+
+<p>Occasionally the token used for synchronizing a remote project may expire at which point the project will need to be reconnected.  When this token expires, the synchronization user for the project (usually the person who created the project) will receive an email notifying them that the connection has expired and they must reconnect.</p>
+
+<p>To re-connect after an expired token:</p>
+<ul>
+  <li>Go to the project/settings/remote page. <a href="#remote-project-settings">Docs about this page are above</a>.</li>
+  <li>Check the “Synchronization User” field.  If you are not this user, you should stop and inform them that they must perform this task.</li>
+  <li>Check the “Remote Connection” section.  If the token is invalid, it should say “Expired/invalid token” and have a “Connect” button.</li>
+  <li>Click the “Connect” button and follow the prompts to re-connect to the remote IRIDA installation.</li>
+  <li>After the token is refreshed, click the “Sync Now” button at the top of the page.  This will re-initialize the sync job and it will be added to the queue to refresh.</li>
+</ul>
+
+<p><img src="images/sync-expired.png" alt="Delete project" /></p>
+
+<h2 id="deleting-a-project">Deleting a project</h2>
+
+<p>Projects can be deleted from the <strong>Delete Project</strong> tab in the settings panel.</p>
+
+<p><img src="images/delete-project-tab.png" alt="Delete project tab" /></p>
+
+<p>To delete a project, first read and understand the warning on the deletion page.  <strong>Deleting a project is a permanent action!  Deleted projects and samples may not be able to be recovered.</strong>  If you are sure you want to delete the project, check the confirmation box, then click <strong>Delete Project</strong>.  Once the project has been successfully deleted you will be redirected to your list of projects.</p>
+
+<p><img src="images/delete-project.png" alt="Delete project" /></p>
+
+<p><a href="../user-groups/">Previous: Managing user groups</a><a href="../samples/" style="float: right;">Next: Managing samples</a></p>
+:ET

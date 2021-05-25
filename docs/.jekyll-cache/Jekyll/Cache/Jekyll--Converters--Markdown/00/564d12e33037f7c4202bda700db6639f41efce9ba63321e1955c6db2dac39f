@@ -1,0 +1,688 @@
+I"�<h1 class="no_toc" id="using-a-clojure-nrepl-to-interact-with-a-live-instance-of-irida">Using a Clojure nREPL to interact with a live instance of IRIDA</h1>
+
+<p><i class="fa fa-warning" style="color:Tomato"></i> <strong>The nREPL is to be used in development only! Use in production at your peril!</strong> <i class="fa fa-"></i></p>
+
+<p>Have you ever wanted to interact with live running instance of IRIDA to see what data an object contains or what a function does or to run some one-off arbitrary code? Well, you can use a Clojure nREPL to do these things and more!</p>
+
+<p>With the <code>jvm-breakglass</code> library (https://github.com/matlux/jvm-breakglass/), it is possible to use a Clojure REPL to interact with a live running Java Spring application like IRIDA.</p>
+
+<p>With a <code>jvm-breakglass</code> Clojure nREPL, you can</p>
+
+<ul>
+  <li>access all your application Spring Beans in an interactive environment to do with as you please
+    <ul>
+      <li>e.g. <code>(get-bean "userRepository")</code> to get the <code>userRepository</code> Bean</li>
+    </ul>
+  </li>
+  <li>you can explore the API of a library to see what kind of data you are able to retrieve from it
+    <ul>
+      <li>e.g. using a blend4j <code>GalaxyInstance</code> object to see what kind of data you can retrieve from Galaxy</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 class="no_toc" id="contents">Contents</h2>
+
+<ul id="markdown-toc">
+  <li><a href="#what-is-a-repl" id="markdown-toc-what-is-a-repl">What is a REPL?</a></li>
+  <li><a href="#requirements" id="markdown-toc-requirements">Requirements</a></li>
+  <li><a href="#clojure-nrepl-in-intellij-idea-with-the-cursive-plugin" id="markdown-toc-clojure-nrepl-in-intellij-idea-with-the-cursive-plugin">Clojure nREPL in IntelliJ IDEA with the Cursive plugin</a>    <ul>
+      <li><a href="#setup" id="markdown-toc-setup">Setup</a></li>
+      <li><a href="#using-the-clojure-repl" id="markdown-toc-using-the-clojure-repl">Using the Clojure REPL</a>        <ul>
+          <li><a href="#enabling-admin-user-security-context-so-you-can-do-anything-in-irida" id="markdown-toc-enabling-admin-user-security-context-so-you-can-do-anything-in-irida">Enabling Admin User Security Context So You Can Do Anything (in IRIDA)!</a></li>
+        </ul>
+      </li>
+      <li><a href="#repl-tutorial" id="markdown-toc-repl-tutorial">REPL tutorial</a>        <ul>
+          <li><a href="#repl-tutorial-clojure-code" id="markdown-toc-repl-tutorial-clojure-code">REPL tutorial Clojure code</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="what-is-a-repl">What is a REPL?</h2>
+
+<p>Read-Eval-Print-Loop (REPL) is an interactive environment that accepts user input, evaluates it and returns the result. If you’ve ever used the Javascript console in your web browser, the R language console, or IPython in a Jupyter Notebook, you’ve basically used a REPL.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<ul>
+  <li>Install <code>leiningen</code> (https://github.com/technomancy/leiningen)</li>
+  <li>In your <code>/etc/irida/irida.conf</code> file, ensure that the <code>irida.debug.nrepl.server.port</code> property is set to a valid port number such as <code>1112</code>:</li>
+</ul>
+
+<div class="highlight"><pre><code># Clojure nREPL server port
+irida.debug.nrepl.server.port=1112
+</code></pre></div>
+
+<h2 id="clojure-nrepl-in-intellij-idea-with-the-cursive-plugin">Clojure nREPL in IntelliJ IDEA with the Cursive plugin</h2>
+
+<p>Although it is possible to use <code>leiningen</code> from the command-line to connect to the nREPL server (<code>lein repl :connect localhost:1112</code>), it is recommended to use IntelliJ with the <a href="https://cursive-ide.com/userguide/">Cursive Clojure plugin</a> for IntelliJ’s general IDE awesomeness, auto-completion, showing method/class docs inline, paredit, etc.</p>
+
+<h3 id="setup">Setup</h3>
+
+<ul>
+  <li>Install Cursive plugin for IntelliJ (https://cursive-ide.com/userguide/)</li>
+  <li>Add <code>Run</code> config for Clojure nREPL (<code>Run</code>-&gt;<code>Edit Configurations...</code>) (save as “nrepl”)
+    <ul>
+      <li>Add new config for Clojure remote repl for host <code>localhost</code> and port <code>1112</code> (or whatever port you set in <code>/etc/irida/irida.conf</code>)</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="images/intellij-nrepl-setup.png" alt="intellij-nrepl-setup" /><br />
+<img src="images/intellij-nrepl-setup-2.png" alt="intellij-nrepl-setup-2" /></p>
+
+<ul>
+  <li>Start IRIDA with <code>-Dspring.profiles.active=dev</code>. You should see something like the following in the IRIDA log if the nREPL server is successfully started:</li>
+</ul>
+
+<div class="highlight"><pre><code>Dec 12, 2017 4:35:54 PM net.matlux.NreplServer &lt;init&gt;
+INFO: Creating ReplStartup for Port=1112
+Dec 12, 2017 4:35:54 PM net.matlux.NreplServer start
+INFO: Repl started successfully on Port = 1112
+Dec 12, 2017 4:35:54 PM net.matlux.MBeanRegistration registerNreplServerAsMBean
+INFO: MBean Registration of JVM-breakglass successful
+</code></pre></div>
+
+<ul>
+  <li>Connect to the nREPL server with Clojure nREPL run config (Run “nrepl”). You should see the following:</li>
+</ul>
+
+<p><img src="images/intellij-nrepl-started.png" alt="started" /></p>
+
+<h3 id="using-the-clojure-repl">Using the Clojure REPL</h3>
+
+<p>One way of using the Clojure REPL is to input expressions like <code>(+ 1 2)</code>, pressing Enter and viewing the output:</p>
+
+<p><img src="images/intellij-nrepl-basic-expression.png" alt="addition-test" /></p>
+
+<p>In order to inspect and interact your running instance of IRIDA, you need to execute the following code in the REPL to load up Java and Spring introspector functions:</p>
+
+<div class="highlight"><pre><code class="language-clojure"><span class="p">(</span><span class="nf">do</span>
+  <span class="p">(</span><span class="nf">use</span> <span class="ss">&#39;cl-java-introspector.spring</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">use</span> <span class="ss">&#39;cl-java-introspector.core</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">use</span> <span class="ss">&#39;me.raynes.fs</span><span class="p">))</span></code></pre></div>
+
+<p>Now you can get the names of all the IRIDA Spring Beans:</p>
+
+<div class="highlight"><pre><code class="language-clojure"><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">(</span><span class="nf">get-beans</span><span class="p">)</span> <span class="nv">sort</span><span class="p">)</span></code></pre></div>
+
+<p>Output:</p>
+
+<div class="highlight"><pre><code class="language-clojure"><span class="nv">=&gt;</span>
+<span class="p">(</span><span class="s">&quot;QCEntryRepository&quot;</span>
+ <span class="s">&quot;analysisCollectionServiceGalaxy&quot;</span>
+ <span class="s">&quot;analysisExecutionService&quot;</span>
+<span class="nv">...</span> <span class="nv">truncated</span>
+ <span class="s">&quot;workflowsClient&quot;</span><span class="p">)</span></code></pre></div>
+
+<p>Let’s say you’re interested in the <code>galaxyInstance</code> Spring Bean and wish to use it. You can save it to a variable <code>gi</code></p>
+
+<div class="highlight"><pre><code class="language-clojure"><span class="p">(</span><span class="k">def </span><span class="nv">gi</span> <span class="p">(</span><span class="nf">get-bean</span> <span class="s">&quot;galaxyInstance&quot;</span><span class="p">))</span></code></pre></div>
+
+<p>Let’s see what <code>gi</code> is:</p>
+
+<div class="highlight"><pre><code class="language-clojure"><span class="p">(</span><span class="nb">identity </span><span class="nv">gi</span><span class="p">)</span>
+<span class="nv">=&gt;</span> <span class="o">#</span><span class="nv">&lt;GalaxyInstanceImpl</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span><span class="o">@</span><span class="mi">4</span><span class="nv">f2cd1c0&gt;</span></code></pre></div>
+
+<ul>
+  <li>Print method info for all methods of <code>galaxyInstance</code></li>
+</ul>
+
+<div class="highlight"><pre><code class="language-clojure"><span class="p">(</span><span class="nf">methods-info</span> <span class="nv">gi</span><span class="p">)</span></code></pre></div>
+
+<p>Output:</p>
+
+<div class="highlight"><pre><code class="language-clojure"><span class="err">|</span>                                                  <span class="ss">:name</span> <span class="err">|</span>                                       <span class="ss">:declaring-class</span> <span class="err">|</span>                                         <span class="ss">:parameter-types</span> <span class="err">|</span> <span class="ss">:exception-types</span> <span class="err">|</span>     <span class="ss">:flags</span> <span class="err">|</span>
+<span class="err">|</span><span class="nv">--------------------------------------------------------+--------------------------------------------------------+----------------------------------------------------------+------------------+------------</span><span class="err">|</span>
+<span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span> <span class="p">[</span><span class="nv">com.github.jmchilton.blend4j.galaxy.WebResourceFactory</span><span class="p">]</span> <span class="err">|</span>               <span class="p">[]</span> <span class="err">|</span>        <span class="o">#</span><span class="p">{}</span> <span class="err">|</span>
+<span class="err">|</span>                                              <span class="nv">getApiKey</span> <span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span>                                                       <span class="p">[]</span> <span class="err">|</span>               <span class="p">[]</span> <span class="err">|</span> <span class="o">#</span><span class="p">{</span><span class="ss">:public</span><span class="p">}</span> <span class="err">|</span>
+<span class="err">|</span>                                 <span class="nv">getConfigurationClient</span> <span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span>                                                       <span class="p">[]</span> <span class="err">|</span>               <span class="p">[]</span> <span class="err">|</span> <span class="o">#</span><span class="p">{</span><span class="ss">:public</span><span class="p">}</span> <span class="err">|</span>
+<span class="err">|</span>                                           <span class="nv">getGalaxyUrl</span> <span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span>                                                       <span class="p">[]</span> <span class="err">|</span>               <span class="p">[]</span> <span class="err">|</span> <span class="o">#</span><span class="p">{</span><span class="ss">:public</span><span class="p">}</span> <span class="err">|</span>
+<span class="err">|</span>                                     <span class="nv">getHistoriesClient</span> <span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span>                                                       <span class="p">[]</span> <span class="err">|</span>               <span class="p">[]</span> <span class="err">|</span> <span class="o">#</span><span class="p">{</span><span class="ss">:public</span><span class="p">}</span> <span class="err">|</span>
+<span class="err">|</span>                                          <span class="nv">getJobsClient</span> <span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span>                                                       <span class="p">[]</span> <span class="err">|</span>               <span class="p">[]</span> <span class="err">|</span> <span class="o">#</span><span class="p">{</span><span class="ss">:public</span><span class="p">}</span> <span class="err">|</span>
+<span class="err">|</span>                                     <span class="nv">getLibrariesClient</span> <span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span>                                                       <span class="p">[]</span> <span class="err">|</span>               <span class="p">[]</span> <span class="err">|</span> <span class="o">#</span><span class="p">{</span><span class="ss">:public</span><span class="p">}</span> <span class="err">|</span>
+<span class="err">|</span>                                  <span class="nv">getRepositoriesClient</span> <span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span>                                                       <span class="p">[]</span> <span class="err">|</span>               <span class="p">[]</span> <span class="err">|</span> <span class="o">#</span><span class="p">{</span><span class="ss">:public</span><span class="p">}</span> <span class="err">|</span>
+<span class="err">|</span>                                         <span class="nv">getRolesClient</span> <span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span>                                                       <span class="p">[]</span> <span class="err">|</span>               <span class="p">[]</span> <span class="err">|</span> <span class="o">#</span><span class="p">{</span><span class="ss">:public</span><span class="p">}</span> <span class="err">|</span>
+<span class="err">|</span>                                        <span class="nv">getSearchClient</span> <span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span>                                                       <span class="p">[]</span> <span class="err">|</span>               <span class="p">[]</span> <span class="err">|</span> <span class="o">#</span><span class="p">{</span><span class="ss">:public</span><span class="p">}</span> <span class="err">|</span>
+<span class="err">|</span>                                      <span class="nv">getToolDataClient</span> <span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span>                                                       <span class="p">[]</span> <span class="err">|</span>               <span class="p">[]</span> <span class="err">|</span> <span class="o">#</span><span class="p">{</span><span class="ss">:public</span><span class="p">}</span> <span class="err">|</span>
+<span class="err">|</span>                                         <span class="nv">getToolsClient</span> <span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span>                                                       <span class="p">[]</span> <span class="err">|</span>               <span class="p">[]</span> <span class="err">|</span> <span class="o">#</span><span class="p">{</span><span class="ss">:public</span><span class="p">}</span> <span class="err">|</span>
+<span class="err">|</span>                                         <span class="nv">getUsersClient</span> <span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span>                                                       <span class="p">[]</span> <span class="err">|</span>               <span class="p">[]</span> <span class="err">|</span> <span class="o">#</span><span class="p">{</span><span class="ss">:public</span><span class="p">}</span> <span class="err">|</span>
+<span class="err">|</span>                                         <span class="nv">getWebResource</span> <span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span>                                                       <span class="p">[]</span> <span class="err">|</span>               <span class="p">[]</span> <span class="err">|</span> <span class="o">#</span><span class="p">{</span><span class="ss">:public</span><span class="p">}</span> <span class="err">|</span>
+<span class="err">|</span>                                     <span class="nv">getWorkflowsClient</span> <span class="err">|</span> <span class="nv">com.github.jmchilton.blend4j.galaxy.GalaxyInstanceImpl</span> <span class="err">|</span>                                                       <span class="p">[]</span> <span class="err">|</span>               <span class="p">[]</span> <span class="err">|</span> <span class="o">#</span><span class="p">{</span><span class="ss">:public</span><span class="p">}</span> <span class="err">|</span>
+<span class="nv">=&gt;</span> <span class="nv">nil</span></code></pre></div>
+
+<p>Let’s see what we can do with <code>galaxyInstance</code>:</p>
+
+<div class="highlight"><pre><code class="language-clojure"><span class="p">(</span><span class="nf">.getGalaxyUrl</span> <span class="nv">gi</span><span class="p">)</span>
+<span class="c1">;=&gt; &quot;http://localhost:48888&quot;</span>
+
+<span class="p">(</span><span class="nf">.getJobsClient</span> <span class="nv">gi</span><span class="p">)</span>
+<span class="c1">;=&gt; #&lt;JobsClientImpl com.github.jmchilton.blend4j.galaxy.JobsClientImpl@35396aae&gt;</span>
+
+<span class="p">(</span><span class="k">def </span><span class="nv">jobs-client</span> <span class="p">(</span><span class="nf">.getJobsClient</span> <span class="nv">gi</span><span class="p">))</span>
+<span class="c1">;=&gt; #&#39;user/jobs-client</span>
+
+<span class="p">(</span><span class="nf">.getJobs</span> <span class="nv">jobs-client</span><span class="p">)</span>
+<span class="c1">;=&gt;</span>
+<span class="c1">;[#&lt;Job com.github.jmchilton.blend4j.galaxy.beans.Job@e538da41&gt;</span>
+<span class="c1">; ...</span>
+<span class="c1">; #&lt;Job com.github.jmchilton.blend4j.galaxy.beans.Job@820aacb0&gt;]</span>
+
+<span class="c1">; Get the fields for the first job returned by the JobClient object</span>
+<span class="p">(</span><span class="nf">get-fields</span> <span class="p">(</span><span class="nb">first </span><span class="p">(</span><span class="nf">.getJobs</span> <span class="nv">jobs-client</span><span class="p">)))</span>
+<span class="c1">;=&gt;</span>
+<span class="c1">; ([:state &quot;error&quot;]</span>
+<span class="c1">;  [:toolId &quot;toolshed.g2.bx.psu.edu/repos/nml/sistr_cmd/sistr_cmd/1.0.2&quot;]</span>
+<span class="c1">;  [:created #inst&quot;2017-11-08T15:33:23.212-00:00&quot;]</span>
+<span class="c1">;  [:updated #inst&quot;2017-11-08T15:37:14.171-00:00&quot;])</span></code></pre></div>
+
+<p>You can get IntelliJ auto-completion for <code>GalaxyInstance</code> objects by importing it into the environment:</p>
+
+<div class="highlight"><pre><code class="language-clojure"><span class="p">(</span><span class="nb">import </span><span class="o">&#39;</span><span class="p">(</span><span class="nf">com.github.jmchilton.blend4j.galaxy</span> <span class="nv">GalaxyInstance</span><span class="p">))</span></code></pre></div>
+
+<p>If you type in the name of the Java class and press Enter, Cursive should automatically import the class into your namespace/environment.</p>
+
+<h4 id="enabling-admin-user-security-context-so-you-can-do-anything-in-irida">Enabling Admin User Security Context So You Can Do Anything (in IRIDA)!</h4>
+
+<p>Copy-paste the following Clojure code into your REPL so that you can have admin privileges to access, create and persist any objects you want:</p>
+
+<div class="highlight"><pre><code class="language-clojure"><span class="p">(</span><span class="nf">do</span>
+  <span class="p">(</span><span class="nf">use</span> <span class="ss">&#39;cl-java-introspector.spring</span>
+       <span class="ss">&#39;cl-java-introspector.core</span>
+       <span class="ss">&#39;clojure.reflect</span> <span class="ss">&#39;clojure.pprint</span> <span class="ss">&#39;clojure.java.javadoc</span>
+       <span class="ss">&#39;me.raynes.fs</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">import </span><span class="o">&#39;</span><span class="p">(</span><span class="nf">org.springframework.security.core.authority</span> <span class="nv">AuthorityUtils</span><span class="p">)</span>
+          <span class="o">&#39;</span><span class="p">(</span><span class="nf">org.springframework.security.core.context</span> <span class="nv">SecurityContextHolder</span><span class="p">)</span>
+          <span class="o">&#39;</span><span class="p">(</span><span class="nf">org.springframework.security.authentication</span> <span class="nv">UsernamePasswordAuthenticationToken</span><span class="p">))</span>
+  <span class="p">(</span><span class="kd">defn </span><span class="nv">cfg-auth</span>
+      <span class="s">&quot;Configure security context and set up authentication to allow access to objects from Spring Service and Repository Beans&quot;</span>
+      <span class="p">[</span><span class="o">&amp;</span> <span class="p">{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">role</span> <span class="nv">principal</span><span class="p">]</span>
+          <span class="ss">:or</span>   <span class="p">{</span><span class="nv">role</span>      <span class="s">&quot;ROLE_ADMIN&quot;</span>
+                 <span class="nv">principal</span> <span class="s">&quot;user&quot;</span><span class="p">}}]</span>
+      <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">roles-array</span> <span class="p">(</span><span class="nb">into-array </span><span class="nv">String</span> <span class="p">[</span><span class="nv">role</span><span class="p">])</span>
+            <span class="nv">authorities</span> <span class="p">(</span><span class="nf">AuthorityUtils/createAuthorityList</span> <span class="nv">roles-array</span><span class="p">)</span>
+            <span class="nv">auth</span> <span class="p">(</span><span class="k">new </span><span class="nv">UsernamePasswordAuthenticationToken</span> <span class="nv">principal</span> <span class="nv">role</span> <span class="nv">authorities</span><span class="p">)</span>
+            <span class="nv">ctx</span> <span class="p">(</span><span class="nf">SecurityContextHolder/getContext</span><span class="p">)]</span>
+        <span class="p">(</span><span class="nf">.setAuthentication</span> <span class="nv">ctx</span> <span class="nv">auth</span><span class="p">)))</span>
+  <span class="p">(</span><span class="k">def </span><span class="nv">user-svc</span> <span class="p">(</span><span class="nf">get-bean</span> <span class="s">&quot;userServiceImpl&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">cfg-auth</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">def </span><span class="nv">admin-user</span> <span class="p">(</span><span class="nf">.loadUserByUsername</span> <span class="nv">user-svc</span> <span class="s">&quot;admin&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kd">defn </span><span class="nv">as-admin</span>
+    <span class="s">&quot;Setup principal user as the `admin-user` so that new objects can be persisted to the database&quot;</span>
+    <span class="p">[]</span> <span class="p">(</span><span class="nf">cfg-auth</span> <span class="ss">:principal</span> <span class="nv">admin-user</span><span class="p">)))</span></code></pre></div>
+
+<p>Execute <code>(as-admin)</code> before any code where you try to save to the database such as:</p>
+
+<div class="highlight"><pre><code class="language-clojure"><span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">user</span> <span class="p">(</span><span class="k">new </span><span class="nv">User</span> <span class="s">&quot;peter&quot;</span> <span class="s">&quot;peter@k.com&quot;</span> <span class="s">&quot;Password1!&quot;</span> <span class="s">&quot;Peter&quot;</span> <span class="s">&quot;Kruczkiewicz&quot;</span> <span class="s">&quot;12345&quot;</span><span class="p">)]</span>
+  <span class="p">(</span><span class="nf">pprint</span> <span class="nv">user</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">pprint</span> <span class="p">(</span><span class="nf">get-fields</span> <span class="nv">user</span><span class="p">))</span>
+  <span class="c1">; calling as-admin to ensure we have admin user security context enabled!</span>
+  <span class="p">(</span><span class="nf">as-admin</span><span class="p">)</span> 
+  <span class="c1">; saving user object to database using &quot;userServiceImpl&quot; Spring Bean</span>
+  <span class="p">(</span><span class="nf">.create</span> <span class="nv">user-svc</span> <span class="nv">user</span><span class="p">)</span>
+  <span class="c1">; retrieving User object with username &quot;peter&quot; from database and printing</span>
+  <span class="p">(</span><span class="nf">as-admin</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">prn </span><span class="p">(</span><span class="nf">.loadUserByUsername</span> <span class="nv">user-svc</span> <span class="s">&quot;peter&quot;</span><span class="p">)))</span></code></pre></div>
+
+<h3 id="repl-tutorial">REPL tutorial</h3>
+
+<p>This tutorial should show you how to get use the Spring Beans to fetch or save objects to the database and how to interact with Galaxy through the blend4j library and GalaxyInstance Bean in IRIDA.</p>
+
+<p>It’s recommended that you copy-paste the following Clojure code into a file and submit the expressions (or forms) one at a time in succession to the Clojure REPL.</p>
+
+<p>This is how it should look in IntelliJ if you were to submit the first few forms to the REPL:</p>
+
+<p><img src="images/repl-in-action.png" alt="repl-in-action" /></p>
+
+<h4 id="repl-tutorial-clojure-code">REPL tutorial Clojure code</h4>
+
+<div class="highlight"><pre><code class="language-clojure"><span class="c1">;==========</span>
+<span class="c1">; Setup</span>
+<span class="c1">;==========</span>
+<span class="c1">; In IntelliJ with the Cursive plugin, you can send the top-most form/expression to the REPL with Ctrl+Shift+p on Linux.</span>
+<span class="c1">; The keymaps bindings may be different on different OSes.</span>
+<span class="c1">; You need to execute (ctrl+shift+p) the following (ns nrepl-example ...) form to load this namespace into the REPL</span>
+<span class="c1">; environment.</span>
+<span class="p">(</span><span class="kd">ns </span><span class="nv">nrepl-example</span>
+  <span class="p">(</span><span class="ss">:import</span> <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.service.analysis.workspace</span> <span class="nv">AnalysisWorkspaceService</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.service.workflow</span> <span class="nv">IridaWorkflowsService</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.service.impl</span> <span class="nv">AnalysisExecutionScheduledTaskImpl</span> <span class="nv">ProjectServiceImpl</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.service.analysis.execution</span> <span class="nv">AnalysisExecutionService</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.model.workflow</span> <span class="nv">IridaWorkflow</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.model.enums</span> <span class="nv">AnalysisState</span> <span class="nv">AnalysisType</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.model.sequenceFile</span> <span class="nv">SequenceFilePair</span> <span class="nv">SequenceFile</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.model.workflow.analysis</span> <span class="nv">ToolExecution</span> <span class="nv">Analysis</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.repositories.analysis.submission</span> <span class="nv">AnalysisSubmissionRepository</span> <span class="nv">JobErrorRepository</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.service</span> <span class="nv">SequencingObjectService</span> <span class="nv">CleanupAnalysisSubmissionCondition</span> <span class="nv">AnalysisExecutionScheduledTask</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.model.workflow.submission</span> <span class="nv">AnalysisSubmission</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.service.impl.user</span> <span class="nv">UserServiceImpl</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.service.user</span> <span class="nv">UserService</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.service.impl.analysis.submission</span> <span class="nv">AnalysisSubmissionServiceImpl</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.repositories.user</span> <span class="nv">UserRepository</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">ca.corefacility.bioinformatics.irida.model.user</span> <span class="nv">User</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">com.github.jmchilton.blend4j.galaxy</span> <span class="nv">GalaxyInstance</span> <span class="nv">HistoriesClient</span> <span class="nv">WorkflowsClient</span> <span class="nv">WorkflowsClientImpl</span> <span class="nv">JobsClient</span> <span class="nv">JobsClientImpl</span> <span class="nv">ToolsClient</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">com.github.jmchilton.blend4j.galaxy.beans</span> <span class="nv">HistoryContentsProvenance</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">org.springframework.security.core.authority</span> <span class="nv">AuthorityUtils</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">org.springframework.security.core.context</span> <span class="nv">SecurityContextHolder</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">org.springframework.security.authentication</span> <span class="nv">UsernamePasswordAuthenticationToken</span><span class="p">)))</span>
+
+<span class="c1">; execute the following form to initialize the Java and Spring inspectors and convenience functions for jvm-breakglass</span>
+<span class="p">(</span><span class="nf">do</span>
+  <span class="p">(</span><span class="nf">use</span> <span class="ss">&#39;cl-java-introspector.spring</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">use</span> <span class="ss">&#39;cl-java-introspector.core</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">use</span> <span class="ss">&#39;clojure.reflect</span> <span class="ss">&#39;clojure.pprint</span> <span class="ss">&#39;clojure.java.javadoc</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">use</span> <span class="ss">&#39;me.raynes.fs</span><span class="p">))</span>
+
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">filter-by</span>
+  <span class="s">&quot;Filter by some string/regex pattern&quot;</span>
+  <span class="p">[</span><span class="nv">pattern</span> <span class="nv">coll</span><span class="p">]</span>
+  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">re-p</span> <span class="p">(</span><span class="nb">re-pattern </span><span class="p">(</span><span class="nb">str </span><span class="s">&quot;.*&quot;</span> <span class="nv">pattern</span> <span class="s">&quot;.*&quot;</span><span class="p">))]</span>
+    <span class="p">(</span><span class="nb">filter </span><span class="o">#</span><span class="p">(</span><span class="nb">re-matches </span><span class="nv">re-p</span> <span class="nv">%</span><span class="p">)</span> <span class="nv">coll</span><span class="p">)))</span>
+
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">sorted-beans</span>
+  <span class="s">&quot;Convenience function for returning sorted bean names matching a regex</span>
+<span class="s">   pattern if provided.&quot;</span>
+  <span class="p">([]</span>
+   <span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">(</span><span class="nf">get-beans</span><span class="p">)</span> <span class="nv">sort</span><span class="p">))</span>
+  <span class="p">([</span><span class="nv">pattern</span><span class="p">]</span>
+   <span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">(</span><span class="nf">get-beans</span><span class="p">)</span>
+        <span class="nv">sort</span>
+        <span class="p">(</span><span class="nf">filter-by</span> <span class="nv">pattern</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="nf">sorted-beans</span> <span class="s">&quot;user&quot;</span><span class="p">)</span>
+<span class="c1">;=&gt;</span>
+<span class="c1">;(&quot;userAuthenticationManager&quot;</span>
+<span class="c1">;  &quot;userGroupJoinRepository&quot;</span>
+<span class="c1">;  &quot;userGroupProjectJoinRepository&quot;</span>
+<span class="c1">;  &quot;userGroupRepository&quot;</span>
+<span class="c1">;  &quot;userGroupServiceImpl&quot;</span>
+<span class="c1">;  &quot;userRepository&quot;</span>
+<span class="c1">;  &quot;userRepositoryImpl&quot;</span>
+<span class="c1">;  &quot;userServiceImpl&quot;)</span>
+
+<span class="p">(</span><span class="k">def </span><span class="nv">user-svc</span> <span class="p">(</span><span class="nf">get-bean</span> <span class="s">&quot;userServiceImpl&quot;</span><span class="p">))</span>
+
+<span class="c1">; You can print the names of the methods for a Java object with the `get-method-names` function</span>
+<span class="c1">; Here we will filter for method names with &quot;load&quot; in their name</span>
+<span class="p">(</span><span class="nf">filter-by</span> <span class="s">&quot;load&quot;</span> <span class="p">(</span><span class="nb">sort </span><span class="p">(</span><span class="nf">get-method-names</span> <span class="nv">user-svc</span><span class="p">)))</span>
+<span class="c1">;=&gt; (... &quot;loadUserByEmail&quot; &quot;loadUserByUsername&quot; ...)</span>
+
+<span class="c1">; If you try to execute the loadUserByUsername method then you&#39;ll get an AuthenticationCredentialsNotFoundException</span>
+<span class="p">(</span><span class="nf">.loadUserByUsername</span> <span class="nv">user-svc</span> <span class="s">&quot;admin&quot;</span><span class="p">)</span>
+<span class="c1">;CompilerException org.springframework.security.authentication.AuthenticationCredentialsNotFoundException: An Authentication object was not found in the SecurityContext, ...</span>
+
+<span class="c1">; To get around this exception, you will need to set your authentication at the appropriate role</span>
+<span class="c1">; You can use the following functions to configure and set authentication</span>
+<span class="p">(</span><span class="kd">defn </span><span class="nv">cfg-auth</span>
+    <span class="s">&quot;Configure security context and set up authentication to allow access to objects from Spring Service and Repository Beans&quot;</span>
+    <span class="p">[</span><span class="o">&amp;</span> <span class="p">{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">role</span> <span class="nv">principal</span><span class="p">]</span>
+        <span class="ss">:or</span>   <span class="p">{</span><span class="nv">role</span>      <span class="s">&quot;ROLE_ADMIN&quot;</span>
+               <span class="nv">principal</span> <span class="s">&quot;user&quot;</span><span class="p">}}]</span>
+    <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">roles-array</span> <span class="p">(</span><span class="nb">into-array </span><span class="nv">String</span> <span class="p">[</span><span class="nv">role</span><span class="p">])</span>
+          <span class="nv">authorities</span> <span class="p">(</span><span class="nf">AuthorityUtils/createAuthorityList</span> <span class="nv">roles-array</span><span class="p">)</span>
+          <span class="nv">auth</span> <span class="p">(</span><span class="k">new </span><span class="nv">UsernamePasswordAuthenticationToken</span> <span class="nv">principal</span> <span class="nv">role</span> <span class="nv">authorities</span><span class="p">)</span>
+          <span class="nv">ctx</span> <span class="p">(</span><span class="nf">SecurityContextHolder/getContext</span><span class="p">)]</span>
+      <span class="p">(</span><span class="nf">.setAuthentication</span> <span class="nv">ctx</span> <span class="nv">auth</span><span class="p">)))</span>
+<span class="c1">; If you execute `as-admin` before the `loadUserByUsername` method then you will be able to access the requested user</span>
+<span class="p">(</span><span class="nf">cfg-auth</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">.loadUserByUsername</span> <span class="nv">user-svc</span> <span class="s">&quot;admin&quot;</span><span class="p">)</span>
+<span class="c1">;=&gt;</span>
+<span class="c1">;#&lt;User org.springframework.security.core.userdetails.User@586034f: Username: admin; Password: [PROTECTED]; Enabled: true; AccountNonExpired: true; credentialsNonExpired: true; AccountNonLocked: true; Granted Authorities: ROLE_ADMIN&gt;</span>
+
+<span class="c1">; Let&#39;s save the admin user to a variable `admin-user`</span>
+<span class="p">(</span><span class="nf">cfg-auth</span><span class="p">)</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">admin-user</span> <span class="p">(</span><span class="nf">.loadUserByUsername</span> <span class="nv">user-svc</span> <span class="s">&quot;admin&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="kd">defn </span><span class="nv">as-admin</span>
+  <span class="s">&quot;Setup principal user as the `admin-user` so that new objects can be persisted to the database&quot;</span>
+  <span class="p">[]</span> <span class="p">(</span><span class="nf">cfg-auth</span> <span class="ss">:principal</span> <span class="nv">admin-user</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nf">get-method-names</span> <span class="nv">admin-user</span><span class="p">)</span>
+<span class="c1">;=&gt;</span>
+<span class="c1">;(&quot;sortAuthorities&quot;</span>
+<span class="c1">;  &quot;isEnabled&quot;</span>
+<span class="c1">;  &quot;getUsername&quot;</span>
+<span class="c1">;  &quot;getPassword&quot;</span>
+<span class="c1">;  &quot;eraseCredentials&quot;</span>
+<span class="c1">;  &quot;getAuthorities&quot;</span>
+<span class="c1">;  &quot;isAccountNonExpired&quot;</span>
+<span class="c1">;  &quot;isAccountNonLocked&quot;</span>
+<span class="c1">;  &quot;isCredentialsNonExpired&quot;</span>
+<span class="c1">;  &quot;equals&quot;</span>
+<span class="c1">;  &quot;toString&quot;</span>
+<span class="c1">;  &quot;hashCode&quot;)</span>
+<span class="p">(</span><span class="nf">.isAccountNonExpired</span> <span class="nv">admin-user</span><span class="p">)</span>
+<span class="c1">;=&gt; true</span>
+<span class="p">(</span><span class="nf">.getAuthorities</span> <span class="nv">admin-user</span><span class="p">)</span>
+<span class="c1">;=&gt; #{#&lt;Role ROLE_ADMIN&gt;}</span>
+
+<span class="c1">; get private fields into a Clojure map</span>
+<span class="p">(</span><span class="nf">get-fields</span> <span class="nv">admin-user</span><span class="p">)</span>
+<span class="c1">;=&gt;</span>
+<span class="c1">;([:password &quot;$2a$10$Kg.HY/cxbViehsPvksaD8OPt27eatbCR4K.WPWEMnMZhssbHmdEMO&quot;]</span>
+<span class="c1">;  [:username &quot;admin&quot;]</span>
+<span class="c1">;  [:authorities #{#&lt;Role ROLE_ADMIN&gt;}]</span>
+<span class="c1">;  [:accountNonExpired true]</span>
+<span class="c1">;  [:accountNonLocked true]</span>
+<span class="c1">;  [:credentialsNonExpired true]</span>
+<span class="c1">;  [:enabled true])</span>
+
+
+<span class="c1">; Let&#39;s create and save a new User to the database</span>
+<span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">user</span> <span class="p">(</span><span class="k">new </span><span class="nv">User</span> <span class="s">&quot;peter&quot;</span> <span class="s">&quot;peter@k.com&quot;</span> <span class="s">&quot;Password1!&quot;</span> <span class="s">&quot;Peter&quot;</span> <span class="s">&quot;Kruczkiewicz&quot;</span> <span class="s">&quot;12345&quot;</span><span class="p">)]</span>
+  <span class="p">(</span><span class="nf">pprint</span> <span class="nv">user</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">pprint</span> <span class="p">(</span><span class="nf">get-fields</span> <span class="nv">user</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">as-admin</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">.create</span> <span class="nv">user-svc</span> <span class="nv">user</span><span class="p">))</span>
+
+
+<span class="p">(</span><span class="k">def </span><span class="nv">user-repo</span> <span class="p">(</span><span class="nf">get-bean</span> <span class="s">&quot;userRepository&quot;</span><span class="p">))</span>
+<span class="c1">; Let&#39;s fetch the user we just created and saved to the database using the `userRepository` bean</span>
+<span class="p">(</span><span class="nf">do</span>
+  <span class="p">(</span><span class="nf">as-admin</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">user-peter</span> <span class="p">(</span><span class="nf">.loadUserByUsername</span> <span class="nv">user-repo</span> <span class="s">&quot;peter&quot;</span><span class="p">)]</span>
+    <span class="p">(</span><span class="nb">prn </span><span class="s">&quot;Type: &quot;</span> <span class="p">(</span><span class="nf">type</span> <span class="nv">user-peter</span><span class="p">))</span>
+    <span class="p">(</span><span class="nb">prn </span><span class="s">&quot;User ID &quot;</span> <span class="p">(</span><span class="nf">.getId</span> <span class="nv">user-peter</span><span class="p">))</span>
+    <span class="c1">; The following command will throw a LazyInitializationException but still print some useful info</span>
+    <span class="p">(</span><span class="nf">pprint</span> <span class="p">(</span><span class="nf">get-fields</span> <span class="nv">user-peter</span><span class="p">))))</span>
+<span class="c1">; OUTPUT:</span>
+<span class="c1">;&quot;Type: &quot; ca.corefacility.bioinformatics.irida.model.user.User</span>
+<span class="c1">;&quot;User ID &quot; 19</span>
+<span class="c1">;CompilerException org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: ca.corefacility.bioinformatics.irida.model.user.User.projects, could not initialize proxy - no Session, compiling:(/home/CSCScience.ca/pkruczkiewicz/repos/irida/src/main/clj/nrepl_example.clj:1:23)</span>
+<span class="c1">;([:id 19]</span>
+<span class="c1">;  [:username &quot;peter&quot;]</span>
+<span class="c1">;  [:email &quot;peter@k.com&quot;]</span>
+<span class="c1">;  [:password</span>
+<span class="c1">;   &quot;$2a$10$Qm0X77srn2wGZRgSJDoblO4JSFk55Fnujuekcq.d9xmaQ49Wuo7hi&quot;]</span>
+<span class="c1">;  [:firstName &quot;Peter&quot;]</span>
+<span class="c1">;  [:lastName &quot;Kruczkiewicz&quot;]</span>
+<span class="c1">;  [:phoneNumber &quot;12345&quot;]</span>
+<span class="c1">;  [:enabled true]</span>
+<span class="c1">;  [:systemRole #&lt;Role ROLE_USER&gt;]</span>
+<span class="c1">;  [:createdDate #inst &quot;2018-01-17T20:06:06.000000000-00:00&quot;]</span>
+<span class="c1">;  [:modifiedDate #inst &quot;2018-01-17T20:06:06.000000000-00:00&quot;]</span>
+<span class="c1">;  [:lastLogin nil]</span>
+
+
+<span class="c1">; Let&#39;s fetch the same user with the `userServiceImpl` bean</span>
+<span class="p">(</span><span class="nf">do</span>
+  <span class="p">(</span><span class="nf">as-admin</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">user-peter</span> <span class="p">(</span><span class="nf">.loadUserByUsername</span> <span class="nv">user-svc</span> <span class="s">&quot;peter&quot;</span><span class="p">)]</span>
+    <span class="p">(</span><span class="nb">prn </span><span class="s">&quot;Type: &quot;</span> <span class="p">(</span><span class="nf">type</span> <span class="nv">user-peter</span><span class="p">)</span> <span class="nv">user-peter</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">get-fields</span> <span class="nv">user-peter</span><span class="p">)))</span>
+<span class="c1">; OUTPUT:</span>
+<span class="c1">;&quot;Type: &quot; org.springframework.security.core.userdetails.User #&lt;User org.springframework.security.core.userdetails.User@659f20c: Username: peter; Password: [PROTECTED]; Enabled: true; AccountNonExpired: true; credentialsNonExpired: true; AccountNonLocked: true; Granted Authorities: ROLE_USER&gt;</span>
+<span class="c1">;=&gt;</span>
+<span class="c1">;([:password &quot;$2a$10$Qm0X77srn2wGZRgSJDoblO4JSFk55Fnujuekcq.d9xmaQ49Wuo7hi&quot;]</span>
+<span class="c1">;  [:username &quot;peter&quot;]</span>
+<span class="c1">;  [:authorities #{#&lt;Role ROLE_USER&gt;}]</span>
+<span class="c1">;  [:accountNonExpired true]</span>
+<span class="c1">;  [:accountNonLocked true]</span>
+<span class="c1">;  [:credentialsNonExpired true]</span>
+<span class="c1">;  [:enabled true])</span>
+
+
+<span class="c1">; Let&#39;s try to get retrieve an AnalysisSubmission</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">asub-svc</span> <span class="p">(</span><span class="nf">get-bean</span> <span class="s">&quot;analysisSubmissionServiceImpl&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">admin-user</span> <span class="p">(</span><span class="nf">.loadUserByUsername</span> <span class="nv">user-repo</span> <span class="s">&quot;admin&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nf">as-admin</span><span class="p">)</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">asubs</span> <span class="p">(</span><span class="nf">.getAnalysisSubmissionsForUser</span> <span class="nv">asub-svc</span> <span class="nv">admin-user</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">count </span><span class="nv">asubs</span><span class="p">)</span>
+<span class="c1">;=&gt; 1</span>
+<span class="c1">; Let&#39;s save the first AnalysisSubmission to the asub variable</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">asub</span> <span class="p">(</span><span class="nb">first </span><span class="nv">asubs</span><span class="p">))</span>
+
+<span class="c1">; This is what asub looks like</span>
+<span class="p">(</span><span class="nb">identity </span><span class="nv">asub</span><span class="p">)</span>
+<span class="c1">;=&gt;</span>
+<span class="c1">;#&lt;AnalysisSubmission AnalysisSubmission [id=6, name=AssemblyAnnotation_20171221_fail, submitter=admin, workflowId=87186c71-5c8a-4027-a9d9-b29850cebdb3, analysisState=ERROR, analysisCleanedState=NOT_CLEANED]&gt;</span>
+<span class="c1">; Getters work as expected</span>
+<span class="p">(</span><span class="nf">.getId</span> <span class="nv">asub</span><span class="p">)</span>
+<span class="c1">;=&gt; 6</span>
+<span class="p">(</span><span class="nf">.getLabel</span> <span class="nv">asub</span><span class="p">)</span>
+<span class="c1">;=&gt; &quot;AssemblyAnnotation_20171221_fail&quot;</span>
+<span class="p">(</span><span class="nf">.getAnalysisState</span> <span class="nv">asub</span><span class="p">)</span>
+<span class="c1">;=&gt; #&lt;AnalysisState ERROR&gt;</span>
+<span class="p">(</span><span class="nf">pprint</span> <span class="p">(</span><span class="nf">get-fields</span> <span class="nv">asub</span><span class="p">))</span>
+<span class="c1">;([:id 6]</span>
+<span class="c1">;  [:name &quot;AssemblyAnnotation_20171221_fail&quot;]</span>
+<span class="c1">;  [:submitter</span>
+<span class="c1">;   #&lt;User User{username=admin, email=admin@example.org, firstName=Administrator, lastName=Administrator, phoneNumber=867-5309}&gt;]</span>
+<span class="c1">;  [:workflowId #uuid &quot;87186c71-5c8a-4027-a9d9-b29850cebdb3&quot;]</span>
+<span class="c1">;  [:remoteAnalysisId &quot;df7a1f0c02a5b08e&quot;]</span>
+<span class="c1">;  [:remoteInputDataId &quot;a799d38679e985db&quot;]</span>
+
+<span class="c1">; Since this analysis is in an error state, let&#39;s try to retrieve the job error info for it</span>
+<span class="c1">; Let&#39;s get jobErrorRepository bean</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">job-error-repo</span> <span class="p">(</span><span class="nf">get-bean</span> <span class="s">&quot;jobErrorRepository&quot;</span><span class="p">))</span>
+<span class="c1">; Find all the JobErrors for the AnalysisSubmission</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">job-errors</span> <span class="p">(</span><span class="nf">.findAllByAnalysisSubmission</span> <span class="nv">job-error-repo</span> <span class="nv">asub</span><span class="p">))</span>
+<span class="c1">; Let&#39;s check how many JobErrors there are</span>
+<span class="p">(</span><span class="nb">count </span><span class="nv">job-errors</span><span class="p">)</span>
+<span class="c1">;=&gt; 2</span>
+
+<span class="c1">; Let&#39;s get the fields for the first JobError</span>
+<span class="p">(</span><span class="nf">get-fields</span> <span class="p">(</span><span class="nb">first </span><span class="nv">job-errors</span><span class="p">))</span>
+<span class="c1">;=&gt;</span>
+<span class="c1">;([:id 1]</span>
+<span class="c1">;  [:toolId &quot;toolshed.g2.bx.psu.edu/repos/nml/spades/spades/1.4&quot;]</span>
+<span class="c1">;  [:toolName &quot;spades&quot;]</span>
+<span class="c1">;  [:toolVersion &quot;1.4&quot;]</span>
+<span class="c1">;  [:toolDescription &quot;SPAdes genome assembler for regular and single-cell projects&quot;]</span>
+<span class="c1">;  [:commandLine</span>
+<span class="c1">;   &quot;perl /shed_tools/toolshed.g2.bx.psu.edu/repos/nml/spades/35cb17bd8bf9/spades/spades.pl ...&quot;]</span>
+<span class="c1">;  [:parameters</span>
+<span class="c1">;   &quot;{iontorrent=\&quot;false\&quot;, __workflow_invocation_uuid__=\&quot;9ebb9a22e69b11e794c10242ac110002\&quot;, ...]</span>
+<span class="c1">;  [:standardError &quot;Failed with code 256...&quot;]</span>
+<span class="c1">;  [:standardOutput</span>
+<span class="c1">;   &quot;Command line: /export/tool_deps/spades/3.9.0/nml/package_spades_3_9_0/d8c8c3dc8f9a/bin/spades.py...</span>
+<span class="c1">;    Please provide us with params.txt and spades.log files from the output directory.</span>
+<span class="c1">;    &quot;]</span>
+<span class="c1">;  [:provenanceUUID #uuid&quot;d9b0c822-5b27-499a-b693-75577a96a2fd&quot;]</span>
+<span class="c1">;  [:provenanceId &quot;1343954bc98f8001&quot;]</span>
+<span class="c1">;  [:jobId &quot;72ad249754f05d26&quot;]</span>
+<span class="c1">;  [:historyId &quot;df7a1f0c02a5b08e&quot;]</span>
+<span class="c1">;  [:createdDate #inst&quot;2017-12-21T22:13:17.000000000-00:00&quot;]</span>
+<span class="c1">;  [:updatedDate #inst&quot;2017-12-21T22:22:24.000000000-00:00&quot;]</span>
+<span class="c1">;  [:exitCode 25]</span>
+<span class="c1">;  [:analysisSubmission</span>
+<span class="c1">;   #&lt;AnalysisSubmission AnalysisSubmission [id=6, name=AssemblyAnnotation_20171221_fail, submitter=admin, workflowId=87186c71-5c8a-4027-a9d9-b29850cebdb3, analysisState=ERROR, analysisCleanedState=NOT_CLEANED]&gt;])</span>
+
+<span class="c1">; If we wanted to get the ToolName, ToolVersion and ExitCode for each JobError</span>
+<span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">x</span><span class="p">]</span>
+       <span class="p">[(</span><span class="nf">.getToolName</span> <span class="nv">x</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">.getToolVersion</span> <span class="nv">x</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">.getExitCode</span> <span class="nv">x</span><span class="p">)])</span>
+     <span class="nv">job-errors</span><span class="p">)</span>
+<span class="c1">;=&gt; ([&quot;spades&quot; &quot;1.4&quot; 25] [&quot;spades&quot; &quot;1.4&quot; 9000])</span>
+
+<span class="c1">; above equivalent to the following idiomatic Clojure:</span>
+<span class="p">(</span><span class="nf">map</span>
+  <span class="o">#</span><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="nv">%</span>
+        <span class="nv">get-fields</span>
+        <span class="p">(</span><span class="nb">into </span><span class="p">{})</span>
+        <span class="p">((</span><span class="nf">juxt</span> <span class="ss">:toolName</span> <span class="ss">:toolVersion</span> <span class="ss">:exitCode</span><span class="p">)))</span>
+  <span class="nv">job-errors</span><span class="p">)</span>
+<span class="c1">;=&gt; ([&quot;spades&quot; &quot;1.4&quot; 25] [&quot;spades&quot; &quot;1.4&quot; 9000])</span>
+
+
+<span class="c1">; Let&#39;s interact with Galaxy using the blend4j library through the GalaxyInstance Bean</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">galaxy-instance</span> <span class="p">(</span><span class="nf">get-bean</span> <span class="s">&quot;galaxyInstance&quot;</span><span class="p">))</span>
+<span class="c1">; We&#39;ll get a HistoriesClient and a JobsClient so we can get Histories and Jobs from Galaxy</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">histories-client</span> <span class="p">(</span><span class="nf">.getHistoriesClient</span> <span class="nv">galaxy-instance</span><span class="p">))</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">jobs-client</span> <span class="p">(</span><span class="nf">.getJobsClient</span> <span class="nv">galaxy-instance</span><span class="p">))</span>
+<span class="c1">; Using the HistoriesClient get all Histories</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">histories</span> <span class="p">(</span><span class="nf">.getHistories</span> <span class="nv">histories-client</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">count </span><span class="nv">histories</span><span class="p">)</span>
+<span class="c1">;=&gt; 1</span>
+<span class="c1">; Only one history</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">history</span> <span class="p">(</span><span class="nb">first </span><span class="nv">histories</span><span class="p">))</span>
+<span class="c1">; What does that history look like</span>
+<span class="p">(</span><span class="nb">identity </span><span class="nv">history</span><span class="p">)</span>
+<span class="c1">;=&gt; #&lt;History com.github.jmchilton.blend4j.galaxy.beans.History@c34821c2&gt;</span>
+<span class="p">(</span><span class="nf">get-fields</span> <span class="nv">history</span><span class="p">)</span>
+<span class="c1">;=&gt; ([:name &quot;Unnamed history&quot;] [:deleted false])</span>
+<span class="c1">; What&#39;s the history ID?</span>
+<span class="p">(</span><span class="nf">.getId</span> <span class="nv">history</span><span class="p">)</span>
+<span class="c1">;=&gt; &quot;f597429621d6eb2b&quot;</span>
+<span class="c1">; Let&#39;s get all the jobs for that history</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">jobs</span> <span class="p">(</span><span class="nf">.getJobsForHistory</span> <span class="nv">jobs-client</span> <span class="p">(</span><span class="nf">.getId</span> <span class="nv">history</span><span class="p">)))</span>
+<span class="c1">; What do the jobs look like?</span>
+<span class="p">(</span><span class="nb">map </span><span class="nv">get-fields</span> <span class="nv">jobs</span><span class="p">)</span>
+<span class="c1">;=&gt;</span>
+<span class="c1">;(([:state &quot;error&quot;]</span>
+<span class="c1">;  [:toolId &quot;toolshed.g2.bx.psu.edu/repos/nml/sistr_cmd/sistr_cmd/1.0.2&quot;]</span>
+<span class="c1">;  [:created #inst&quot;2017-11-08T15:33:23.212-00:00&quot;]</span>
+<span class="c1">;  [:updated #inst&quot;2017-11-08T15:37:14.171-00:00&quot;])</span>
+<span class="c1">;([:state &quot;ok&quot;]</span>
+<span class="c1">;  [:toolId &quot;upload1&quot;]</span>
+<span class="c1">;  [:created #inst&quot;2017-11-08T15:31:49.523-00:00&quot;]</span>
+<span class="c1">;  [:updated #inst&quot;2017-11-08T15:36:41.493-00:00&quot;])</span>
+<span class="c1">;([:state &quot;ok&quot;]</span>
+<span class="c1">;  [:toolId &quot;toolshed.g2.bx.psu.edu/repos/nml/sistr_cmd/sistr_cmd/1.0.2&quot;]</span>
+<span class="c1">;  [:created #inst&quot;2017-11-08T15:21:51.718-00:00&quot;]</span>
+<span class="c1">;  [:updated #inst&quot;2017-11-08T15:21:47.767-00:00&quot;])</span>
+<span class="c1">;([:state &quot;ok&quot;]</span>
+<span class="c1">;  [:toolId &quot;upload1&quot;]</span>
+<span class="c1">;  [:created #inst&quot;2017-11-07T16:32:03.376-00:00&quot;]</span>
+<span class="c1">;  [:updated #inst&quot;2017-11-07T16:31:29.300-00:00&quot;]))</span>
+
+<span class="c1">; Map of Galaxy Job ID to Job fields</span>
+<span class="p">(</span><span class="nb">zipmap </span><span class="p">(</span><span class="nb">map </span><span class="o">#</span><span class="p">(</span><span class="nf">.getId</span> <span class="nv">%</span><span class="p">)</span> <span class="nv">jobs</span><span class="p">)</span>
+        <span class="p">(</span><span class="nb">map </span><span class="o">#</span><span class="p">(</span><span class="nb">into </span><span class="p">{}</span> <span class="p">(</span><span class="nf">get-fields</span> <span class="nv">%</span><span class="p">))</span> <span class="nv">jobs</span><span class="p">))</span>
+<span class="c1">;{&quot;f597429621d6eb2b&quot; {:state &quot;ok&quot;,</span>
+<span class="c1">;                     :toolId &quot;toolshed.g2.bx.psu.edu/repos/nml/sistr_cmd/sistr_cmd/1.0.2&quot;,</span>
+<span class="c1">;                     :created #inst&quot;2017-11-08T15:21:51.718-00:00&quot;,</span>
+<span class="c1">;                     :updated #inst&quot;2017-11-08T15:21:47.767-00:00&quot;},</span>
+<span class="c1">; &quot;ebfb8f50c6abde6d&quot; {:state &quot;error&quot;,</span>
+<span class="c1">;                     :toolId &quot;toolshed.g2.bx.psu.edu/repos/nml/sistr_cmd/sistr_cmd/1.0.2&quot;,</span>
+<span class="c1">;                     :created #inst&quot;2017-11-08T15:33:23.212-00:00&quot;,</span>
+<span class="c1">;                     :updated #inst&quot;2017-11-08T15:37:14.171-00:00&quot;},</span>
+<span class="c1">; &quot;5969b1f7201f12ae&quot; {:state &quot;ok&quot;,</span>
+<span class="c1">;                     :toolId &quot;upload1&quot;,</span>
+<span class="c1">;                     :created #inst&quot;2018-01-12T22:20:39.345-00:00&quot;,</span>
+<span class="c1">;                     :updated #inst&quot;2018-01-12T22:30:27.272-00:00&quot;}}</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">job</span> <span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="nv">jobs</span>
+              <span class="p">(</span><span class="nb">map </span><span class="o">#</span><span class="p">(</span><span class="nb">into </span><span class="p">{}</span> <span class="p">(</span><span class="nf">get-fields</span> <span class="nv">%</span><span class="p">)))</span>
+              <span class="p">(</span><span class="nb">filter </span><span class="o">#</span><span class="p">(</span><span class="nb">= </span><span class="p">(</span><span class="ss">:state</span> <span class="nv">%</span><span class="p">)</span> <span class="s">&quot;error&quot;</span><span class="p">))</span>
+              <span class="nv">first</span><span class="p">))</span>
+<span class="p">(</span><span class="nf">get-fields</span> <span class="nv">job</span><span class="p">)</span>
+<span class="c1">;=&gt;</span>
+<span class="c1">;(([:state &quot;error&quot;]</span>
+<span class="c1">;  [:toolId &quot;toolshed.g2.bx.psu.edu/repos/nml/sistr_cmd/sistr_cmd/1.0.2&quot;]</span>
+<span class="c1">;  [:created #inst&quot;2017-11-08T15:33:23.212-00:00&quot;]</span>
+<span class="c1">;  [:updated #inst&quot;2017-11-08T15:37:14.171-00:00&quot;])</span>
+
+<span class="p">(</span><span class="nf">get-method-names</span> <span class="nv">galaxy-instance</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">get-method-names</span> <span class="nv">job</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">(</span><span class="nf">.getOutputs</span> <span class="nv">job</span><span class="p">)</span>
+     <span class="nv">vals</span>
+     <span class="nv">first</span>
+     <span class="nv">get-fields</span>
+     <span class="p">(</span><span class="nb">into </span><span class="p">{}))</span>
+
+<span class="p">(</span><span class="nb">identity </span><span class="nv">history</span><span class="p">)</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">history-details</span> <span class="p">(</span><span class="nf">.showHistory</span> <span class="nv">histories-client</span> <span class="p">(</span><span class="nf">.getId</span> <span class="nv">history</span><span class="p">)))</span>
+<span class="p">(</span><span class="nb">identity </span><span class="nv">history-details</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">get-fields</span> <span class="nv">history-details</span><span class="p">)</span>
+<span class="c1">;=&gt;</span>
+<span class="c1">;([:state &quot;error&quot;]</span>
+<span class="c1">;  [:stateIds</span>
+<span class="c1">;   {&quot;paused&quot; [],</span>
+<span class="c1">;    &quot;ok&quot; [&quot;f2db41e1fa331b3e&quot;</span>
+<span class="c1">;          &quot;f597429621d6eb2b&quot;</span>
+<span class="c1">;          &quot;1cd8e2f6b131e891&quot;</span>
+<span class="c1">;          &quot;ebfb8f50c6abde6d&quot;</span>
+<span class="c1">;          &quot;33b43b4e7093c91f&quot;</span>
+<span class="c1">;          &quot;a799d38679e985db&quot;</span>
+<span class="c1">;          &quot;3f5830403180d620&quot;</span>
+<span class="c1">;          &quot;e85a3be143d5905b&quot;</span>
+<span class="c1">;          &quot;c9468fdb6dc5c5f1&quot;</span>
+<span class="c1">;          &quot;4b187121143038ff&quot;</span>
+<span class="c1">;          &quot;2d9035b3fc152403&quot;],</span>
+<span class="c1">;    &quot;failed_metadata&quot; [],</span>
+<span class="c1">;    &quot;upload&quot; [],</span>
+<span class="c1">;    &quot;discarded&quot; [],</span>
+<span class="c1">;    &quot;running&quot; [],</span>
+<span class="c1">;    &quot;setting_metadata&quot; [],</span>
+<span class="c1">;    &quot;error&quot; [&quot;5969b1f7201f12ae&quot;</span>
+<span class="c1">;             &quot;df7a1f0c02a5b08e&quot;</span>
+<span class="c1">;             &quot;0a248a1f62a0cc04&quot;</span>
+<span class="c1">;             &quot;03501d7626bd192f&quot;</span>
+<span class="c1">;             &quot;2a56795cad3c7db3&quot;</span>
+<span class="c1">;             &quot;1e8ab44153008be8&quot;</span>
+<span class="c1">;             &quot;417e33144b294c21&quot;],</span>
+<span class="c1">;    &quot;new&quot; [],</span>
+<span class="c1">;    &quot;queued&quot; [],</span>
+<span class="c1">;    &quot;empty&quot; []}])</span>
+
+<span class="p">(</span><span class="k">def </span><span class="nv">errored-outputs</span> <span class="p">(</span><span class="nb">get </span><span class="p">(</span><span class="nf">.getStateIds</span> <span class="nv">history-details</span><span class="p">)</span> <span class="s">&quot;error&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">count </span><span class="nv">errored-outputs</span><span class="p">)</span>
+<span class="c1">;=&gt; 7</span>
+
+<span class="c1">; Let&#39;s get the HistoryContentsProvenance information for the first output in an error state</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">prov</span> <span class="p">(</span><span class="nf">.showProvenance</span> <span class="nv">histories-client</span> <span class="p">(</span><span class="nf">.getId</span> <span class="nv">history</span><span class="p">)</span> <span class="p">(</span><span class="nb">first </span><span class="nv">errored-outputs</span><span class="p">)))</span>
+<span class="p">(</span><span class="nb">identity </span><span class="nv">prov</span><span class="p">)</span>
+<span class="c1">;=&gt; #&lt;HistoryContentsProvenance com.github.jmchilton.blend4j.galaxy.beans.HistoryContentsProvenance@41e9657a&gt;</span>
+
+
+<span class="c1">; Let&#39;s get the standard error from the HistoryContentsProvenance object</span>
+<span class="p">(</span><span class="nf">.getStandardError</span> <span class="nv">prov</span><span class="p">)</span>
+<span class="c1">;=&gt;</span>
+<span class="c1">;&quot;Fatal error: Exit code 1 ()</span>
+<span class="c1">; ...</span>
+<span class="c1">;Exception: makeblastdb was not able to create a BLAST DB for dataset_6_dat. STDERR: b&#39;BLAST options error: /tmp/20171108153234-SISTR-messed_up/dataset_6_dat does not match input format type, default input type is FASTA\</span>
+<span class="c1">;&#39;</span>
+<span class="c1">;&quot;</span>
+
+<span class="c1">; Let&#39;s see what type of info the HistoryContentsProvenance object contains</span>
+<span class="p">(</span><span class="nf">get-fields</span> <span class="nv">prov</span><span class="p">)</span>
+<span class="c1">;=&gt;</span>
+<span class="c1">;([:id &quot;5969b1f7201f12ae&quot;]</span>
+<span class="c1">;  [:uuid &quot;3448adf3-6e0e-4fa7-a093-83f2fa62fa71&quot;]</span>
+<span class="c1">;  [:toolId &quot;toolshed.g2.bx.psu.edu/repos/nml/sistr_cmd/sistr_cmd/1.0.2&quot;]</span>
+<span class="c1">;  [:jobId &quot;ebfb8f50c6abde6d&quot;]</span>
+<span class="c1">;  [:standardOutput &quot;&quot;]</span>
+<span class="c1">;  [:standardError</span>
+<span class="c1">;   &quot;Fatal error: Exit code 1 ()</span>
+<span class="c1">;    ...</span>
+<span class="c1">;   Exception: makeblastdb was not able to create a BLAST DB for dataset_6_dat. STDERR: b&#39;BLAST options error: /tmp/20171108153234-SISTR-messed_up/dataset_6_dat does not match input format type, default input type is FASTA\</span>
+<span class="c1">;   &#39;</span>
+<span class="c1">;       &quot;]</span>
+<span class="c1">;     [:parameters</span>
+<span class="c1">;      {&quot;use_full_cgmlst_db&quot; &quot;\&quot;false\&quot;&quot;,</span>
+<span class="c1">;   &quot;no_cgmlst&quot; &quot;\&quot;false\&quot;&quot;,</span>
+<span class="c1">;   &quot;input_fastas&quot; {&quot;id&quot; &quot;a799d38679e985db&quot;, &quot;uuid&quot; &quot;8cc0abd6-1ce4-4034-bd4d-89201f55d63d&quot;},</span>
+<span class="c1">;   &quot;verbosity&quot; &quot;\&quot;-v\&quot;&quot;,</span>
+<span class="c1">;   &quot;more_output&quot; &quot;\&quot;\&quot;&quot;,</span>
+<span class="c1">;   &quot;dbkey&quot; &quot;\&quot;?\&quot;&quot;,</span>
+<span class="c1">;   &quot;keep_tmp&quot; &quot;\&quot;false\&quot;&quot;,</span>
+<span class="c1">;   &quot;run_mash&quot; &quot;\&quot;true\&quot;&quot;,</span>
+<span class="c1">;   &quot;qc&quot; &quot;\&quot;true\&quot;&quot;,</span>
+<span class="c1">;   &quot;input_fastas1&quot; {&quot;id&quot; &quot;a799d38679e985db&quot;, &quot;uuid&quot; &quot;8cc0abd6-1ce4-4034-bd4d-89201f55d63d&quot;},</span>
+<span class="c1">;   &quot;chromInfo&quot; &quot;\&quot;/galaxy-central/tool-data/shared/ucsc/chrom/?.len\&quot;&quot;,</span>
+<span class="c1">;   &quot;output_format&quot; &quot;\&quot;tab\&quot;&quot;}])</span>
+
+<span class="c1">; Other methods for the HistoryContentsProvenance object</span>
+<span class="p">(</span><span class="nf">get-method-names</span> <span class="nv">prov</span><span class="p">)</span>
+<span class="c1">;=&gt;</span>
+<span class="c1">;(&quot;setParameters&quot;</span>
+<span class="c1">;  &quot;setId&quot;</span>
+<span class="c1">;  &quot;getToolId&quot;</span>
+<span class="c1">;  &quot;getJobId&quot;</span>
+<span class="c1">;  &quot;getStandardError&quot;</span>
+<span class="c1">;  &quot;getStandardOutput&quot;</span>
+<span class="c1">;  &quot;getUuid&quot;</span>
+<span class="c1">;  &quot;setToolId&quot;</span>
+<span class="c1">;  &quot;setUuid&quot;</span>
+<span class="c1">;  &quot;setStandardOutput&quot;</span>
+<span class="c1">;  &quot;setStandardError&quot;</span>
+<span class="c1">;  &quot;setJobId&quot;</span>
+<span class="c1">;  &quot;getId&quot;</span>
+<span class="c1">;  &quot;getParameters&quot;)</span></code></pre></div>
+
+:ET

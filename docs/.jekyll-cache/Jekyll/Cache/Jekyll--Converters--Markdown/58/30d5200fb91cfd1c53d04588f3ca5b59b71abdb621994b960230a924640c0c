@@ -1,0 +1,268 @@
+I"<7<h1 class="no_toc" id="user-guide">User Guide</h1>
+
+<p>The user guide for IRIDA describes the major concepts of IRIDA, and demonstrates how to manage data in IRIDA, including launching new analytical workflows.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#users" id="markdown-toc-users">Users</a>    <ul>
+      <li><a href="#system-roles" id="markdown-toc-system-roles">System Roles</a>        <ul>
+          <li><a href="#user" id="markdown-toc-user">User</a></li>
+          <li><a href="#technician" id="markdown-toc-technician">Technician</a></li>
+          <li><a href="#manager" id="markdown-toc-manager">Manager</a></li>
+          <li><a href="#administrator" id="markdown-toc-administrator">Administrator</a></li>
+          <li><a href="#sequencer" id="markdown-toc-sequencer">Sequencer</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#user-groups" id="markdown-toc-user-groups">User Groups</a></li>
+  <li><a href="#projects" id="markdown-toc-projects">Projects</a></li>
+  <li><a href="#samples" id="markdown-toc-samples">Samples</a></li>
+  <li><a href="#sequence-files" id="markdown-toc-sequence-files">Sequence Files</a></li>
+  <li><a href="#sequencing-runs" id="markdown-toc-sequencing-runs">Sequencing Runs</a></li>
+  <li><a href="#analyses" id="markdown-toc-analyses">Analyses</a></li>
+</ul>
+
+<h2 class="no_toc" id="system-introduction">System Introduction</h2>
+
+<p>IRIDA provides a management interface for several different types of data:</p>
+
+<ul>
+  <li>Users,</li>
+  <li>User groups,</li>
+  <li>Projects,</li>
+  <li>Samples,</li>
+  <li>Sequence files,</li>
+  <li>Sequencing runs,</li>
+  <li>Analyses.</li>
+</ul>
+
+<p>If you already understand the different data types (or are impatient!), you can proceed directly to the <a href="../dashboard/">dashboard section</a> section.</p>
+
+<h3 id="users">Users</h3>
+<p>A user account is required to use IRIDA. User accounts have the following properties:</p>
+
+<ul>
+  <li>A username,</li>
+  <li>An e-mail address,</li>
+  <li>A password,</li>
+  <li>A full name</li>
+  <li>A phone number</li>
+</ul>
+
+<p>The username and e-mail address must be unique in IRIDA. The minimum length for a username is 3 characters. The e-mail address must be a properly formatted e-mail address. If you intend to export your samples to Galaxy, we recommend that you use the same e-mail address in IRIDA as you use in Galaxy (the data library owner field is auto-filled with the e-mail address you’ve entered for IRIDA).</p>
+
+<p>First and last names are required to be at least 2 characters long, but are otherwise not validated.</p>
+
+<p>The password that you choose for IRIDA must meet the following requirements:</p>
+
+<ul>
+  <li>Have at least 8 characters (Admin passwords should be at least 11 characters)</li>
+  <li>Include at least 1 upper-case character</li>
+  <li>Include at least 1 lower-case character</li>
+  <li>Include at least 1 number</li>
+  <li>Include at least 1 special character (ex: <code>!@#$%^&amp;*()+?/&lt;&gt;=.\\{}</code>)</li>
+  <li>Passwords should not form words</li>
+  <li>Passwords should not include any personal information</li>
+  <li>Passwords may not be reused</li>
+</ul>
+
+<p>Phone numbers must be at least 4 characters long, but are otherwise not validated. For example, the following phone numbers are valid:</p>
+
+<ul>
+  <li>+1-204-789-7029</li>
+  <li>(204) 789-7029</li>
+  <li>789-7029</li>
+  <li>7029</li>
+  <li>204-789-7029 ext: 3000</li>
+</ul>
+
+<h4 id="system-roles">System Roles</h4>
+<p>User accounts in IRIDA can be assigned a system role that gives them certain privileges. IRIDA currently has 4 types of user account roles:</p>
+
+<ol>
+  <li>User</li>
+  <li>Technician</li>
+  <li>Manager</li>
+  <li>Administrator</li>
+  <li>Sequencer</li>
+</ol>
+
+<h5 id="user">User</h5>
+
+<p>User accounts with the <code>user</code> role are permitted to:</p>
+
+<ol>
+  <li>Create new projects,</li>
+  <li>Manage the projects created by that user account,</li>
+  <li>View data on the projects that they participate in.</li>
+</ol>
+
+<h5 id="technician">Technician</h5>
+
+<p>User accounts with the <code>technician</code> role have all of the same permissions as a user account with the <code>user</code> role, and also have the permission to view all sequencing runs on the system.</p>
+
+<h5 id="manager">Manager</h5>
+
+<p>User accounts with the <code>manager</code> role have all of the same permissions as a user account with the <code>user</code> role, and also have the permission to create new user accounts (restricted to creating user accounts with the <code>user</code> role).</p>
+
+<h5 id="administrator">Administrator</h5>
+
+<p>User accounts with the <code>administrator</code> role have all of the same permissions as a user account with the <code>manager</code> role, and may also:</p>
+
+<ol>
+  <li>View data on <strong>all</strong> projects in IRIDA,</li>
+  <li>Manage data in <strong>all</strong> projects in IRIDA,</li>
+  <li>Create new user accounts with <em>any</em> system role.</li>
+</ol>
+
+<h5 id="sequencer">Sequencer</h5>
+
+<p>User accounts with the <code>sequencer</code> role are intended to be used by lab technicians for uploading data to IRIDA from a sequencer, using the uploader tool. User accounts with <em>only</em> the <code>sequencer</code> role are not permitted to log into the web interface and can only interact with IRIDA using external tools. User accounts with the <code>sequencer</code> role are permitted to:</p>
+
+<ol>
+  <li>Create new samples in any project,</li>
+  <li>Upload files to any sample in any project.</li>
+</ol>
+
+<h3 id="user-groups">User Groups</h3>
+
+<p>User groups are collections of user accounts used to assign permissions to <a href="#projects">Projects</a>. You can assign a user group to several projects and any membership changes to the user group will be reflected in the projects that the group is a member of.</p>
+
+<p>A user group has the following properties:</p>
+
+<ul>
+  <li>A name,</li>
+  <li>A description,</li>
+  <li>A collection of user accounts with permissions to view or modify group details.</li>
+</ul>
+
+<p>The user group name must be <strong>at least</strong> 3 characters log and is not otherwise validated.</p>
+
+<p>The user group description can be any length and is not otherwise validated.</p>
+
+<p>Each user account in the user group is assigned a role of either <em>group member</em> or <em>group owner</em>. A group member is used <strong>only</strong> for project membership, group members cannot change any properties of a group. A group owner has permissions to change the group name, description, and add or remove members from the group.</p>
+
+<h3 id="projects">Projects</h3>
+
+<p>A project is a container for organizing a collection of related samples. A project has the following properties:</p>
+
+<ul>
+  <li>A unique identifier (generated by IRIDA),</li>
+  <li>A required name,</li>
+  <li>An optional project organism,</li>
+  <li>An optional description,</li>
+  <li>An optional link to a wiki or external web site for the project,</li>
+  <li>A collection of user accounts and user groups with permissions to view or modify project details,</li>
+  <li>A collection of samples.</li>
+</ul>
+
+<p>The unique identifier is generated by IRIDA and is required by external tools to interact with a project.</p>
+
+<p>The project name must be <strong>at least</strong> 5 characters long, and <strong>must not</strong> contain any of the following characters: <code>? ( ) [ ] / \ = + &lt; &gt; : ; " , * ^ | &amp;</code></p>
+
+<p>The project description is not validated and may have an arbitrary length.</p>
+
+<p>The link to an external project wiki or web site must be a valid URL.</p>
+
+<p>Each project also has an associated collection of user accounts that are permitted to view or modify the project and its samples. Each user account in the collection is assigned a <strong>project role</strong> of <code>owner</code> or <code>collaborator</code>. A project role of <code>owner</code> permits the user account to view and modify all properties and samples of the project. Users with a project role of <code>collaborator</code> can only view properties and samples of the project.</p>
+
+<h3 id="samples">Samples</h3>
+
+<p>A sample is a container for organizing a collection of related files, usually generated from a single isolate. Samples are generally <em>not</em> created by a user account. Instead, samples are automatically created by an external tool when sequencing data is bring transferred to IRIDA.</p>
+
+<p>Samples have the following, user-modifiable properties:</p>
+
+<ul>
+  <li>A unique identifier (generated by IRIDA),</li>
+  <li>A required name,</li>
+  <li>An optional description,</li>
+  <li>Optional organism details (including organism name, isolate, and strain),</li>
+  <li>Optional collection information (including collected by, date of collection, isolation source, and geographic location of collection)</li>
+  <li>A collection of sequence files.</li>
+</ul>
+
+<p>The unique identifier is generated by IRIDA and is required by external tools to interact with the sample (along with the unique project identifier).</p>
+
+<p>The sample name must be <strong>at least</strong> 3 characters long, and <strong>must not</strong> contain white space characters (tab or space) or any of the following characters: <code>? ( ) [ ] / \ = + &lt; &gt; : ; " , * ^ | &amp; ' .</code></p>
+
+<p>The sample name automatically assigned by the uploader tool corresponds to the <code>Sample_Name</code> column of the <a href="http://supportres.illumina.com/documents/documentation/system_documentation/miseq/miseq-sample-sheet-quick-ref-guide-15028392-j.pdf">sample sheet</a> used by the Illumina MiSeq sequencer. The <code>Sample_Name</code> column is filled-in by sequencing technicians when preparing the sequencing run. Sample name restrictions are the same as those <a href="http://supportres.illumina.com/documents/myillumina/a557afc4-bf0e-4dad-9e59-9c740dd1e751/casava_userguide_15011196d.pdf">enforced by CASAVA</a>.</p>
+
+<p>The sample description is not validated and can have arbitrary length.</p>
+
+<p>The organism and sample collection information is not validated.</p>
+
+<h3 id="sequence-files">Sequence Files</h3>
+
+<p>A sequence file contains the primary source of information for processes in IRIDA. The sequence files currently stored in IRIDA are uncompressed FASTQ files. Sequence files are generally <em>not</em> created by a user. Instead, a sequence file is created by a tool external to IRIDA when data is transferred to be managed by IRIDA.</p>
+
+<p>Sequence files have the following properties:</p>
+
+<ul>
+  <li>A unique identifier (generated by IRIDA),</li>
+  <li>A collection of sequencer-specific additional properties,</li>
+  <li>Quality control data generated by <a href="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/">FastQC</a>.</li>
+</ul>
+
+<p>The unique identifier is generated by IRIDA and is required by external tools to interact with the file (along with the unique sample and project identifiers).</p>
+
+<p><a href="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/">FastQC</a> is executed by IRIDA automatically when data is uploaded. IRIDA stores the following statistics computed by FastQC:</p>
+
+<ul>
+  <li>The file type (usually “Conventional base calls”),</li>
+  <li>The total number of reads in the file,</li>
+  <li>The GC content,</li>
+  <li>The length of the shortest read in the file,</li>
+  <li>The length of the longest read in the file,</li>
+  <li>The number of reads filtered by FastQC,</li>
+  <li>A chart showing per-sequence quality scores,</li>
+  <li>A chart showing per-base quality scores,</li>
+  <li>A chart showing duplication levels,</li>
+  <li>A collection of over-represented sequences found in reads.</li>
+</ul>
+
+<p>Sequence files can be grouped together as part of a pair, if paired-end sequencing was used to generate the file.</p>
+
+<h3 id="sequencing-runs">Sequencing Runs</h3>
+
+<p>A sequencing run contains a collection of <a href="#sequence-files">sequence files</a> that were produced on the same execution of a sequencer. Only users with the <code>administrator</code> role can see a sequencing run.</p>
+
+<p>A sequencing run has the following properties:</p>
+
+<ul>
+  <li>A unique identifier (generated by IRIDA),</li>
+  <li>The date the run was created in IRIDA,</li>
+  <li>A collection of files associated with the run,</li>
+  <li>The layout type (one of single-end or paired-end).</li>
+</ul>
+
+<p>Sequencing runs cannot be created by a user. Instead, a sequencing run is created by the uploader tool prior to uploading any data from a sequencing run.</p>
+
+<h3 id="analyses">Analyses</h3>
+
+<p>An analysis contains the results of running a pipeline on a collection of samples in IRIDA. An analysis cannot be created manually by a user. Instead, an analysis is created automatically by IRIDA on pipeline submission and completion.</p>
+
+<p>IRIDA currently has multiple types of analysis that can be created:</p>
+
+<ol>
+  <li>SNVPhyl, and</li>
+  <li>Assembly and annotation.</li>
+  <li>Salmonella <em>in silico</em> typing (SISTR).</li>
+</ol>
+
+<p>Each specific type of analysis may have analysis-specific properties, but an analysis will have <em>at least</em> the following properties:</p>
+
+<ul>
+  <li>A unique identifier (generated by IRIDA),</li>
+  <li>The date that the analysis was created in IRIDA (when it finished running),</li>
+  <li>A description,</li>
+  <li>A collection of analysis-specific properties,</li>
+  <li>A collection of named files produced by the pipeline execution,</li>
+  <li>A reference to the submission request that was used to launch pipeline execution.</li>
+</ul>
+
+<p>The unique identifier is generated by IRIDA and is required by external tools to interact with the analysis.</p>
+
+<p>The collection of named files produced by the pipeline execution also includes workflow execution provenance that describe how the files were created. The workflow execution provenance includes individual tool names, individual tool versions, and the set of <em>all</em> parameters that were supplied to the tool at execution time.</p>
+
+<p><a href="../login/" style="float: right;">Next: Logging in</a></p>
+:ET

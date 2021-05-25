@@ -1,0 +1,85 @@
+I"Z<h1 class="no_toc" id="sharing-some-data-from-a-project">Sharing some data from a project</h1>
+
+<p>Sometimes you only want to share a small subset of the data in one of your projects with another user. You can share out smaller sets of samples from a project by creating a new project in IRIDA, copying some samples to it, then adding new members to that project.</p>
+
+<p>You must have the role of <strong>Manager</strong> on the project to copy samples to another project.</p>
+
+<h3 id="create-a-new-project">Create a new project</h3>
+
+<p>You can create a new project by clicking on the “Projects” menu at the top of the dashboard and selecting “Your Projects”.</p>
+
+<p><img src="images/your-projects.png" alt="your-projects" /></p>
+
+<p>From the projects listing page click the “Create New Project” button:</p>
+
+<p><img src="images/create-new-project-btn.png" alt="create-new-project" /></p>
+
+<p><img src="/documentation/images/tutorials/common/projects/create-new-project-btn.png" alt="Create new project dashboard location." /></p>
+
+<p>When you create a new project, you’ll need to provide a project name, and can optionally provide a project organism, a free-form project description, and a link to another web site that has more inforamtion about the project:</p>
+
+<p><img src="/documentation/images/tutorials/common/projects/create-new-project-form.png" alt="Create new project form." /></p>
+
+<p>A project name must be <strong>at least</strong> 5 characters long, and <strong>must not</strong> contain any of the following characters: <code>? ( ) [ ] / \ = + &lt; &gt; : ; " , * ^ | &amp;</code></p>
+
+<p>If you choose to set a project organism, click on the “Select an Organism” drop-down menu and begin typing the name of the organism. For example, if you wanted to specify a project organism of “Salmonella enterica”, you would begin to type “Sal” and the menu would allow you to choose from a set of well-defined organism names:</p>
+
+<p><img src="/documentation/images/tutorials/common/projects/project-organism.png" alt="Project organism entry." /></p>
+
+<p>The organism names are derived from the <a href="http://www.ncbi.nlm.nih.gov/taxonomy">NCBI taxonomy database</a>.</p>
+
+<p>To lock sample modification in the new project, check the “Lock sample modification” box. This setting will only allow the sample owner to edit any sample data.</p>
+
+<p>When you’ve finished entering the details for your new project, click on the “Create Project” button. You will be redirected to the projects list.</p>
+
+<p>IRIDA will automatically generate a numeric project identifier for your project. The project identifier is used by external tools for uploading sequencing data to IRIDA. The project identifier can be found in the <a href="/documentation/user/user/project/index.html#viewing-project-details">“Project Details” panel</a>, or in the <a href="/documentation/user/user/project/index.html#viewing-existing-projects">projects list</a>.</p>
+
+<h4 id="creating-a-project-from-cart">Creating a project from cart</h4>
+
+<p>You can create a project with samples already added to the project by using the cart.  Continue creating the project details as described above, but select the checkbox <strong>Add samples in cart to project</strong>.  If this checkbox is enabled any samples in the cart will be automatically added to this project.  If there are any samples which you cannot add to the project, a warning will be displayed below.</p>
+
+<p><img src="/documentation/images/tutorials/common/projects/create-project-cart-warning.png" alt="Create project cart warning" /></p>
+
+<p>Once the new project is created return to the project that you would like to copy samples from.</p>
+
+<h3 id="copy-samples">Copy Samples</h3>
+
+<p>Samples may be shared between projects. A sample that is shared into multiple projects is effectively <em>linked</em> between those projects – the files contained within the sample are not physically duplicated, and any sample metadata changes in one project are reproduced in the sample for all projects.</p>
+
+<p>You must be a project <strong>Manager</strong> on <strong>both</strong> the project that you are sharing the sample <em>from</em>, and the project that you are sharing the sample <em>to</em>.</p>
+
+<p>Start by <a href="/documentation/user/user/samples/#selecting-samples">selecting the samples</a> that you want to share with another project. When you’ve selected the samples that you want to share, click on the “Samples” button just above the samples list, and select “Share”:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/copy-samples-button.png" alt="Share samples button." /></p>
+
+<p>In the dialog that appears you will be presented with a list of the samples that are going to be shared, and an option to choose the project that the samples should be shared to:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/copy-samples-dialog.png" alt="Copy samples dialog." /></p>
+
+<p>When you click on the drop-down box to select a project, you can either visually find the project that you want, or you can filter the projects by their name by typing into the text field.</p>
+
+<p>After selecting the project to share samples to, you may select whether users on the new project should have modification access to those samples.  If users on the new project should not be able to modify the samples, uncheck the <code>Allow modification access to samples in the new project</code> box.  If you have selected samples that are non-modifiable in your current project you will be unable to give modification access to any of the samples you have selected.</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/copy-samples-locked.png" alt="Locked Sample." /></p>
+
+<p>Once you’ve selected the project that you want to share the samples to, click on the “Share Samples” button.</p>
+
+<h3 id="adding-a-project-member">Adding a Project Member</h3>
+
+<p>Once the samples are copied over to the new project, the last step is to add all users to this project that need access to this data.</p>
+
+<p><img src="/documentation/images/tutorials/common/projects/project-details-members-tab.png" alt="Project details members tab." /></p>
+
+<p>To add an individual project member, click on the “Add Member” button:</p>
+
+<p><img src="/documentation/images/tutorials/common/projects/add-member-button.png" alt="Add project member button." /></p>
+
+<p>You can use the dialog that appears to select a user account, and choose the <strong>Project Role</strong> that the new member should have:</p>
+
+<p><img src="/documentation/images/tutorials/common/projects/add-member-modal.png" alt="Add project member dialog." /></p>
+
+<p><strong>Remember</strong>: a project collaborator has <em>read-only</em> permissions, and a project <em>manager</em> is allowed to modify project details.</p>
+
+<p>Once you’ve selected the user and role to add to the project, click on the “OK” button.</p>
+
+:ET

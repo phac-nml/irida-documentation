@@ -1,0 +1,64 @@
+I"^<h1 id="building-irida-from-source">Building IRIDA from source</h1>
+
+<p>This document describes the necessary steps for building the IRIDA web interface from source.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#building-irida-from-source" id="markdown-toc-building-irida-from-source">Building IRIDA from source</a>    <ul>
+      <li><a href="#prerequisites" id="markdown-toc-prerequisites">Prerequisites</a></li>
+      <li><a href="#building-irida" id="markdown-toc-building-irida">Building IRIDA</a>        <ul>
+          <li><a href="#getting-the-source-code" id="markdown-toc-getting-the-source-code">Getting the source code</a></li>
+          <li><a href="#installing-dependencies" id="markdown-toc-installing-dependencies">Installing dependencies</a></li>
+          <li><a href="#packaging-irida" id="markdown-toc-packaging-irida">Packaging IRIDA</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>The following software is required to build IRIDA from source:</p>
+
+<ul>
+  <li>Java 11 JDK (http://www.oracle.com/technetwork/java/javase/downloads/index.html)</li>
+  <li>Apache Maven 3.0+ (http://maven.apache.org/index.html)</li>
+  <li>Git (http://git-scm.com/)</li>
+  <li>Node (http://nodejs.org/)</li>
+  <li>Yarn (https://yarnpkg.com/lang/en/)</li>
+</ul>
+
+<p>Installing these dependencies varies greatly, depending on the host operating system that you are using, so no install instructions are provided. The following commands must be available on your <code>$PATH</code>:</p>
+
+<ul>
+  <li><code>java</code></li>
+  <li><code>javac</code></li>
+  <li><code>mvn</code></li>
+  <li><code>git</code></li>
+</ul>
+
+<h2 id="building-irida">Building IRIDA</h2>
+
+<h3 id="getting-the-source-code">Getting the source code</h3>
+
+<p>The IRIDA source code is hosted at the NML:</p>
+
+<div class="highlight"><pre><code class="language-bash">git clone https://github.com/phac-nml/irida.git</code></pre></div>
+
+<h3 id="installing-dependencies">Installing dependencies</h3>
+
+<p>IRIDA uses Maven and Yarn for managing external dependencies. Some of the libraries that we’re using to build IRIDA are either not available in the Maven central repository, or we’ve had to seperately modify/update the code to accomplish the task we want, and the changes have not yet been accepted upstream.</p>
+
+<p>We’ve written a small script that can be used to install these external dependencies. From the directory where you’ve checked out the source code for IRIDA, you can run:</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="nb">cd</span> irida/lib
+bash install-libs.sh</code></pre></div>
+
+<h3 id="packaging-irida">Packaging IRIDA</h3>
+<p>Once you’ve installed the required dependencies (and if your <code>$PATH</code> is configured correctly), you should be able to compile and package IRIDA by running:</p>
+
+<div class="highlight"><pre><code class="language-bash">mvn clean package -DskipTests<span class="o">=</span><span class="nb">true</span></code></pre></div>
+
+<p>From the root IRIDA directory.</p>
+
+<p>You may (optionally) run the tests, but the complete test suite takes approximately 45 minutes to execute, and has several more dependencies than what’s required for building IRIDA. If you would like to run the complete test suite, you may follow the instructions provided in the <a href="../../../developer/setup">developer documentation</a>.</p>
+:ET

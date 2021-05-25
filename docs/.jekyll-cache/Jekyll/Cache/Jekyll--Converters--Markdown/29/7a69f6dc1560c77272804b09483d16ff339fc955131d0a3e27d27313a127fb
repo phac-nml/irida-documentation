@@ -1,0 +1,366 @@
+I"ej<h1 class="no_toc" id="launching-pipelines">Launching Pipelines</h1>
+
+<p>IRIDA provides multiple analysis pipelines for analysing your sequencing data.  These pipelines take as input a set of sequencing read files from different samples. The samples must first be added to a cart before a pipeline can be run.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#adding-samples-to-the-cart" id="markdown-toc-adding-samples-to-the-cart">Adding samples to the cart</a></li>
+  <li><a href="#searching-samples-in-the-cart" id="markdown-toc-searching-samples-in-the-cart">Searching samples in the cart</a></li>
+  <li><a href="#running-and-queued-counts" id="markdown-toc-running-and-queued-counts">Running and Queued Counts</a></li>
+  <li><a href="#selecting-a-pipeline" id="markdown-toc-selecting-a-pipeline">Selecting a pipeline</a></li>
+  <li><a href="#running-a-pipeline" id="markdown-toc-running-a-pipeline">Running a pipeline</a>    <ul>
+      <li><a href="#removing-samples-from-a-pipeline-submission" id="markdown-toc-removing-samples-from-a-pipeline-submission">Removing samples from a pipeline submission</a></li>
+      <li><a href="#multiple-filesets-per-sample" id="markdown-toc-multiple-filesets-per-sample">Multiple filesets per sample</a></li>
+    </ul>
+  </li>
+  <li><a href="#modifying-pipeline-parameters" id="markdown-toc-modifying-pipeline-parameters">Modifying pipeline parameters</a>    <ul>
+      <li><a href="#saving-pipeline-parameters" id="markdown-toc-saving-pipeline-parameters">Saving pipeline parameters</a></li>
+      <li><a href="#using-pre-saved-pipeline-parameters" id="markdown-toc-using-pre-saved-pipeline-parameters">Using pre-saved pipeline parameters</a></li>
+    </ul>
+  </li>
+  <li><a href="#running-the-pipeline" id="markdown-toc-running-the-pipeline">Running the pipeline</a></li>
+  <li><a href="#monitoring-pipeline-progress" id="markdown-toc-monitoring-pipeline-progress">Monitoring pipeline progress</a></li>
+  <li><a href="#viewing-pipeline-results" id="markdown-toc-viewing-pipeline-results">Viewing pipeline results</a>    <ul>
+      <li><a href="#previewing-analysis-output-files" id="markdown-toc-previewing-analysis-output-files">Previewing analysis output files</a>        <ul>
+          <li><a href="#previewing-tabular-analysis-output" id="markdown-toc-previewing-tabular-analysis-output">Previewing tabular analysis output</a></li>
+          <li><a href="#default-plain-text-preview-of-analysis-output" id="markdown-toc-default-plain-text-preview-of-analysis-output">Default plain text preview of analysis output</a></li>
+        </ul>
+      </li>
+      <li><a href="#viewing-the-sequencing-data-submitted-for-analysis" id="markdown-toc-viewing-the-sequencing-data-submitted-for-analysis">Viewing the sequencing data submitted for analysis</a></li>
+      <li><a href="#viewing-pipeline-parameters-used-at-runtime" id="markdown-toc-viewing-pipeline-parameters-used-at-runtime">Viewing pipeline parameters used at runtime</a></li>
+      <li><a href="#edit-analysis-name" id="markdown-toc-edit-analysis-name">Edit analysis name</a></li>
+    </ul>
+  </li>
+  <li><a href="#sharing-pipeline-results" id="markdown-toc-sharing-pipeline-results">Sharing pipeline results</a>    <ul>
+      <li><a href="#sharing-when-launching-a-pipeline" id="markdown-toc-sharing-when-launching-a-pipeline">Sharing when launching a pipeline</a></li>
+      <li><a href="#share-results-after-pipeline-has-been-launched" id="markdown-toc-share-results-after-pipeline-has-been-launched">Share results after pipeline has been launched</a></li>
+    </ul>
+  </li>
+  <li><a href="#saving-pipeline-results-to-a-sample" id="markdown-toc-saving-pipeline-results-to-a-sample">Saving pipeline results to a sample</a></li>
+  <li><a href="#receive-email-upon-pipeline-completion-or-error" id="markdown-toc-receive-email-upon-pipeline-completion-or-error">Receive email upon pipeline completion or error</a></li>
+  <li><a href="#downloading-single-sample-analysis-output-files-in-batch" id="markdown-toc-downloading-single-sample-analysis-output-files-in-batch">Downloading single sample analysis output files in batch</a></li>
+  <li><a href="#errors-when-executing-pipelines" id="markdown-toc-errors-when-executing-pipelines">Errors when executing pipelines</a></li>
+</ul>
+
+<h2 id="adding-samples-to-the-cart">Adding samples to the cart</h2>
+
+<p>The cart is a place where you can temporarily store a selection of samples from across multiple projects for submission to a pipeline for analysis.</p>
+
+<p>The cart is initially empty. You can add samples to your cart by navigating to the <a href="../samples/#viewing-samples-in-a-project">samples list for a project</a> and <a href="../samples/#selecting-samples">selecting the samples that you want to add</a>. Once you’ve selected the samples that you want to add, click on the “Add to Cart” button, just above the samples list:</p>
+
+<p><img src="images/add-to-cart-button.png" alt="Add to cart button." /></p>
+
+<p>Once you’ve added some samples to the cart, if you click the <code>Cart</code> button on the main navigation, you will be taken to the cart page.</p>
+
+<p><img src="images/pipeline-launch-cart.png" alt="Pipeline Cart." /></p>
+
+<p>You can remove individual samples or all selected samples from a project by clicking on the sample menu icon:</p>
+
+<p><img src="images/menu-icon.png" alt="Cart clear button." /></p>
+
+<p>And either selecting “Remove Sample” which will remove just a single sample or “Remove Project” which will remove all samples that belong to the same project. You can also empty the cart entirely by clicking on the “Empty” button, in the top, right-hand corner of the cart.</p>
+
+<h2 id="searching-samples-in-the-cart">Searching samples in the cart</h2>
+
+<p>You can search for individual samples within the cart use the ‘cart search’ field.</p>
+
+<p><img src="images/cart-filter-input.gif" alt="Cart search field" /></p>
+
+<p>Search terms can match partial samples names.</p>
+
+<h2 id="running-and-queued-counts">Running and Queued Counts</h2>
+
+<p>You can get a snapshot of the current state of the analysis server in the page menu bar.  Inside the blue box are the counts for the number of running and queued analyses.  The longer the queue, the longer time it will take to start your analysis.</p>
+
+<p><img src="images/queue-counts.png" alt="Queue Counts" /></p>
+
+<h2 id="selecting-a-pipeline">Selecting a pipeline</h2>
+
+<p>The default cart page will allow you to choose from the pipelines that are currently configured in IRIDA.  If you are not on the pipelines page, select the “Pipelines” menu from the top of the section:</p>
+
+<p><img src="images/pipeline-tab.png" alt="Select a pipeline page." /></p>
+
+<p>Click on the “Select” button at the bottom of the pipeline that you’d like to launch.</p>
+
+<h2 id="running-a-pipeline">Running a pipeline</h2>
+
+<p><strong>Note</strong>: Some pipelines will require a reference sequence:</p>
+
+<p><img src="images/reference-file-required.png" alt="Reference file required." /></p>
+
+<p>If you have the <img src="images/manager-icon.png" alt="" /> <strong>Manager</strong> role on a project, you can <a href="../project/#reference-files">add a reference file to the project</a>. Reference files added to a project can be shared with all other project members.</p>
+
+<p>If you do not have the <img src="images/manager-icon.png" alt="" /> <strong>Manager</strong> role on a project, or you would just like to upload a reference file for <em>this</em> pipeline, you can add a new reference file to the analysis by clicking on the “<i class="fa fa-upload"></i> Upload New” button. If you upload a reference to the analysis instead of the project, no other users will be able to see or use the file you’ve uploaded.</p>
+
+<p>When you select a pipeline that doesn’t require a reference file (or you’ve already <a href="../project/#reference-files">uploaded one</a>), you will be presented with a list of the samples that you’ve selected for analysis in the pipeline:</p>
+
+<p><img src="images/pipeline-samples.png" alt="Pipeline samples." /></p>
+
+<h3 id="removing-samples-from-a-pipeline-submission">Removing samples from a pipeline submission</h3>
+
+<p>You can remove a sample from a pipeline submission by clicking on the “Remove” button on the right-hand side of the sample:</p>
+
+<p><img src="images/sample-remove-button.png" alt="Sample remove button." /></p>
+
+<h3 id="multiple-filesets-per-sample">Multiple filesets per sample</h3>
+
+<p>If a sample has been sequenced multiple times (a top-up run, for example), the pipeline submission page will display multiple filesets for that sample:</p>
+
+<p><img src="images/multiple-filesets-per-sample.png" alt="Multiple filesets per sample." /></p>
+
+<p>You may only select one fileset for submission to the pipeline for analysis. You can select the fileset that you want to submit to the pipeline for analysis using the radio buttons on the left-hand side of the sample fileset display:</p>
+
+<p><img src="images/multiple-filesets-per-sample-radio-buttons.png" alt="Multiple filesets per sample selection." /></p>
+
+<h2 id="modifying-pipeline-parameters">Modifying pipeline parameters</h2>
+
+<p>IRIDA has pre-defined some default values for pipeline submissions, but you may change the default parameters for your analysis by clicking on the “Customize” button on the right-hand side of the parameters drop-down at the top of the pipeline submission page:</p>
+
+<p><img src="images/customize-parameters-button.png" alt="Customize parameters button." /></p>
+
+<p>The dialog window that appears will allow you to change the parameters for the pipeline execution:</p>
+
+<p><img src="images/default-pipeline-parameters.png" alt="Default pipeline parameters." /></p>
+
+<p>If you would like to reset a value that you modified back to the default value, click on the “Use Default” button on the right-hand side of the paramater:</p>
+
+<p><img src="images/use-default-button.png" alt="Use Default button for pipeline parameters." /></p>
+
+<blockquote>
+<p><b>Note</b>: customized pipeline parameters are not validated, please ensure that the values you are entering are valid for the parameter that you are modifying.</p>
+</blockquote>
+
+<p>When you’ve finished customizing the pipeline parameters, you can click on the “Use these Parameters” button to return to the pipeline submission page.</p>
+
+<h3 id="saving-pipeline-parameters">Saving pipeline parameters</h3>
+
+<p>You may save the <a href="#modifying-pipeline-parameters">parameters that you modified</a> by clicking on the “Save these parameters for later?” checkbox at the bottom of the parameters dialog:</p>
+
+<p><img src="images/save-parameters-for-later-checkbox.png" alt="Save parameters for later checkbox." /></p>
+
+<p>You should provide a name for the pipeline parameters that reflects the modifications that you’ve made to the parameters. When you’ve entered the name for the parameter set, you can click on the “Use these Parameters” button at the bottom of the parameter modification dialog to return to the pipeline submission page.</p>
+
+<h3 id="using-pre-saved-pipeline-parameters">Using pre-saved pipeline parameters</h3>
+
+<p>Parameter sets that <a href="#saving-pipeline-parameters">have been saved</a> can be used on subsequent executions of the pipeline by using the parameters drop-down, just below the pipeline name:</p>
+
+<p><img src="images/parameters-dropdown.png" alt="Named parameters drop-down." /></p>
+
+<h2 id="running-the-pipeline">Running the pipeline</h2>
+
+<p>Once you’ve <a href="#multiple-filesets-per-sample">selected the files</a> and <a href="#using-pre-saved-pipeline-parameters">selected</a> or <a href="#modifying-pipeline-parameters">customized</a> the parameters, you can submit the pipeline for execution by clicking on the rocket ship button on the right-hand side of the page:</p>
+
+<p><img src="images/ready-to-launch.png" alt="Rocket ship launch icon." /></p>
+
+<p>Your pipeline submission will be prepared and launched, and you will see a confirmation dialog:</p>
+
+<p><img src="images/launch-success.png" alt="Pipeline launch success." /></p>
+
+<p>You can <a href="#monitoring-pipeline-progress">monitor pipeline progress</a> by clicking on the “Let’s see how this pipeline is doing” button, or you can empty your cart and start again by clicking on the “Let the pipeline run!” button.</p>
+
+<h2 id="monitoring-pipeline-progress">Monitoring pipeline progress</h2>
+
+<p>Once you’ve <a href="#launching-pipelines">launched a pipeline</a>, you can monitor the overall progress of the pipeline by clicking on the “Analyses” tab at the top of the <a href="../dashboard">dashboard</a>:</p>
+
+<p><img src="images/analyses-button.png" alt="Analysis dashboard tab." /></p>
+
+<p>The analysis overview list will show the current progress of all running and completed pipelines that you’ve submitted for execution:</p>
+
+<p><img src="images/analysis-listing.png" alt="Analysis listing." /></p>
+
+<p>If you leave your browser window open you can monitor the progress of your pipeline executions. The “State” and “Duration” columns will auto update every <strong>60</strong> seconds.</p>
+
+<p>You can also monitor the progress of the analysis by clicking on the analysis name which will open up the analysis details page. If you leave the browser window open on this page the “state” and “duration” of the analysis will auto update every <strong>60</strong> seconds.</p>
+
+<p><img src="images/updated-progress.png" alt="Analysis Details." /></p>
+
+<h2 id="viewing-pipeline-results">Viewing pipeline results</h2>
+
+<p>You can either click on the <img src="images/download-icon.png" alt="download-icon" /> icon to download <em>all</em> of the outputs produced by the pipeline execution, or you can click on the name of the analysis to view more detailed outputs and, if available, view a preview of the outputs:</p>
+
+<p><img src="images/completed-analysis.png" alt="Completed analysis listing." /></p>
+
+<p>The analysis page shows you more detailed information about your pipeline submission, including the names of the files that were produced by the analysis (on the Output File Preview page), a preview of the outputs (if available), and some tabs to view more details about how the pipeline was submitted and for sharing results:</p>
+
+<p><img src="images/analysis-results-page.png" alt="Analysis results page." /></p>
+<figcaption>Example `SNVPhyl` pipeline phylogenetic tree preview</figcaption>
+<p><br /><br /></p>
+
+<p><img src="images/view-results-refseq-masher.png" alt="view-results-refseq-masher" /></p>
+<figcaption>Example `refseq_masher` tabular results preview</figcaption>
+<p><br /><br /><br />
+To download output files, you can click on the <code>Output Files</code> tab. To download an individual file, click on the file name. If the file does not have an available output preview it can be downloaded by clicking the <code>...</code> next to the Download All Files button and selecting the file to download.  To download <em>all</em> the outputs produced by the pipeline, you can click on the “Download All Files” button.</p>
+
+<p><img src="images/analysis-results-download.png" alt="Analysis results download." /></p>
+
+<h3 id="previewing-analysis-output-files">Previewing analysis output files</h3>
+
+<p>All analysis pipelines produce analysis output files. To view these file, click the <code>Output Files</code> tab on the <strong>Analysis</strong> page:</p>
+
+<p><img src="images/view-results-preview-refseq-masher.png" alt="view-results-preview-refseq-masher" /></p>
+<figcaption>Example `refseq_masher` tabular results preview</figcaption>
+
+<p>For each analysis output file, you will see a panel and in each panel you will see:</p>
+
+<ul>
+  <li>a panel heading with the Galaxy tool name (e.g. “RefSeq Masher Matches”) and version (e.g. “(0.1.1)”), internal IRIDA output name (e.g. “refseq-masher-matches”) and output file name (e.g. “refseq-masher-matches.tsv”)</li>
+  <li>a file download link</li>
+  <li>a preview of the file contents displayed as plain text or in a table</li>
+</ul>
+
+<h4 id="previewing-tabular-analysis-output">Previewing tabular analysis output</h4>
+
+<p>Some of the output files will be rendered in a table:</p>
+
+<p><img src="images/view-results-tabular-snvphyl-snv-table.png" alt="view-results-tabular-snvphyl-snv-table" /></p>
+<figcaption>SNVPhyl SNV  results shown in a table.</figcaption>
+
+<p><img src="images/view-results-tabular-refseq_masher-contains-default.png" alt="view-results-tabular-refseq_masher-contains-default" /></p>
+<figcaption>`refseq_masher` results shown in a table.</figcaption>
+
+<h4 id="default-plain-text-preview-of-analysis-output">Default plain text preview of analysis output</h4>
+
+<p>Analysis output files with file extensions like <code>.log</code>, <code>.txt</code> or <code>.fasta</code> can be previewed in the browser as plain text:</p>
+
+<p><img src="images/view-results-plain-text-snvphyl-mapping.png" alt="view-results-plain-text-snvphyl-mapping" /></p>
+
+<p>If an analysis output file is small enough like this log file, it will be loaded in its entirety:</p>
+
+<p><img src="images/view-results-plain-text-quast-log.png" alt="view-results-plain-text-quast-log" /></p>
+
+<figcaption>Notice that the `3.0 kB / 3.0 kB (100%)` indicates that 100% of the file has been loaded.</figcaption>
+
+<p>If an analysis output file is fairly large like this log file, it will be loaded as you scroll to the bottom of the file preview:</p>
+
+<p><img src="images/view-results-plain-text-shovill-log.png" alt="view-results-plain-text-shovill-log" /></p>
+<figcaption>Notice that the `8.0 kB / 212.0 kB (3.8%)` indicates that only 3.8% of the file has been loaded into this view. Scrolling to the end will trigger loading of the next chunk of this file into the view!</figcaption>
+
+<h3 id="viewing-the-sequencing-data-submitted-for-analysis">Viewing the sequencing data submitted for analysis</h3>
+
+<p>To view the data that was submitted to the pipeline for analysis, start from the <a href="#viewing-pipeline-results">Analysis results page</a>, click on the <code>Settings</code> tab and then click on the <code>Samples</code> tab:</p>
+
+<p><img src="images/input-files-tab.png" alt="Input files tab." /></p>
+
+<p>The pipeline samples page shows all of the files that were submitted for analysis in the pipeline submission:</p>
+
+<p><img src="images/pipeline-input-files.png" alt="Pipeline input files." /></p>
+
+<p>You can view more details about each of the files that were submitted in the pipeline submission by clicking on the names of the files. This provides you a quick way to view the file details, including quality control measurements provided by <a href="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/">FastQC</a>.</p>
+
+<h3 id="viewing-pipeline-parameters-used-at-runtime">Viewing pipeline parameters used at runtime</h3>
+
+<p>To view the parameters that were used when submitting the pipeline, start from the <a href="#viewing-pipeline-results">Analysis results page</a> and click on the “Provenance” tab.</p>
+
+<p>The provenance page shows a list of the files that were generated as outputs by the pipeline execution:<br />
+<img src="images/provenance-tab.png" alt="Input parameters tab." /></p>
+
+<p>You can click on each of the file names to expand the complete listing of <em>how</em> the file was generated behind the scenes:</p>
+
+<p><img src="images/expanded-provenance.png" alt="Expanded provenance information." /></p>
+
+<p>You can further inspect the parameters of each of the tools that were used to generate the analysis by clicking on one of the steps:</p>
+
+<p><img src="images/actual-pipeline-parameters.png" alt="Analysis name edit." /></p>
+
+<h3 id="edit-analysis-name">Edit analysis name</h3>
+
+<p>If you are the user who submitted the pipeline, you are able to change the submission name from the results page.  To edit an analysis name, click the <code>Settings</code> tab and then click the Pencil icon next to the analysis name. Once you have edited the analysis name, pressing the <code>ENTER</code> key on your keyboard or clicking anywhere outside of the text box will update the name. To cancel editing a name you can either hit the <code>ESC</code> key on your keyboard or if the name has not been changed you can also click anywhere outside of the text box.</p>
+
+<p><img src="images/edit-name.png" alt="Edit pipeline name." /></p>
+
+<h2 id="sharing-pipeline-results">Sharing pipeline results</h2>
+
+<p>Pipeline results can be shared with projects so that other users on a shared project can view results of the analysis.</p>
+
+<h3 id="sharing-when-launching-a-pipeline">Sharing when launching a pipeline</h3>
+
+<p>When launching a pipeline you can select which projects the results should be shared with by selecting them in the <code>Share Results</code> section of the pipeline setup.</p>
+
+<p><img src="images/analysis-share-launch.png" alt="Share analysis results." /></p>
+
+<p>Note that for a project to be displayed in this list it must have samples being used in the pipeline.</p>
+
+<p>Once the pipeline has been submitted the submission will show up in the analysis listing for the selected projects.  From this page users on the project will be able to monitor the pipeline’s progress and view results once they are complete.  For more information on viewing analysis results shared with a project, see the <a href="../project/#project-analysis-results">Managing Projects</a> page.</p>
+
+<h3 id="share-results-after-pipeline-has-been-launched">Share results after pipeline has been launched</h3>
+
+<p>Pipeline results can also be shared anytime after a pipeline has been launched.  To view or modify which projects an analysis has been shared with, click the <code>Settings</code> tab and then click the <code>Manage Results</code> tab on the pipeline results page.</p>
+
+<p><img src="images/analysis-share-results-with-project.png" alt="Share analysis results with project." /></p>
+
+<p>From this page you will be shown all projects that the pipeline result has been shared with (indicated by a check mark) along with additional projects available for sharing results.  To share or unshare the results with a project, check or uncheck the box next to the project name.</p>
+
+<p>Note that for a project to be displayed in this list it must contain samples which were used in the analysis.</p>
+
+<h2 id="saving-pipeline-results-to-a-sample">Saving pipeline results to a sample</h2>
+
+<p>Some pipelines allow you to save data back to the samples in which the pipeline was ran.  The type of data which will be saved back to the samples will differ between pipelines.  For example an assembly and annotation pipeline will save the assembly to the list of files on a sample, whereas a typing pipeline such as SISTR may save a serotype to the metadata of the sample.</p>
+
+<p>To save analysis results back to a sample, on submission of a pipeline please select the <code>Save Results to Samples</code> checkbox on the pipeline setup page.</p>
+
+<p><img src="images/save-results-to-samples.png" alt="save-results-to-samples" /></p>
+
+<p>Results can also be saved after a pipeline has completed.  To save analysis results after the pipeline has finished, click the <code>Settings</code> tab and then click the <code>Manage Results</code> tab on the pipeline results page.  If you are able to save the analysis results back to the sample, a <code>Save Results</code> section will be displayed.  Click the button to save the results to the related samples.</p>
+
+<p><img src="images/save-results-to-samples-after.png" alt="save-results-to-samples-after" /></p>
+
+<h2 id="receive-email-upon-pipeline-completion-or-error">Receive email upon pipeline completion or error</h2>
+
+<p>When launching a pipeline you can select the checkbox to receive an email upon pipeline completion or on error.</p>
+
+<p><img src="images/analysis-email-upon-completion.png" alt="analysis-email-upon-completion" /></p>
+
+<p>The option to receive an email upon analysis completion can also be updated as long as the analysis is not in <code>COMPLETED</code> or <code>ERROR</code> state. To update the email option click the <code>Settings</code> tab. To receive an email select the checkbox in the <code>Receive an email upon analysis completion</code> section. If you do not want to receive an email then you can unselect the checkbox in this section.</p>
+
+<p><img src="images/analysis-email-upon-completion-running.png" alt="analysis-email-upon-completion-running" /></p>
+
+<h2 id="downloading-single-sample-analysis-output-files-in-batch">Downloading single sample analysis output files in batch</h2>
+
+<p>You can download all of your single sample analysis output files in batch by clicking <strong>Analyses&gt;Output Files</strong> in the top navigation bar:</p>
+
+<p><img src="images/user-outputs.png" alt="" /></p>
+
+<p>You will see a table of your single sample analysis output files:</p>
+
+<p><img src="images/batch-download-user-outputs.png" alt="" /></p>
+
+<p>You can apply filters to any columns by clicking the column menu icon, for example, applying a filter to the <code>File</code> column:</p>
+
+<p><img src="images/batch-download-column-filter-open.png" alt="" /></p>
+
+<p>Filtering for files with <code>contigs</code> in the filename:</p>
+
+<p><img src="images/batch-download-filtering-on-contains-contigs.png" alt="" /></p>
+
+<p>You will then see a filter icon displayed beside the column name <img src="images/batch-download-column-filter-icon.png" alt="" /></p>
+
+<p>You can select the files you wish to download using the checkboxes or by holding the <code>Ctrl</code> or <code>Shift</code> keys as you click on the rows for the files you wish to download.</p>
+
+<p><img src="images/batch-download-multiselect-refine.png" alt="" /></p>
+
+<p>Or you can click the checkbox in the leftmost column header to select all files displayed:</p>
+
+<p><img src="images/batch-download-select-all.png" alt="" /></p>
+
+<p>Click <strong>Download</strong> to download. Depending on the number of files you have selected, preparation of the download may take a moment.</p>
+
+<p>Single files will be downloaded as is, while multiple files will downloaded bundled together in ZIP file.</p>
+
+<p><img src="images/download-confirmation-ff.png" alt="" /></p>
+
+<h2 id="errors-when-executing-pipelines">Errors when executing pipelines</h2>
+
+<p>You may experience an analysis pipeline execution failure caused by an error in one or more tools within a pipeline.</p>
+
+<p>For example, you may encounter an error when running the “Assembly and Annotation” pipeline:</p>
+
+<p><img src="images/analyses-table-error.png" alt="analyses-table-error" /></p>
+
+<p>If you click on the analysis name it will take you to the analysis page. From here you can view all the job error information for the pipeline including the galaxy job information, the galaxy parameters, standard error, and standard output.</p>
+
+<p><img src="images/analysis-job-error.png" alt="analysis-job-error" /></p>
+
+<p>This information may be helpful for troubleshooting and communicating what went wrong in a particular analysis pipeline.</p>
+
+<p><a href="../samples/">Previous: Managing Samples</a></p>
+
+:ET

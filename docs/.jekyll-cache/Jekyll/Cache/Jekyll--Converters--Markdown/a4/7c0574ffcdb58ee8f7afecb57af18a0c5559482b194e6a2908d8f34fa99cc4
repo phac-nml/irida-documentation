@@ -1,0 +1,235 @@
+I"�4<p>This guide describes how to set up a workstation for hacking on IRIDA.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#general-requirements" id="markdown-toc-general-requirements">General Requirements</a></li>
+  <li><a href="#install-instructions" id="markdown-toc-install-instructions">Install instructions</a>    <ul>
+      <li><a href="#install-instructions-for-ubuntu" id="markdown-toc-install-instructions-for-ubuntu">Install instructions for Ubuntu</a></li>
+      <li><a href="#install-instructions-for-centos" id="markdown-toc-install-instructions-for-centos">Install instructions for CentOS</a></li>
+      <li><a href="#post-software-install-setup-ubuntu-and-centos" id="markdown-toc-post-software-install-setup-ubuntu-and-centos">Post-software install setup (Ubuntu and CentOS)</a>        <ul>
+          <li><a href="#cloning-irida" id="markdown-toc-cloning-irida">Cloning IRIDA</a></li>
+          <li><a href="#installing-dependencies" id="markdown-toc-installing-dependencies">Installing dependencies</a></li>
+          <li><a href="#custom-configuration" id="markdown-toc-custom-configuration">Custom configuration</a></li>
+          <li><a href="#configure-mysql" id="markdown-toc-configure-mysql">Configure MySQL</a></li>
+          <li><a href="#configure-filesystem-locations" id="markdown-toc-configure-filesystem-locations">Configure Filesystem Locations</a></li>
+          <li><a href="#testing-irida" id="markdown-toc-testing-irida">Testing IRIDA</a>            <ul>
+              <li><a href="#checking-to-see-that-jetty-starts" id="markdown-toc-checking-to-see-that-jetty-starts">Checking to see that Jetty starts</a></li>
+              <li><a href="#database-first-time-setup" id="markdown-toc-database-first-time-setup">Database first-time setup</a></li>
+              <li><a href="#integration-testing" id="markdown-toc-integration-testing">Integration Testing</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#setting-up-galaxy" id="markdown-toc-setting-up-galaxy">Setting up Galaxy</a></li>
+      <li><a href="#front-end-development-setup" id="markdown-toc-front-end-development-setup">Front End Development Setup</a></li>
+    </ul>
+  </li>
+  <li><a href="#tasks" id="markdown-toc-tasks">Tasks</a></li>
+  <li><a href="#javascript-and-scss-code-formatting-and-linting" id="markdown-toc-javascript-and-scss-code-formatting-and-linting">JavaScript and SCSS Code Formatting and Linting</a>    <ul>
+      <li><a href="#intellij-idea-setup" id="markdown-toc-intellij-idea-setup">IntelliJ IDEA Setup</a></li>
+      <li><a href="#visual-studio-code-setup" id="markdown-toc-visual-studio-code-setup">Visual Studio Code Setup</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="general-requirements">General Requirements</h1>
+
+<p>You’re required to install a few different pieces of software on your machine before you can get started on hacking IRIDA:</p>
+
+<ol>
+  <li>DB: A MySQL or MariaDB server,</li>
+  <li>Languages: Java 11 (we have a hard requirement on Java 11), Python, Node</li>
+  <li>Build: Apache Maven</li>
+  <li>SCM: Git</li>
+  <li>IDE: Eclipse, Netbeans, IntelliJ, vim… (whatever you want, really).</li>
+</ol>
+
+<h1 id="install-instructions">Install instructions</h1>
+
+<h2 id="install-instructions-for-ubuntu">Install instructions for Ubuntu</h2>
+<p>These instructions work for a fresh, up-to-date install of Ubuntu 14.04 LTS. No guarantees if you’re using some other version of Ubuntu or some derivative of Ubuntu.</p>
+
+<div class="highlight"><pre><code># required for using the `apt-add-repository` command
+sudo apt-get install --yes --no-install-recommends python-software-properties
+# update sources
+sudo apt-get update
+
+# You will be prompted to set a root password for mysql and to accept the license for the Java installer.
+sudo apt-get install --yes --no-install-recommends mysql-server maven git openjdk-11-jdk
+</code></pre></div>
+
+<h2 id="install-instructions-for-centos">Install instructions for CentOS</h2>
+<p>These instructions work for a fresh, up-to-date install of CentOS 7. No guarantees if you’re using some other version of CentOS or some other RedHat-like distro.</p>
+
+<p>CentOS (unfortunately) isn’t as easy to set up as Ubuntu, you will have to manually install several bits of software.</p>
+
+<h2 id="post-software-install-setup-ubuntu-and-centos">Post-software install setup (Ubuntu and CentOS)</h2>
+<p>Once you’ve installed all of the prerequisites with your package manager (or manually), you can proceed with configuring MySQL (creating a user account and setting permissions), checking out IRIDA from our git repository, and running IRIDA on the command-line. You’re on your own for IDE configuration.</p>
+
+<h3 id="cloning-irida">Cloning IRIDA</h3>
+
+<p>You’ve <em>probably</em> already figured out how to clone IRIDA if you’re reading this documentation. Nevertheless, for completeness sake, you can clone IRIDA on the command-line like so:</p>
+
+<div class="highlight"><pre><code>git clone https://github.com/phac-nml/irida.git
+</code></pre></div>
+
+<p>Importing IRIDA into an IDE is left to the developer.</p>
+
+<h3 id="installing-dependencies">Installing dependencies</h3>
+
+<p>IRIDA uses some custom libraries that are either a) not currently available in a Maven repository, or b) a custom version of the software available in Maven central. We provide a convenient <code>bash</code> script for installing our additional Java dependencies in the <code>lib</code> directory:</p>
+
+<div class="highlight"><pre><code>cd irida/lib/
+bash install-libs.sh
+</code></pre></div>
+
+<h3 id="custom-configuration">Custom configuration</h3>
+
+<p>Many of IRIDA’s properties can be configured by creating a file <code>/etc/irida/irida.conf</code>. The file is a basic key/value file (keys and values are separated by an <code>=</code> sign). A short example:</p>
+
+<div class="highlight"><pre><code># configure liquibase to manage the database schema
+liquibase.update.database.schema=false
+# disable hibernate's automatic schema creation
+hibernate.hbm2ddl.auto=
+# disallow hibernate from importing any data
+hibernate.hbm2ddl.import_files=
+</code></pre></div>
+
+<p>The sections below will include the keys that you can use to override the default behaviour.</p>
+
+<h3 id="configure-mysql">Configure MySQL</h3>
+
+<p>IRIDA is configured to use the following credentials by default:</p>
+
+<ul>
+  <li><strong>Username</strong> (<code>jdbc.username</code>): <code>test</code></li>
+  <li><strong>Password</strong> (<code>jdbc.password</code>): <code>test</code></li>
+  <li><strong>Database</strong> (<code>jdbc.url</code>): <code>jdbc:mysql://localhost:3306/irida_test</code></li>
+</ul>
+
+<p>You’ll need to permit those user credentials to create the tables in the database. A quick one-liner for that is:</p>
+
+<div class="highlight"><pre><code>echo "grant all privileges on irida_test.* to 'test'@'localhost' identified by 'test';" | mysql -u root -p
+</code></pre></div>
+
+<p>Also create the database if it doesn’t exist:</p>
+
+<div class="highlight"><pre><code>echo "create database irida_test;" | mysql -u root -p
+</code></pre></div>
+
+<p>In order to run local integration tests, the database <code>irida_integration_test</code> is used instead.  This database requires permissions from user <code>'test'@'localhost'</code>.  To grant such permissions a quick one-liner is:</p>
+
+<div class="highlight"><pre><code>echo "grant all privileges on irida_integration_test.* to 'test'@'localhost';" | mysql -u root -p
+</code></pre></div>
+
+<h3 id="configure-filesystem-locations">Configure Filesystem Locations</h3>
+
+<p>IRIDA stores much of its metadata in the relational database, but all sequencing and analysis files are stored on the filesystem. Directory configuration is:</p>
+
+<ul>
+  <li><strong>Sequencing Data</strong>: <code>sequence.file.base.directory</code></li>
+  <li><strong>Reference Files</strong>: <code>reference.file.base.directory</code></li>
+  <li><strong>Analysis Output</strong>: <code>output.file.base.directory</code></li>
+</ul>
+
+<p>If the directories that are configured do not exist (they don’t likely exist if you don’t configure them), IRIDA will default to automatically creating a temporary directory using Java’s <a href="http://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html#createTempDirectory-java.lang.String-java.nio.file.attribute.FileAttribute...-"><code>Files.createTempDirectory</code></a>.</p>
+
+<h3 id="testing-irida">Testing IRIDA</h3>
+
+<p>You can verify that you’ve installed everything correctly in one of two ways:</p>
+
+<ol>
+  <li>Minimal verification: Check to see that Jetty starts, or</li>
+  <li>Maximal verification: Run the complete test suite.</li>
+</ol>
+
+<p>Checking to see that Jetty starts will ensure that you’re able to start hacking on the UI or the REST API. If you’re going to be working on Galaxy-related features, you should <em>probably</em> run the complete test suite as it runs a Docker version of Galaxy and verifies that communication between IRIDA and Galaxy will work properly. Keep in mind that the complete test suite execution currently takes approximately 1 hour to complete.</p>
+
+<h4 id="checking-to-see-that-jetty-starts">Checking to see that Jetty starts</h4>
+
+<p>IRIDA uses Maven for build and dependency management. You can check to see that Jetty starts like so:</p>
+
+<div class="highlight"><pre><code>mvn clean jetty:run
+</code></pre></div>
+
+<h4 id="database-first-time-setup">Database first-time setup</h4>
+
+<p>When first starting up Jetty, you’ll need to have the database created and populated, which can be done by running the following script:</p>
+
+<div class="highlight"><pre><code>./run.sh --create-db
+</code></pre></div>
+
+<p>This will create the database schema and import some testing data. This can also be used to drop then recreate the database and reimport the starting dataset when a clean database is needed.</p>
+
+<p>For all subsequent runs, simply run the script with no options:</p>
+
+<div class="highlight"><pre><code>./run.sh
+</code></pre></div>
+
+<p>This will update the database if the schema has been changed, but without dropping all of the tables beforehand, which will cause Jetty to start up much faster.</p>
+
+<h4 id="integration-testing">Integration Testing</h4>
+
+<p>To run the full integration test suite for IRIDA please run the following:</p>
+
+<div class="highlight"><pre><code>./run-tests.sh all
+</code></pre></div>
+
+<p>This will run all the integration test profiles using Maven, and print out reports for each profile.</p>
+
+<h2 id="setting-up-galaxy">Setting up Galaxy</h2>
+
+<p>Please refer to the <a href="../../administrator/galaxy">Galaxy Install Guide</a> for information on setting up Galaxy to use with IRIDA. The simplest method is to use Docker, but if new tools are being developed for Galaxy and integrated into IRIDA it is recommended to install a non-Docker version of Galaxy.</p>
+
+<h2 id="front-end-development-setup">Front End Development Setup</h2>
+
+<p>IRIDA uses <a href="https://yarnpkg.com">Yarn</a> for front-end dependency management.  <a href="https://yarnpkg.com/en/docs/install">Install yarn</a> by following the directions for your machine.  For production, it is automatically installed during the build process.</p>
+
+<p>From within <code>src/main/webapp/</code>:</p>
+
+<p>You will need to run <code>yarn install</code> to install all dependencies required to run the following from the command line.</p>
+
+<h1 id="tasks">Tasks</h1>
+
+<ul>
+  <li><code>yarn sass</code> - compile all <code>.scss</code> files into <code>.css</code> files, with sourcemaps.</li>
+  <li><code>yarn build</code> - compile all es6 files to es2015.</li>
+  <li><code>yarn start</code> - use when developing front end code.  Webpack will monitor for changes to the entry files, compile them, and then updates the browser with the changes.</li>
+</ul>
+
+<h1 id="javascript-and-scss-code-formatting-and-linting">JavaScript and SCSS Code Formatting and Linting</h1>
+
+<p>IRIDA JavaScript follows the <a href="https://github.com/prettier/prettier">Prettier</a> format guideline and is enforced using <code>eslint-plugin-prettier</code> (see below for enabling eslint in IntelliJ and VS Code).</p>
+
+<p>There is good <a href="https://github.com/prettier/prettier#editor-integration">editor integration for Prettier formatting</a></p>
+
+<h3 id="intellij-idea-setup">IntelliJ IDEA Setup</h3>
+
+<p>To enable eslinting (JavaScript linting) in IntelliJ, open the preferences panel &gt; Languages &amp; Frameworks &gt; JavaScript &gt; Code Quality Tools &gt; ESLint</p>
+
+<ul>
+  <li>Check the “Enable” checkbox.</li>
+  <li>Node interpreter should be you system node by default.</li>
+  <li>ESLint package is the <code>eslint</code> within the projects <code>node_modules</code> directory.</li>
+  <li>Configuration file is the <code>src/main/webapp/.eslintrc.json</code>.</li>
+</ul>
+
+<video controls="controls" style="width: 960px">
+    <source src="images/intellij-eslint.mp4" type="video/mp4" />
+</video>
+
+<h3 id="visual-studio-code-setup">Visual Studio Code Setup</h3>
+
+<p>To enable eslinting (JavaScript linting) in VS Code:</p>
+
+<ul>
+  <li>Open the quick open panel <code>Ctrl+P</code>.</li>
+  <li>Copy and paste: <code>ext install vscode-eslint</code> and press enter.</li>
+  <li>Select <code>ESLint</code> and click “Install”.</li>
+  <li>Click “Enable” and allow VS Code to restart.</li>
+</ul>
+
+<video controls="controls" style="width: 960px">
+    <source src="images/vs-code-eslint.mp4" type="video/mp4" />
+</video>
+
+:ET

@@ -1,0 +1,25 @@
+I"¼<h1 class="no_toc" id="sharing-some-data-from-a-project">Sharing some data from a project</h1>
+
+<p>Sometimes you only want to share a small subset of the data in one of your projects with another user. You can share out smaller sets of samples from a project by creating a new project in IRIDA, copying some samples to it, then adding new members to that project.</p>
+
+<p>You must have the role of <strong>Manager</strong> on the project to copy samples to another project.</p>
+
+<h3 id="create-a-new-project">Create a new project</h3>
+
+<p>{% include tutorials/common/creating-a-project.md %}</p>
+
+<p>Once the new project is created return to the project that you would like to copy samples from.</p>
+
+<h3 id="copy-samples">Copy Samples</h3>
+
+<p>{% include tutorials/common/samples/copy-samples.md %}</p>
+
+<h3 id="adding-a-project-member">Adding a Project Member</h3>
+
+<p>Once the samples are copied over to the new project, the last step is to add all users to this project that need access to this data.</p>
+
+<p><img src="{{ site.baseurl }}/images/tutorials/common/projects/project-details-members-tab.png" alt="Project details members tab." /></p>
+
+<p>{% include tutorials/common/project-add-member.md %}</p>
+
+:ET

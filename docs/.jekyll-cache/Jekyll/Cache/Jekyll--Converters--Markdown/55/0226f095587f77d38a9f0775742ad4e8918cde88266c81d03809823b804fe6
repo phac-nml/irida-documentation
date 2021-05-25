@@ -1,0 +1,174 @@
+I"_0<h1 class="no_toc" id="building-a-whole-genome-snv-phylogeny-with-snvphyl">Building a whole genome SNV Phylogeny with SNVPhyl</h1>
+
+<p>This is a quick tutorial on how to construct a whole genome SNV phylogeny with <a href="http://snvphyl.readthedocs.io/">SNVPhyl</a> through IRIDA.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#initial-data" id="markdown-toc-initial-data">Initial Data</a></li>
+  <li><a href="#adding-samples-to-the-cart" id="markdown-toc-adding-samples-to-the-cart">Adding Samples to the Cart</a></li>
+  <li><a href="#selecting-a-pipeline" id="markdown-toc-selecting-a-pipeline">Selecting a Pipeline</a></li>
+  <li><a href="#selecting-parameters" id="markdown-toc-selecting-parameters">Selecting Parameters</a>    <ul>
+      <li><a href="#select-a-reference-genome" id="markdown-toc-select-a-reference-genome">Select a reference genome</a></li>
+      <li><a href="#required-parameters-density-filtering" id="markdown-toc-required-parameters-density-filtering">Required parameters (density filtering)</a></li>
+      <li><a href="#optional-parameters" id="markdown-toc-optional-parameters">Optional parameters</a></li>
+    </ul>
+  </li>
+  <li><a href="#running-the-pipeline" id="markdown-toc-running-the-pipeline">Running the pipeline</a></li>
+  <li><a href="#monitoring-pipeline-status" id="markdown-toc-monitoring-pipeline-status">Monitoring Pipeline Status</a></li>
+  <li><a href="#viewing-the-results" id="markdown-toc-viewing-the-results">Viewing the Results</a></li>
+  <li><a href="#viewing-provenance-information" id="markdown-toc-viewing-provenance-information">Viewing Provenance Information</a></li>
+  <li><a href="#viewing-pipeline-details" id="markdown-toc-viewing-pipeline-details">Viewing Pipeline Details</a></li>
+  <li><a href="#advanced-snvphyl-visualizations" id="markdown-toc-advanced-snvphyl-visualizations">Advanced SNVPhyl Visualizations</a></li>
+</ul>
+
+<h1 id="initial-data">Initial Data</h1>
+
+<p>The data for this tutorial comes from <a href="https://irida.corefacility.ca/downloads/snvphyl-galaxy/examples/snvphyl-example-lm.tar.gz">https://irida.corefacility.ca/downloads/snvphyl-galaxy/examples/snvphyl-example-lm.tar.gz</a>. It is assumed the sequence files (forward and reverse) <code>CFSAN002349</code> and <code>CFSAN023463</code> in fastq/ have been uploaded into appropriate samples as described in the <a href="../web-upload/">Web Upload Tutorial</a>. Before starting this tutorial you should have a project with samples that appear as:</p>
+
+<p><img src="images/snvphyl-samples.png" alt="snvphyl-samples" /></p>
+
+<h1 id="adding-samples-to-the-cart">Adding Samples to the Cart</h1>
+
+<p>Before a pipeline can be run, a set of samples and sequence read data must be selected and added to the cart. For this tutorial please select the  2 samples and click the <strong>Add to Cart</strong> button.</p>
+
+<p><img src="images/add-to-cart.png" alt="add-to-cart" /></p>
+
+<p>Once the samples have been added to the cart, the samples can be reviewed by clicking on the <strong>Cart</strong> button at the top.</p>
+
+<p><img src="images/cart-button.png" alt="cart-button" /></p>
+
+<h1 id="selecting-a-pipeline">Selecting a Pipeline</h1>
+
+<p>For this tutorial, we will select the <strong>SNVPhyl Phylogenomics Pipeline</strong>.</p>
+
+<p><img src="images/pipeline-select.png" alt="pipeline-select" /></p>
+
+<h1 id="selecting-parameters">Selecting Parameters</h1>
+
+<p>Once the pipeline is selected, the next page provides an overview of all the input files, as well as the option to modify parameters.</p>
+
+<p><img src="images/snvphyl-pipeline-page.png" alt="snvphyl-pipeline-page" /></p>
+
+<h2 id="select-a-reference-genome">Select a reference genome</h2>
+
+<p>SNVPhyl requires a reference genome to be used for mapping sequencing reads and calling variants.  This must be uploaded to the project containing the samples to use.  There is an example reference file in the sample data package (snvphyl-example-lm).  Please upload the file <code>CFSAN023463.fasta</code> by clicking the <strong>Upload New</strong> button.</p>
+
+<p><img src="images/snvphyl-pipeline-upload-ref-file.png" alt="snvphyl-pipeline-upload-ref-file" /></p>
+
+<h2 id="required-parameters-density-filtering">Required parameters (density filtering)</h2>
+
+<p>One component of the SNVPhyl pipeline is to remove regions with high SNV density (which could suggest possible recombination). This component works well when all genomes under question are fairly closely-related, but when analyzing distantly-related genomes the <strong>SNV density filtering</strong> may remove too much data. The <strong>SNV density filtering</strong> can be enabled or disabled using the drop-down menu as shown.</p>
+
+<p><img src="images/snvphyl-pipeline-snv-density.png" alt="snvphyl-pipeline-snv-density.png" /></p>
+
+<p>Please select <strong>Enable</strong> if all the genomes are closely-related to each other and you wish to remove SNVs in high-density regions (that could be indicative of recombination). The thresholds for SNV removal can be set in the <a href="#optional-parameters">optional parameters</a> section.</p>
+
+<p>Please select <strong>Disable</strong> if you wish to turn off SNV density filtering. This is useful if you are analyzing genomes that are much more distantly related to each other (and so the SNV density filtering would be likely to remove non-recombinant SNVs).</p>
+
+<p>More information on SNV density filtering can be found in the <a href="https://snvphyl.readthedocs.io/en/latest/user/parameters/#step-12-consolidate-vcfs">SNVPhyl documentation</a>.</p>
+
+<h2 id="optional-parameters">Optional parameters</h2>
+
+<p>Next, selecting <strong>Customize</strong> brings up a page where parameters can be customized. The default parameters will often be appropriate, so we will use them for now.</p>
+
+<p><img src="images/snvphyl-pipeline-customize.png" alt="snvphyl-pipeline-customize" /></p>
+
+<h1 id="running-the-pipeline">Running the pipeline</h1>
+
+<p>Please use the <strong>Ready to Launch?</strong> button to start the pipeline.</p>
+
+<p><img src="../../../images/tutorials/common/pipelines/ready-to-launch-button.png" alt="launch-button" /></p>
+
+<p>Once the button is selected you should see a screen showing that your pipeline has been launched.</p>
+
+<p><img src="images/pipeline-launched.png" alt="pipeline-launched" /></p>
+
+<h1 id="monitoring-pipeline-status">Monitoring Pipeline Status</h1>
+
+<p>To monitor the status of the launched pipeline, please select the <strong>Analysis &gt; Your Analyses</strong> menu.</p>
+
+<p><img src="images/view-your-analyses.png" alt="view-your-analyses" /></p>
+
+<p>The will bring you to a page where you can monitor the status of each launched workflow.</p>
+
+<p><img src="images/monitor-analyses.png" alt="monitor-analyses" /></p>
+
+<p>Clicking the pipeline name <strong>SNVPhyl_20200702</strong> will bring you to a page for that analysis pipeline. It will take a while for the SNVPhyl analysis pipeline to complete. Along the top of the page you can check the current step of the analysis and at the bottom of the <strong>Details</strong> tab you can select if you would like to receive an email upon pipeline completion. The email option is only available if the analysis is not in <code>COMPLETED</code> or <code>ERROR</code> state.</p>
+
+<p><img src="images/analysis-in-progress.png" alt="analysis-in-progress" /></p>
+
+<p>It will take a while the SNVPhyl analysis pipeline to complete.</p>
+
+<h1 id="viewing-the-results">Viewing the Results</h1>
+
+<p>Once the pipeline is complete, you will see the generated phylogenetic tree within your browser.</p>
+
+<p><img src="images/snvphyl-results.png" alt="snvphyl-results" /></p>
+
+<p>You can view the <code>SNVPhyl</code> analysis output files by selecting the <code>Output Files</code> tab. Note that not all files have an available preview and as such are not displayed in the Output File Preview but are downloaded when selecting the <code>Download All Files</code> button.</p>
+
+<p><img src="images/snvphyl-output-files.png" alt="snvphyl-output-files" /></p>
+
+<p>To download individual files select the <strong>…</strong> next to the Download All Files and select the file to download.</p>
+
+<p><img src="images/snvphyl-download-individual-files.png" alt="snvphyl-download-individual-files" /></p>
+
+<p>To download al the files generated by the analysis, please select the <strong>Download All Files</strong> button.</p>
+
+<p><img src="images/snvphyl-download-all-files.png" alt="snvphyl-download-all-files" /></p>
+
+<p>A number of files are provided within the download package.  These are described below:</p>
+
+<ol>
+  <li><code>vcf2core.tsv</code>:  This defines the number of core positions evaluated for constructing the phylogeny.</li>
+  <li><code>phylogeneticTreeStats.txt</code>:  This contains additional information about the constructed tree.</li>
+  <li><code>phylogeneticTree.newick</code>:  This contains the constructed phylogenetic tree in newick format.</li>
+  <li><code>mappingQuality.txt</code>:  This defines the percent of the reference covered by each genome.</li>
+  <li><code>snvAlignment.phy</code>:  This defines a multiple sequence alignment of SNVs used to generate the phylogeny.</li>
+  <li><code>snvMatrix.tsv</code>:  This contains a pair-wise SNV distance matrix.</li>
+  <li><code>snvTable.tsv</code>:  This is a table of the individual variants detected.</li>
+  <li><code>filterStats.txt</code>:  This defines information about the SNVs removed due to poor quality.</li>
+</ol>
+
+<p>More information about interpreting these files can be found in the <a href="http://snvphyl.readthedocs.io/en/latest/user/output/">SNVPhyl Output Guide</a>.</p>
+
+<h1 id="viewing-provenance-information">Viewing Provenance Information</h1>
+
+<p>To view the pipeline provenance information, please select the <strong>Provenance</strong> tab.</p>
+
+<p><img src="images/snvphyl-provenance.png" alt="snvphyl-provenance" /></p>
+
+<p>The provenance is displayed on a per file basis. Clicking on <code>filterStats.txt</code> file will display it’s provenance. Expanding each tool will display the parameters that the tool was executed with.</p>
+
+<p><img src="images/snvphyl-provenance-tools.png" alt="snvphyl-provenance-tools" /></p>
+
+<h1 id="viewing-pipeline-details">Viewing Pipeline Details</h1>
+
+<p>To view analysis details, please select the <strong>Settings</strong> tab. From here you can view the analysis name, analysis description, analysis id, pipeline and pipeline version used by the analysis, analysis priority, when the analysis was created, and duration of the analysis.</p>
+
+<p><img src="images/snvphyl-settings.png" alt="snvphyl-settings" /></p>
+
+<p>To edit an analysis name, please select the Pencil icon next to the analysis name. Once you have edited the analysis name, pressing the <code>ENTER</code> key on your keyboard or clicking anywhere outside of the text box will update the name. To cancel editing a name you can either hit the <code>ESC</code> key on your keyboard or if the name has not been changed you can also click anywhere outside of the text box.</p>
+
+<p><img src="images/snvphyl-settings-edit-name.png" alt="snvphyl-settings-edit-name" /></p>
+
+<p>To view samples used by the analysis, as well as, the reference file please select the <strong>Samples</strong> tab.</p>
+
+<p><img src="images/snvphyl-settings-samples.png" alt="snvphyl-settings-samples" /></p>
+
+<p>To share analysis results with other projects and/or save results back to samples, please select the <strong>Manage Results</strong> tab.</p>
+
+<p><img src="images/snvphyl-settings-share.png" alt="snvphyl-settings-share" /></p>
+
+<p>To delete an analysis, please select the <strong>Delete Analysis</strong> tab.</p>
+
+<p><img src="images/snvphyl-settings-delete.png" alt="snvphyl-settings-delete" /></p>
+
+<h1 id="advanced-snvphyl-visualizations">Advanced SNVPhyl Visualizations</h1>
+
+<p>SNVPhyl Analyses can be combined with metadata from the sample the were run to get a more complete picture.  For more information see  <a href="../../../user/user/analysis-visualizations">Advanced Visualizations</a>.</p>
+
+<p>To view the advanced visualization, click the <strong>Phylogenetic Tree</strong> tab and click the <strong>View Advanced Visualization</strong> button on the <strong>Tree Preview</strong> tab.</p>
+
+<p><img src="images/snvphyl-results-adv-tree.png" alt="snvphyl-results-adv-tree" /></p>
+
+:ET

@@ -1,0 +1,36 @@
+I"�
+<h1 class="no_toc" id="exporting-data-to-the-command-line">Exporting data to the command-line</h1>
+
+<p>The IRIDA package comes with a Linux command-line utility for <em>linking</em> to files in your current working directory. If you are working on a Linux workstation, we <strong>strongly</strong> encourage you to use the command-line utility for working with the sequencing data stored in IRIDA.</p>
+
+<p>Start by <a href="/documentation/user/user/samples/#selecting-samples">selecting the samples</a> that you want to export to the command-line, clicking on the “Export” button just above the samples list and clicking “Command-line Linker”:</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/command-line-linker-button.png" alt="Command-line linker button." /></p>
+
+<p>The dialog that appears will provide you with a command that you can <strong>copy</strong> and <strong>paste</strong> into a terminal window.  You may select “Sequence Files” to get raw sequencing data, or “Assemblies” to get assembled data, or both.</p>
+
+<p><img src="/documentation/images/tutorials/common/samples/command-line-linker-dialog.png" alt="Command-line linker dialog." /></p>
+
+<p>Copy and paste the command into a terminal window and use the username and password that you use to log in to IRIDA:</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="o">[</span>user@waffles ~<span class="o">]</span>$ ngsArchiveLinker.pl -p <span class="m">2</span> -s <span class="m">5</span>
+Writing files to /home/user
+Enter username: user
+Enter password: 
+Reading samples <span class="m">5</span> from project <span class="m">2</span>
+Created <span class="m">2</span> files <span class="k">for</span> <span class="m">1</span> samples in /home/user/Project
+<span class="o">[</span>user@waffles ~<span class="o">]</span>$</code></pre></div>
+
+<p>The folder structure that will be created in the current working directory will match the structure present in IRIDA:</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="o">[</span>user@waffles ~<span class="o">]</span>$ tree Project/
+Project/
+└── sample-1
+    ├── sample-1_S1_L001_R1_001.fastq -&gt; /opt/irida/sequence-files/1/sample-1_S1_L001_R1_001.fastq
+    └── sample-1_S1_L001_R2_001.fastq -&gt; /opt/irida/sequence-files/2/sample-2_S1_L001_R2_001.fastq
+
+<span class="m">1</span> directory, <span class="m">2</span> files</code></pre></div>
+
+<p>Importantly, the files that are stored in your directory structure are <em>links</em> and not copies of the files. The purpose of links is to reduce the use of disk space on shared resources. An unfortunate side effect of the link structure is that you <strong>cannot</strong> change the contents of the files.</p>
+
+:ET

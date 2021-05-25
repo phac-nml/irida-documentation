@@ -1,0 +1,134 @@
+I""<h1 class="no_toc" id="performing-de-novo-assemblies-with-irida">Performing <em>de novo</em> assemblies with IRIDA</h1>
+
+<p>This is a quick tutorial on how to assemble a set of genomes through IRIDA.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#pipeline-overview" id="markdown-toc-pipeline-overview">Pipeline Overview</a></li>
+  <li><a href="#initial-data" id="markdown-toc-initial-data">Initial Data</a></li>
+  <li><a href="#adding-samples-to-the-cart" id="markdown-toc-adding-samples-to-the-cart">Adding Samples to the Cart</a></li>
+  <li><a href="#selecting-a-pipeline" id="markdown-toc-selecting-a-pipeline">Selecting a Pipeline</a></li>
+  <li><a href="#selecting-parameters" id="markdown-toc-selecting-parameters">Selecting Parameters</a></li>
+  <li><a href="#monitoring-pipeline-status" id="markdown-toc-monitoring-pipeline-status">Monitoring Pipeline Status</a></li>
+  <li><a href="#viewing-the-results" id="markdown-toc-viewing-the-results">Viewing the Results</a></li>
+  <li><a href="#viewing-provenance-information" id="markdown-toc-viewing-provenance-information">Viewing Provenance Information</a></li>
+  <li><a href="#viewing-pipeline-details" id="markdown-toc-viewing-pipeline-details">Viewing Pipeline Details</a></li>
+</ul>
+
+<h1 id="pipeline-overview">Pipeline Overview</h1>
+
+<p>The assembly and annotation pipeline built into IRIDA proceeds through the following steps.</p>
+
+<ol>
+  <li>Paired-end reads are merged using <a href="http://ccb.jhu.edu/software/FLASH/">FLASh</a>.</li>
+  <li>The merged paired-end reads as well as the unmerged reads are passed to <a href="http://bioinf.spbau.ru/spades">SPAdes</a> to perform a <em>de novo</em> assembly.</li>
+  <li>The contigs returned by SPAdes are filtered to remove small and low coverage contigs.</li>
+  <li>The filtered contigs are passed to <a href="http://www.vicbioinformatics.com/software.prokka.shtml">Prokka</a> for genome annotation.</li>
+  <li>A set of summary statistics are generated for the assembled genome.</li>
+</ol>
+
+<h1 id="initial-data">Initial Data</h1>
+
+<p>The data for this tutorial comes from the miseq-run-salmonella/ directory within <a href="https://irida.corefacility.ca/downloads/data/irida-sample-data.zip">https://irida.corefacility.ca/downloads/data/irida-sample-data.zip</a>.  It is assumed the sequence files in <code>miseq-run-assembly-small/</code> have been uploaded into appropriate samples as described in the <a href="../web-upload/">Web Upload Tutorial</a>.  Before starting this tutorial you should have a project with samples that appear as:</p>
+
+<p><img src="images/assembly-samples.png" alt="assembly-samples" /></p>
+
+<h1 id="adding-samples-to-the-cart">Adding Samples to the Cart</h1>
+
+<p>Before a pipeline can be run a set of samples and sequence read data must be selected and added to the cart.  For this tutorial please select all three samples and click the <strong>Add to Cart</strong> button.</p>
+
+<p><img src="images/add-to-cart.png" alt="add-to-cart" /></p>
+
+<p>Once the samples have been added to the cart, the samples can be reviewed by clicking on the <strong>Cart</strong> button at the top.</p>
+
+<p><img src="images/cart-button.png" alt="cart-button" /></p>
+
+<h1 id="selecting-a-pipeline">Selecting a Pipeline</h1>
+
+<p>Once inside the cart, all available pipelines will be displayed.</p>
+
+<p><img src="images/pipeline-select.png" alt="pipeline-select" /></p>
+
+<p>There are two different types of assembly pipelines available:</p>
+
+<ol>
+  <li><strong>Assembly and Annotation Pipeline</strong>:  This is used for assembling and annotating a single genome.</li>
+  <li><strong>Assembly and Annotation Collection Pipeline</strong>:  This is used for assembling and annotating a collection of genomes and compiling the results into a single downloadable package.</li>
+</ol>
+
+<p>For this tutorial, we will select the <strong>Assembly and Annotation Collection Pipeline</strong>.</p>
+
+<h1 id="selecting-parameters">Selecting Parameters</h1>
+
+<p>Once the pipeline is selected, the next page provides an overview of all the input files, as well as the option to modify parameters.</p>
+
+<p><img src="images/assembly-pipeline-page.png" alt="assembly-pipeline-page" /></p>
+
+<p>We will use the default parameters.  Please select the <strong>Ready to Launch?</strong> button to continue.</p>
+
+<p><img src="../../../images/tutorials/common/pipelines/ready-to-launch-button.png" alt="launch-button" /></p>
+
+<p>Once the button is selected you should see a screen showing that your pipeline has been launched.</p>
+
+<p><img src="images/pipeline-launched.png" alt="pipeline-launched" /></p>
+
+<h1 id="monitoring-pipeline-status">Monitoring Pipeline Status</h1>
+
+<p>To monitor the status of the launched pipeline, please select the <strong>Analysis &gt; Your Analyses</strong> menu or click the <strong>Let’s see how this pipeline is doing</strong> button.</p>
+
+<p><img src="images/view-your-analyses.png" alt="view-your-analyses" /></p>
+
+<p>The will bring you to a page where you can monitor the status of each launched workflow.</p>
+
+<p><img src="images/monitor-analyses.png" alt="monitor-analyses" /></p>
+
+<p>Clicking the pipeline name will bring you to a page for that analysis pipeline. It will take a few minutes for the assembly and annotation collection pipeline to complete. Along the top of the page you can check the current step of the analysis and at the bottom of the <strong>Details</strong> tab you can select if you would like to receive an email upon pipeline completion. The email option is only available if the analysis is not in <code>COMPLETED</code> or <code>ERROR</code> state.</p>
+
+<p><img src="images/analysis-in-progress.png" alt="analysis-in-progress" /></p>
+
+<h1 id="viewing-the-results">Viewing the Results</h1>
+
+<p>Once the pipeline is complete, you will be able to view the results of the <code>AssemblyAnnotationCollection</code> analysis. Note that not all files have an available preview and as such are not displayed in the Output File Preview but are downloaded when selecting the <code>Download All Files</code> button.</p>
+
+<p><img src="images/assembly-results.png" alt="assembly-results" /></p>
+
+<p>To download individual files select the <strong>…</strong> next to the Download All Files and select the file to download.</p>
+
+<p><img src="images/assembly-download-individual-files.png" alt="assembly-download-individual-files" /></p>
+
+<p>To download all the files generated by the analysis, please select the <strong>Download All Files</strong> button.</p>
+
+<p><img src="images/assembly-download-all-files.png" alt="assembly-download-all-files" /></p>
+
+<h1 id="viewing-provenance-information">Viewing Provenance Information</h1>
+
+<p>To view the pipeline provenance information, please select the <strong>Provenance</strong> tab.</p>
+
+<p><img src="images/assembly-provenance.png" alt="assembly-provenance" /></p>
+
+<p>The provenance is displayed on a per file basis. Clicking on <code>quast.tsv</code> file will display it’s provenance. Expanding each tool will display the parameters that the tool was executed with.</p>
+
+<p><img src="images/assembly-provenance-tools.png" alt="assembly-provenance-tools" /></p>
+
+<h1 id="viewing-pipeline-details">Viewing Pipeline Details</h1>
+
+<p>To view analysis details, please select the <strong>Settings</strong> tab. From here you can view the analysis name, analysis description, analysis id, pipeline and pipeline version used by the analysis, analysis priority, when the analysis was created, and duration of the analysis.</p>
+
+<p><img src="images/assembly-settings.png" alt="assembly-settings" /></p>
+
+<p>To edit an analysis name, please select the <strong>Pencil</strong> icon next to the analysis name. Once you have edited the analysis name, pressing the <code>ENTER</code> key on your keyboard or clicking anywhere outside of the text box will update the name. To cancel editing a name you can either hit the <code>ESC</code> key on your keyboard or if the name has not been changed you can also click anywhere outside of the text box.</p>
+
+<p><img src="images/assembly-settings-edit-name.png" alt="assembly-settings-edit-name" /></p>
+
+<p>To view samples used by the analysis, please select the <strong>Samples</strong> tab.</p>
+
+<p><img src="images/assembly-settings-samples.png" alt="assembly-settings-samples" /></p>
+
+<p>To share analysis results with other projects and/or save results back to samples, please select the <strong>Manage Results</strong> tab.</p>
+
+<p><img src="images/assembly-settings-share.png" alt="assembly-settings-share" /></p>
+
+<p>To delete an analysis, please select the <strong>Delete Analysis</strong> tab.</p>
+
+<p><img src="images/assembly-settings-delete.png" alt="assembly-settings-delete" /></p>
+
+:ET

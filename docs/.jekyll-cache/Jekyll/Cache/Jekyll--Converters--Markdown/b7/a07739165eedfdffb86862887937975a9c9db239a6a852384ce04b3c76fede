@@ -1,0 +1,141 @@
+I"ª"<h1 id="using-the-sistr-pipeline">Using the SISTR Pipeline</h1>
+
+<p>This guide describes how to make use of the <a href="https://lfz.corefacility.ca/sistr-app/"><em>Salmonella in-silico</em> Typing Resource</a> (SISTR) pipeline within IRIDA. This pipeline enables the identification of the serovar and cgMLST types for <em>Salmonella</em> whole genome sequencing (WGS) data through comparisons with a large database (10,000+) of <em>Salmonella</em> genomes within <a href="https://www.ncbi.nlm.nih.gov/">NCBI</a>.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#using-the-sistr-pipeline" id="markdown-toc-using-the-sistr-pipeline">Using the SISTR Pipeline</a>    <ul>
+      <li><a href="#pipeline-overview" id="markdown-toc-pipeline-overview">Pipeline Overview</a></li>
+      <li><a href="#running-the-pipeline" id="markdown-toc-running-the-pipeline">Running the Pipeline</a>        <ul>
+          <li><a href="#1-automated-execution" id="markdown-toc-1-automated-execution">1. Automated Execution</a></li>
+          <li><a href="#2-manual-execution" id="markdown-toc-2-manual-execution">2. Manual Execution</a></li>
+        </ul>
+      </li>
+      <li><a href="#sistr-results" id="markdown-toc-sistr-results">SISTR Results</a>        <ul>
+          <li><a href="#report" id="markdown-toc-report">Report</a>            <ul>
+              <li><a href="#1-sistr-information" id="markdown-toc-1-sistr-information">1. SISTR Information</a></li>
+              <li><a href="#2-cgmlst330" id="markdown-toc-2-cgmlst330">2. cgMLST330</a></li>
+              <li><a href="#3-mash" id="markdown-toc-3-mash">3. Mash</a></li>
+            </ul>
+          </li>
+          <li><a href="#output-files" id="markdown-toc-output-files">Output Files</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="pipeline-overview">Pipeline Overview</h2>
+
+<p>The SISTR pipeline that is implemented within IRIDA makes use of the following steps to translate WGS data into typing information:</p>
+
+<ol>
+  <li>Paired-end reads are merged with <a href="https://doi.org/10.1093/bioinformatics/btr507">FLASH</a>.</li>
+  <li>Merged and un-merged reads are assembled <em>de novo</em> using <a href="http://bioinf.spbau.ru/spades">SPAdes</a>.</li>
+  <li>Low-coverage and small contigs are removed from the generated assembly.</li>
+  <li>The assembled genome is passed to <a href="https://github.com/peterk87/sistr_cmd/">sistr_cmd</a>, a command-line program for comparing genomes against the SISTR database.</li>
+</ol>
+
+<h2 id="running-the-pipeline">Running the Pipeline</h2>
+
+<p>The SISTR pipeline can bet set up to run using two separate methods.</p>
+
+<h3 id="1-automated-execution">1. Automated Execution</h3>
+
+<p>The SISTR pipeline can be set to run automatically on upload of new sequencing data to particular projects.</p>
+
+<p><strong>Project Settings</strong></p>
+
+<p>Automated SISTR analysis can also be enabled (or disabled) after a project is created from the project <strong>Settings</strong> page.</p>
+
+<p><img src="images/project-settings-sistr.png" alt="project-settings-sistr.png" /></p>
+
+<p>If automated execution of SISTR has been enabled for a project, then a SISTR analysis will be scheduled for execution on the upload of new sequencing data.  The results are accessible from the particular <code>Project</code> &gt; <code>Analyses</code> page.</p>
+
+<p><img src="images/sistr-typing-analysis-page.png" alt="sistr-typing-analysis-page.png" /></p>
+
+<p>Clicking the <strong>Automated SISTR Typing</strong> link brings you to the appropriate analysis page for SISTR.</p>
+
+<p><img src="images/sistr-typing-status.png" alt="sistr-typing-status.png" /></p>
+
+<h3 id="2-manual-execution">2. Manual Execution</h3>
+
+<p>To execute SISTR manually, please refer to the <a href="../../tutorials/sistr/">IRIDA/SISTR Tutorial</a>.</p>
+
+<h2 id="sistr-results">SISTR Results</h2>
+
+<p>A successful SISTR run should produce the following page as output. There are three possible Quality Control Statuses (Pass, Warning, and Fail)</p>
+
+<p><img src="images/sistr-results.png" alt="sistr-results.png" /></p>
+
+<p>The results are broken up into three different sections (SISTR Information, cgMLST330, and Mash).</p>
+
+<p>To view the output files and/or download the outputs, click the Output Files tab.</p>
+
+<p><img src="images/sistr-results-outputs.png" alt="sistr-results-outputs.png" /></p>
+
+<h3 id="report">Report</h3>
+
+<p>Interpretation of the produced output is as follows:</p>
+
+<h4 id="1-sistr-information">1. SISTR Information</h4>
+
+<p>Basic information on the sample and quality of the SISTR results.</p>
+
+<ul>
+  <li><strong>Sample Name</strong>: The name of the sample used within this analysis.</li>
+  <li><strong>Quality Control Status</strong>: A value of <code>PASS</code>, <code>FAIL</code>, or <code>WARNING</code> depending on the quality of the input genome as determined by SISTR.</li>
+  <li><strong>Quality Control Details</strong>: In the case of a status of <code>WARNING</code> or <code>FAIL</code>, the particular reason why these results did not pass.</li>
+</ul>
+
+<p>Serovar Predictions:</p>
+
+<p>The <em>in silico</em> serovar predictions generated from SISTR.</p>
+
+<ul>
+  <li><strong>Serovar (overall)</strong>: The overall serovar prediction from both the antigen and cgMLST methods employed by SISTR.</li>
+  <li><strong>Serovar (antigen)</strong>: The serovar prediction generated by looking for the presence of specific antigen genes.</li>
+  <li><strong>Serovar (cgMLST)</strong>: The serovar prediction generated by comparing the cgMLST type of this genome to the SISTR database.</li>
+  <li><strong>Serogroup</strong>: The serogroup, identified based on the detected alleles of the <em>wzx</em> and <em>wzy</em> genes.</li>
+  <li><strong>H1</strong>: The H1 antigen prediction based off of the detected <em>fliC</em> allele. If absent, a <code>-</code> is reported.</li>
+  <li><strong>H2</strong>: The H2 antigen based of off the detected <em>fljB</em> allele. If absent, a <code>-</code> is reported.</li>
+  <li><strong>O-antigen</strong>: The O-antigen prediction (inferred from the overall serovar prediction).</li>
+</ul>
+
+<h4 id="2-cgmlst330">2. cgMLST330</h4>
+
+<p>The results of additional predictions made using the SISTR cgMLST330 schema.</p>
+
+<ul>
+  <li><strong>Subspecies</strong>: The subspecies identified by comparing the genome to the cgMLST database in SISTR.</li>
+  <li><strong>Matching genome name</strong>: The name of the closest matching genome in the SISTR database.</li>
+  <li><strong>Alleles matching genome</strong>: The number of alleles that have a sufficient match (non-missing, non-partial/truncated) to the closest genome in the SISTR database.</li>
+  <li><strong>Percent matching</strong>: The percent of alleles perfectly matching the closest genome (e.g., <em>100% * Alleles matching genome/330</em>).</li>
+  <li><strong>cgMLST Sequence Type</strong>: A SISTR Sequence Type number associated with the particular cgMLST profile. A sequence type will only be assigned when the full complement of 330 cgMLST genes are found (whether a perfect match or an imperfect but non-truncated match).</li>
+</ul>
+
+<h4 id="3-mash">3. Mash</h4>
+
+<p>The results of predictions made through comparisons using the software <a href="https://mash.readthedocs.io/en/latest/">Mash</a>. Generally, cgMLST results are preferred over Mash.</p>
+
+<ul>
+  <li><strong>Subspecies</strong>: The subspecies identified by comparing the genome to the SISTR database.</li>
+  <li><strong>Serovar</strong>: The serovar identified using Mash.</li>
+  <li><strong>Matching genome name</strong>: The name of the closest matching genome in the SISTR database identified using Mash.</li>
+  <li><strong>Mash distance</strong>: The Mash distance to the closest matching genome. This approximates the mutation rate.</li>
+</ul>
+
+<h3 id="output-files">Output Files</h3>
+
+<p>In addition to the report, the SISTR pipeline produces the following files available for download.</p>
+
+<ul>
+  <li><code>sistr-cgmlst-profiles.csv</code>: A comma-separated values file listing the cgMLST allelic profile for the genome.</li>
+  <li><code>sistr-alleles-out.json</code>: A JSON file containing details on each of the allele calls.</li>
+  <li><code>shovill-contigs.fasta</code>: The set of contigs generated from the <em>de novo</em> assembly and used by SISTR.  This file could be uploaded to the <a href="https://lfz.corefacility.ca/sistr-app/">SISTR web application</a> for additional details and visualization of the results.</li>
+  <li><code>sistr-predictions.json</code>: The SISTR prediction results used to generate the SISTR report.</li>
+  <li><code>sistr-novel-alleles.fasta</code>: A list of any novel alleles that were detected by SISTR.</li>
+</ul>
+
+<p>More information on the interpretation of these files is available on the <a href="https://github.com/peterk87/sistr_cmd/">sistr_cmd</a> page.</p>
+
+:ET

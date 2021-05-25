@@ -1,0 +1,378 @@
+I"ma<h1 class="no_toc" id="managing-samples">Managing Samples</h1>
+
+<p>Each <a href="../project">project</a> in IRIDA may contain a collection of samples that corresponds to an isolate. Each sample may contain one or more of the following types of files: sequencing files in paired-end or single-end format, or assembled genomes. This section of the user guide describes how you can view samples, manage samples (merging, copying, renaming, exporting), and search for samples by name.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#viewing-samples-in-a-project" id="markdown-toc-viewing-samples-in-a-project">Viewing samples in a project</a>    <ul>
+      <li><a href="#viewing-individual-sample-details" id="markdown-toc-viewing-individual-sample-details">Viewing individual sample details</a></li>
+      <li><a href="#editing-sample-details" id="markdown-toc-editing-sample-details">Editing sample details</a></li>
+      <li><a href="#viewing-contained-files" id="markdown-toc-viewing-contained-files">Viewing contained files</a>        <ul>
+          <li><a href="#viewing-sequence-files" id="markdown-toc-viewing-sequence-files">Viewing Sequence Files</a></li>
+          <li><a href="#uploading-sequence-files" id="markdown-toc-uploading-sequence-files">Uploading Sequence Files</a></li>
+          <li><a href="#downloading-a-sequence-file" id="markdown-toc-downloading-a-sequence-file">Downloading a sequence file</a></li>
+          <li><a href="#deleting-a-sequence-file" id="markdown-toc-deleting-a-sequence-file">Deleting a sequence file</a></li>
+          <li><a href="#concatenating-sequence-files" id="markdown-toc-concatenating-sequence-files">Concatenating sequence files</a></li>
+          <li><a href="#viewing-genome-assemblies" id="markdown-toc-viewing-genome-assemblies">Viewing genome assemblies</a></li>
+          <li><a href="#deleting-genome-assemblies" id="markdown-toc-deleting-genome-assemblies">Deleting genome assemblies</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#adding-a-new-sample" id="markdown-toc-adding-a-new-sample">Adding a new sample</a></li>
+  <li><a href="#searching-and-filtering-samples" id="markdown-toc-searching-and-filtering-samples">Searching and filtering samples</a>    <ul>
+      <li><a href="#search-field" id="markdown-toc-search-field">Search Field</a></li>
+      <li><a href="#advanced-filtering" id="markdown-toc-advanced-filtering">Advanced Filtering</a></li>
+      <li><a href="#clearing-filters" id="markdown-toc-clearing-filters">Clearing Filters</a></li>
+    </ul>
+  </li>
+  <li><a href="#filtering-and-selecting-by-file" id="markdown-toc-filtering-and-selecting-by-file">Filtering and Selecting by File</a></li>
+  <li><a href="#viewing-associated-samples" id="markdown-toc-viewing-associated-samples">Viewing associated samples</a></li>
+  <li><a href="#modifying-samples" id="markdown-toc-modifying-samples">Modifying samples</a>    <ul>
+      <li><a href="#selecting-samples" id="markdown-toc-selecting-samples">Selecting samples</a>        <ul>
+          <li><a href="#multiple-sample-selection" id="markdown-toc-multiple-sample-selection">Multiple Sample Selection</a></li>
+          <li><a href="#selecting-groupings-of-samples" id="markdown-toc-selecting-groupings-of-samples">Selecting Groupings of Samples</a></li>
+        </ul>
+      </li>
+      <li><a href="#sharing-samples-between-projects" id="markdown-toc-sharing-samples-between-projects">Sharing samples between projects</a></li>
+      <li><a href="#moving-samples-between-projects" id="markdown-toc-moving-samples-between-projects">Moving samples between projects</a></li>
+      <li><a href="#merging-samples-within-a-project" id="markdown-toc-merging-samples-within-a-project">Merging samples within a project</a></li>
+    </ul>
+  </li>
+  <li><a href="#exporting-samples" id="markdown-toc-exporting-samples">Exporting samples</a>    <ul>
+      <li><a href="#downloading-samples" id="markdown-toc-downloading-samples">Downloading samples</a></li>
+      <li><a href="#command-line-export" id="markdown-toc-command-line-export">Command-line export</a></li>
+      <li><a href="#galaxy-export" id="markdown-toc-galaxy-export">Galaxy export</a></li>
+      <li><a href="#ncbi-upload" id="markdown-toc-ncbi-upload">NCBI Upload</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="viewing-samples-in-a-project">Viewing samples in a project</h2>
+
+<p>{% include tutorials/common/samples/viewing-samples.md %}</p>
+
+<p>The samples listing shows high-level sample details, such as:</p>
+
+<ul>
+  <li>The name of the sample,</li>
+  <li>The user-defined organism of the sample (if provided),</li>
+  <li>The name of the person who collected the sample (if provided),</li>
+  <li>The project that the sample belongs to (if from a related project),</li>
+  <li>The date that the sample was created in IRIDA.</li>
+  <li>Whether the sample failed IRIDA’s quality control checks.  If a sample has failed QC, the cell will have a red background and warning icon <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>.  Note if you are displaying <a href="#viewing-associated-samples">associated project samples</a> QC information will come from the sample’s parent project.</li>
+  <li>Whether the sample can be modified in this project.  If the project does not have modification access, a lock icon will be displayed <i class="fa fa-lock" aria-hidden="true"></i>.</li>
+</ul>
+
+<h3 id="viewing-individual-sample-details">Viewing individual sample details</h3>
+
+<p>All of the sample details that are in IRIDA are currently provided by a user with the project <strong>Manager</strong> role. To view details about an individual sample, start by <a href="#viewing-samples-in-a-project">viewing the samples in a project</a>, then click on the sample name in the samples table:</p>
+
+<p><img src="{{ site.baseurl }}/images/tutorials/common/samples/sample-name-button.png" alt="Sample name button." /></p>
+
+<p>The sample details page shows all of the details that are currently known about a sample:</p>
+
+<p><img src="{{ site.baseurl }}/images/tutorials/common/samples/sample-details.png" alt="Sample details page." /></p>
+
+<h3 id="editing-sample-details">Editing sample details</h3>
+
+<p>Start by <a href="#viewing-individual-sample-details">viewing the details of an individual sample</a>. On the samples details page, click on the “Edit” button in the top, right-hand corner:</p>
+
+<p><img src="images/sample-details-edit.png" alt="Sample details edit button." /></p>
+
+<p>You can provide as many or as few sample details that you want – the sample details are not used by any workflows in IRIDA (except the sample name in the SNVPhyl workflow), and (with the exception of the sample name) none of the sample details are required fields. When you’ve finished updating the sample details, you can click on the “Update” button at the bottom, right-hand side of the page.</p>
+
+<h3 id="viewing-contained-files">Viewing contained files</h3>
+
+<p>Samples can contain different types of files, either <strong>Sequence Files</strong> which are produced by a sequencing instrument, or <strong>Assemblies</strong> which consist of the re-constructed genome from the sequence reads.</p>
+
+<p><img src="images/sample-contained-files.png" alt="sample-contained-files" /></p>
+
+<h4 id="viewing-sequence-files">Viewing Sequence Files</h4>
+
+<p>{% include tutorials/common/samples/view-sequence-files.md %}</p>
+
+<h4 id="uploading-sequence-files">Uploading Sequence Files</h4>
+
+<p>{% include tutorials/common/uploading-sample-files.md %}</p>
+
+<h4 id="downloading-a-sequence-file">Downloading a sequence file</h4>
+
+<p>{% include tutorials/common/samples/download-sequence-file.md %}</p>
+
+<p>You can download all sequence files in a sample by following the instructions in the <a href="#exporting-samples">exporting samples</a> section about <a href="#downloading-samples">downloading samples</a>.</p>
+
+<h4 id="deleting-a-sequence-file">Deleting a sequence file</h4>
+
+<p>If you need to delete a sequence file from IRIDA, you can do so by clicking on the <img src="images/delete-icon.png" alt="Delete icon" class="inline" /> icon, on the right-hand side of the row for the sequence file.</p>
+
+<p>You can only delete a sequence file from a sample if you have the project <img src="images/manager-icon.png" class="inline" alt="Manager role icon." /> <strong>Manager</strong> role on the project.</p>
+
+<h4 id="concatenating-sequence-files">Concatenating sequence files</h4>
+
+<p>In cases where a top-up run or any other additional data is added to a sample, you may want to combine the sequence files into a single <em>concatenated</em> file.  IRIDA allows you to do this under the <em>Concatenate Files</em> page.</p>
+
+<p><img src="{{ site.baseurl }}/images/tutorials/common/samples/concatenate-link.png" alt="Concatenate link" /></p>
+
+<p>In the concatenation page you must select 2 or more sequence file objects <strong>of the same type</strong> to concatenate.  If you have selected a collection of files which cannot be concatenated, a warning will be displayed.</p>
+
+<p><img src="{{ site.baseurl }}/images/tutorials/common/samples/concatenate-page.png" alt="Concatenate page" /></p>
+
+<p>Once you have selected your files to concatenate, you have the following options:</p>
+
+<ul>
+  <li><em>New filename</em> - This will set the base name of the new concatenated files.  For paired-end data a modifier will be appended to determine the forward and reverse files.</li>
+  <li><em>Remove originals</em> - This will remove the original files from the sample, leaving only the new concatenated file.</li>
+</ul>
+
+<p>Once you have selected your files and selected your options, click <em>Submit</em> to begin the concatenation.  This may take a while, so you should stay on this page until the process is complete.  Once your files are concatenated, you will be redirected back to the sample-files page.</p>
+
+<h4 id="viewing-genome-assemblies">Viewing genome assemblies</h4>
+
+<p>Samples can also contain assembled genomes.</p>
+
+<p><img src="images/sample-automated-assembly.png" alt="sample-automated-assembly" /></p>
+
+<p>Genome assemblies can be linked to samples in the following ways:</p>
+
+<ol>
+  <li>By uploading assemblies to the sample through the <a href="#sequence-files--assemblies">file upload interface</a></li>
+  <li>By enabling the assembly pipeline as an <a href="../project/#automated-pipelines">automated pipeline</a>, which will be triggered on upload of sequencing files in the appropriate project.</li>
+  <li>Or by selecting the option to save assemblies back to a sample from the <a href="../pipelines/#saving-pipeline-results-to-a-sample">Launch Pipelines</a> page.</li>
+</ol>
+
+<p>The assembled genome file can be downloaded by clicking the <span class="fa fa-fw fa-download"></span> icon.</p>
+
+<p>If the project manager has enabled automated assemblies for uploaded data an assembly will also be shown associated with the particular sequence files used to generate the assembled genome.</p>
+
+<p><img src="images/automated-assembly.png" alt="Automated assembly" /></p>
+
+<p>The assembly status will be displayed along with a link to view the assembly results page.  On completion, the assembled genome will be saved back to the Sample.  For more information on viewing pipeline results see the <a href="../pipelines/#viewing-pipeline-results">pipeline documentation</a></p>
+
+<p>See the <a href="../project#automated-pipelines">project documentation</a> for information on enabling automated assembly.</p>
+
+<h4 id="deleting-genome-assemblies">Deleting genome assemblies</h4>
+
+<p>Assembled genomes may be deleted from a sample by selecting the <img src="images/delete-icon.png" alt="Delete icon" class="inline" /> icon.</p>
+
+<p><img src="images/delete-sample-assembly.png" alt="delete-sample-assembly" /></p>
+
+<h2 id="adding-a-new-sample">Adding a new sample</h2>
+
+<p>{% include tutorials/common/creating-a-sample.md %}</p>
+
+<h2 id="searching-and-filtering-samples">Searching and filtering samples</h2>
+
+<p>You can search and filter samples in a project in IRIDA by sample name, organism, and/or date range using the filters at the top of the <a href="#viewing-samples-in-a-project">samples list</a>:</p>
+
+<p><img src="images/sample-filter-area.png" alt="Samples filter area." /></p>
+
+<h3 id="search-field">Search Field</h3>
+
+<p><img src="images/search-input.png" alt="Samples search input." /></p>
+
+<p>You can perform a general search on sample names using the search field.  This will filter samples that have the search string <em>anywhere</em> in the name or organism field.  So, for example, if you’re searching for a sample that has the numeral 2 in its name, enter <code>2</code> into the search input, and you would find samples with names like:</p>
+
+<ul>
+  <li>Sample_2</li>
+  <li>Sample_293</li>
+  <li>02-2222</li>
+</ul>
+
+<h3 id="advanced-filtering">Advanced Filtering</h3>
+
+<p><img src="images/advanced-filter.png" alt="Samples advanced filters." /></p>
+
+<p>Clicking the filter button <span class="fa fa-filter fa-fw"></span> opens a dialog where you can filter by sample name and / or  date modified.</p>
+
+<p><img src="images/advanced-filter-dialogue.png" alt="Samples advanced filter dialogue." /></p>
+
+<p>Filtering by sample name will match the same as the search field, so the filter name will match <em>anywhere</em> in the sample name.</p>
+
+<p><img src="images/advanced-filter-dialogue-daterange.png" alt="Samples advanced filter dialogue daterange." /></p>
+
+<p>To search sample by a date range, click on the date range field.  A drop down will be displayed with pre-determine ranges:</p>
+
+<ul>
+  <li>Last 30 Days</li>
+  <li>Last 60 Days</li>
+  <li>Last 120 Days</li>
+</ul>
+
+<p>Or you can enter a custom date range by selecting the dates in the calendar.</p>
+
+<p><img src="images/advanced-filter-dialogue-apply.png" alt="Samples advanced filter dialogue apply." /></p>
+
+<p>To apply the selected filters click the ‘Filter’ button.</p>
+
+<p><img src="images/advanced-filter-applied-state.png" alt="Samples advanced filter applied state." /></p>
+
+<p>Once the filter is applied, the samples table will be updated with the filtered samples.  When an advanced filter is applied, a tag is created below the filter button to allow the user to know what filters are currently applied.  To remove a specific filter click on the tag itself.</p>
+
+<h3 id="clearing-filters">Clearing Filters</h3>
+
+<p><img src="images/advanced-filter-clear.png" alt="Samples clear filters button." /></p>
+
+<p>To clear all currently applied filters and search, click on the clear button to the right of the filter area.</p>
+
+<h2 id="filtering-and-selecting-by-file">Filtering and Selecting by File</h2>
+
+<p>As projects become larger, it becomes unwieldy to select a large subset of samples.  To facilitate this, there is the ‘Filter by File’ option.</p>
+
+<ul>
+  <li>Create a <code>.txt</code> file that contains the name of each sample you want to select on a new line.  You can either:
+    <ul>
+      <li>Use a text editor like Windows Notepad or TextEdit on Mac (note: when creating a new text document in TextEdit, press cmd + shift + t to change to the <code>.txt</code> format)</li>
+      <li>Or create a spreadsheet in Excel with a single column and save the file as a ‘Text (Tab Delimited) (*.txt)’ file.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Example (<code>project_5_filter.txt</code>):</p>
+
+<pre>
+03-3333
+10-6966
+15-7569
+</pre>
+
+<ul>
+  <li>On the project samples page, click the <span class="fa fa-file-o fa-fw"></span> button from the filter menu.</li>
+</ul>
+
+<p><img src="images/filter_by_file_btn.png" alt="Filter by File Button" /></p>
+
+<ul>
+  <li>Select the file you created.  The samples will be filtered by these names.</li>
+</ul>
+
+<p>If all sample names are found, a green success notification will appear in the upper right corner of the window.  This notification will disappear after 2 seconds.</p>
+
+<p><img src="images/filter_by_file_allfound.png" alt="Filter by File all found" /></p>
+
+<p>If sample names are not found, the samples will be filtered by the available names and a notification will appear telling you which samples could not be found.  This notification will not go away until it is clicked.</p>
+
+<p>Example.  If my file contained and additional sample name <code>12-4598_a</code>  which does not exist the following will be displayed.</p>
+
+<p><img src="images/filter_by_file_missing.png" alt="Filter by File missing samples" /></p>
+
+<h2 id="viewing-associated-samples">Viewing associated samples</h2>
+
+<p>You can quickly create an aggregated view of all of the samples in this project with all of the samples from both local and associated projects. To view associated samples, click the “Associated Projects” button.  All projects associated with the current project will be displayed here.  Select the projects you would also like to see in the view. Project managers may choose which samples will appear here by <a href="../../user/project/#associated-projects">adding or removing associated projects</a>.</p>
+
+<p><img src="images/display-sample-type.png" alt="Sample type selector" /></p>
+
+<p>Associated samples will be displayed in the project samples table designated with the same colours.</p>
+
+<p><img src="images/associated-display.png" alt="Sample table with associated and remote samples" /></p>
+
+<h2 id="modifying-samples">Modifying samples</h2>
+
+<p>Only user accounts that have the <strong>Manager</strong> role on a project can modify the samples in a project.</p>
+
+<h3 id="selecting-samples">Selecting samples</h3>
+
+<p>All sample modification actions require that samples be selected. You can select individual samples by clicking anywhere on the row (except on the sample name itself):</p>
+
+<p><img src="images/selected-sample.png" alt="Selected sample." /></p>
+
+<h4 id="multiple-sample-selection">Multiple Sample Selection</h4>
+
+<p>You can also select multiple samples at once by selecting a sample, pressing the shift key, and than selecting the last sample that you want selected.</p>
+
+<p>You can always see how many samples are selected at the top left of the samples table.</p>
+
+<p><img src="images/selected-sample-count.png" alt="Selected sample counts." /></p>
+
+<h4 id="selecting-groupings-of-samples">Selecting Groupings of Samples</h4>
+
+<p>All samples in the project can be selected at once using the checkbox in the table header.</p>
+
+<p><img src="images/samples-select-cb-empty.png" alt="Select All Checkbox" /></p>
+
+<p><img src="images/samples-select-cb-complete.png" alt="Selected sample counts." /></p>
+
+<p>Alternatively, there is a dropdown next to the select all checkbox that allows you to select/deselect samples in the entire project, or on the current page of the sample table.</p>
+
+<p><img src="images/samples-select-cb-dropdown.png" alt="Selected sample counts." /></p>
+
+<h3 id="sharing-samples-between-projects">Sharing samples between projects</h3>
+
+<p>{% include tutorials/common/samples/copy-samples.md %}</p>
+
+<h3 id="moving-samples-between-projects">Moving samples between projects</h3>
+
+<p>An alternative to <a href="#sharing-samples-between-projects">sharing samples between projects</a> is to <strong>move</strong> a sample between projects. Unlike sharing, when a sample is moved, the original sample is removed.</p>
+
+<p>Like sharing samples, you must be a project <img src="images/manager-icon.png" class="inline" alt="Manager role icon." /> <strong>Manager</strong> on <strong>both</strong> the project that you are moving the sample <em>from</em>, and the project that you are moving the sample <em>to</em>.  In addition, the source project you are sharing <em>from</em> must <strong>not</strong> be a remote project.</p>
+
+<p>Start by <a href="#selecting-samples">selecting the samples</a> that you want to move to the other project. When you’ve selected the samples that you want to move, click on the “Samples” button just above the samples list and select “Move Samples”:</p>
+
+<p><img src="images/move-samples-button.png" alt="Move samples button." /></p>
+
+<p>In the dialog that appears you will be presented with a list of the samples that are going to be moved, and an option to choose the project that the samples should be moved to:</p>
+
+<p><img src="images/move-samples-dialog.png" alt="Move samples dialog." /></p>
+
+<p>When you click on the drop-down box to select a project, you can either visually find the project that you want, or you can filter the projects by their name by typing into the text field.</p>
+
+<p>If you have selected samples that are non-modifiable in your current project, you will be shown a warning that the samples you are moving will also be non-modifiable in the new project.</p>
+
+<p>Once you’ve selected the project that you want to move the samples to, click on the “Move Samples” button.</p>
+
+<h3 id="merging-samples-within-a-project">Merging samples within a project</h3>
+
+<p>If a sample was created when sequencing data was uploaded with an incorrect name, you may want to merge two samples together. When you merge two samples, you will move all of the <strong>sequencing files</strong> and <strong>assembled genomes</strong> from one sample to another, then <strong>delete the original sample</strong>. <strong>None</strong> of the sample metadata will be copied between the merged samples, instead you will select one sample as the target for the sample merge. Only users with the project <img src="images/manager-icon.png" class="inline" alt="Manager role icon." /> <strong>Manager</strong> role can merge samples in a project and samples cannot be merged within <strong>remote</strong> projects.</p>
+
+<p>Start by <a href="#selecting-samples">selecting the samples</a> that you want to merge. You <strong>must</strong> select more than one sample to enable the merge samples button. Once you’ve selected the two or more samples that you would like to merge, click on the “Samples” button just above the samples list and select “Merge Samples”:</p>
+
+<p><img src="images/merge-samples-button.png" alt="Merge samples button." /></p>
+
+<p>In the dialog that appears you will be presented with a list of the samples that are going to be merged, and an option to choose the target sample of the merge:</p>
+
+<p><img src="images/merge-samples-dialog.png" alt="Merge samples dialog." /></p>
+
+<p>Click on the sample name under “<strong>Select a sample to merge into</strong>” to choose which sample will be used as the target for all of the sequencing data.</p>
+
+<p>You may also (optionally) rename the target sample by entering a new sample name under “<strong>Rename sample</strong>”. The sample name must be <strong>at least</strong> 3 characters long, and <strong>must not</strong> contain white space characters (tab or space) or any of the following characters: <code>? ( ) [ ] / \ = + &lt; &gt; : ; " , * ^ | &amp; ' .</code>. If you do not want to rename the target sample, leave this field blank.</p>
+
+<p>Once you’ve finished choosing the sample to merge into, click on the “Complete Merge” button at the bottom of the dialog.</p>
+
+<p>Note if you select samples that are non-modifiable, a warning will be displayed that you cannot merge the selected samples.</p>
+
+<h2 id="exporting-samples">Exporting samples</h2>
+
+<p>The <a href="../pipelines">pipelines</a> available in IRIDA may not be enough for the types of analysis that you want to run on your sequencing data. You can export your sample data from IRIDA in a number of different ways:</p>
+
+<ol>
+  <li><a href="#downloading-samples">Downloading samples</a>,</li>
+  <li><a href="#command-line-export">To the command-line</a>, or</li>
+  <li><a href="#galaxy-export">Directly to Galaxy</a></li>
+  <li><a href="#ncbi-upload">Upload to NCBI</a></li>
+</ol>
+
+<p>All export options require that you <a href="#selecting-samples">select the samples for export</a> before you are able to export the samples.</p>
+
+<blockquote>
+<b>Tip</b>: For all types of export, you can export <b>all</b> of the data in a project using the <b>Select All</b> feature.
+</blockquote>
+
+<h4 id="downloading-samples">Downloading samples</h4>
+
+<p>You can download an individual sequence file from a sample by <a href="#viewing-sequence-files">navigating to the file</a>, then clicking on the <span class="fa fa-fw fa-download"></span> icon (see: <a href="#downloading-a-sequence-file">Downloading a sequence file</a>).</p>
+
+<p>{% include tutorials/common/samples/download-samples.md %}</p>
+
+<h4 id="command-line-export">Command-line export</h4>
+
+<p>{% include tutorials/common/samples/command-line.md %}</p>
+
+<h4 id="galaxy-export">Galaxy export</h4>
+
+<p>{% include tutorials/common/samples/galaxy-export.md %}</p>
+
+<h4 id="ncbi-upload">NCBI Upload</h4>
+
+<p>{% include tutorials/common/ncbi-export.md %}</p>
+
+<p><a href="../project/">Previous: Managing Projects</a><a href="../pipelines/" style="float: right;">Next: Launching Pipelines</a></p>
+:ET

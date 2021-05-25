@@ -1,0 +1,72 @@
+I"<h1 class="no_toc" id="building-vms-with-packer">Building VMs with packer</h1>
+
+<p>This guide describes how to set up your workstation to build VM images of IRIDA with <a href="https://packer.io">packer</a>.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#general-requirements" id="markdown-toc-general-requirements">General Requirements</a></li>
+  <li><a href="#building-the-vm" id="markdown-toc-building-the-vm">Building the VM</a></li>
+  <li><a href="#using-the-vm" id="markdown-toc-using-the-vm">Using the VM</a>    <ul>
+      <li><a href="#ports" id="markdown-toc-ports">Ports</a></li>
+      <li><a href="#log-files" id="markdown-toc-log-files">Log files</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="general-requirements">General Requirements</h2>
+
+<p>You’re required to install a few different pieces of software on your machine before you can get started:</p>
+
+<ol>
+  <li><a href="https://packer.io">packer</a> (install guide: <a href="https://packer.io/docs/installation.html">https://packer.io/docs/installation.html</a>)</li>
+  <li><a href="https://www.virtualbox.org">VirtualBox</a> (install guide: <a href="https://www.virtualbox.org/wiki/Linux_Downloads">https://www.virtualbox.org/wiki/Linux_Downloads</a>)</li>
+</ol>
+
+<h2 id="building-the-vm">Building the VM</h2>
+
+<p>You can build the VM once you’ve got the prerequisites installed. From the <code>packer/</code> directory in the root of the project folder, run:</p>
+
+<div class="highlight"><pre><code>packer build template.json
+</code></pre></div>
+
+<p>This will:</p>
+
+<ol>
+  <li>Download a CentOS 7.1 ISO,</li>
+  <li>Run an automated CentOS kickstart script in VirtualBox (VirtualBox should pop up on your screen),</li>
+  <li>Install the VirtualBox tools,</li>
+  <li>Run the customization scripts (importantly running <code>irida-web.sh</code> and <code>irida-galaxy.sh</code>),</li>
+  <li>Package the customized VirtualBox image as a VirtualBox appliance (found in <code>packer/output-virtualbox-iso</code>).</li>
+</ol>
+
+<h2 id="using-the-vm">Using the VM</h2>
+
+<p>You can import the <code>.ovf</code> file in <code>packer/output-virtualbox-iso</code> into VirtualBox by double clicking it, or running something like:</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="nb">cd</span> output-virtualbox-iso
+xdg-open packer-virtualbox-iso*.ovf</code></pre></div>
+
+<h3 id="ports">Ports</h3>
+
+<p>By default, the appliance is set up using NAT for networking. The appliance is configured to do port forwarding via <code>localhost</code> such that you can access IRIDA by navigating to <a href="http://localhost:48888/irida">http://localhost:48888/irida</a>.</p>
+
+<p>You can SSH into the virtual machine with:</p>
+
+<div class="highlight"><pre><code class="language-bash">ssh -p <span class="m">42222</span> vagrant@localhost</code></pre></div>
+
+<p>The default password is <code>vagrant</code>.</p>
+
+<p>You may also view the Galaxy interface at <a href="http://localhost:49999/">http://localhost:49999/</a>. The default user accounts created in Galaxy are <code>admin@galaxy.org</code> with password <code>admin</code>.</p>
+
+<p>You may also change the machine to use bridged networking instead of NAT so that you can connect to the machine using an external IP address. Tomcat is configured to respond on port 80, so if you use bridged networking, you can navigate to <a href="http://{bridged-ip}/irida">http://{bridged-ip}/irida</a>.</p>
+
+<h3 id="log-files">Log files</h3>
+
+<p>We’ve configured packer to build us an image of CentOS 7.1, which has migrated to <a href="http://www.freedesktop.org/wiki/Software/systemd/">systemd</a>. Traditionally, tomcat logs are found at <code>/var/log/tomcat/catalina.out</code>, but you can’t find them there with systemd. Instead, you must use <code>journalctl</code> to inspect the logs of a service. To view tomcat logs, run:</p>
+
+<div class="highlight"><pre><code class="language-bash">sudo journalctl -u tomcat -f</code></pre></div>
+
+<p>You can view the Galaxy log files by running:</p>
+
+<div class="highlight"><pre><code class="language-bash">sudo docker logs -f galaxy</code></pre></div>
+
+:ET

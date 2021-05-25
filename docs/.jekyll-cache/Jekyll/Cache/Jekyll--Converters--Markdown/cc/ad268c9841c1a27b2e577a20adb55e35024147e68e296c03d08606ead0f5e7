@@ -1,0 +1,261 @@
+I"CN<p>This document describes how to install the IRIDA web interface. We assume that you have completed <a href="../galaxy">installing and configuring Galaxy</a>.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#prerequisites" id="markdown-toc-prerequisites">Prerequisites</a>    <ul>
+      <li><a href="#prerequisite-install-instructions" id="markdown-toc-prerequisite-install-instructions">Prerequisite install instructions</a></li>
+    </ul>
+  </li>
+  <li><a href="#deploying-irida" id="markdown-toc-deploying-irida">Deploying IRIDA</a>    <ul>
+      <li><a href="#servlet-container-configuration" id="markdown-toc-servlet-container-configuration">Servlet Container Configuration</a></li>
+      <li><a href="#core-configuration" id="markdown-toc-core-configuration">Core Configuration</a></li>
+      <li><a href="#web-configuration" id="markdown-toc-web-configuration">Web Configuration</a></li>
+      <li><a href="#analytics" id="markdown-toc-analytics">Analytics</a></li>
+      <li><a href="#deploy-the-war-file" id="markdown-toc-deploy-the-war-file">Deploy the <code>WAR</code> File</a></li>
+      <li><a href="#logging-in-for-the-first-time" id="markdown-toc-logging-in-for-the-first-time">Logging in for the first time</a></li>
+      <li><a href="#multi-web-server-configuration" id="markdown-toc-multi-web-server-configuration">Multi Web Server Configuration</a>        <ul>
+          <li><a href="#example-moderate-load-deployment" id="markdown-toc-example-moderate-load-deployment">Example moderate load deployment:</a></li>
+          <li><a href="#example-high-load-deployment" id="markdown-toc-example-high-load-deployment">Example high load deployment:</a></li>
+        </ul>
+      </li>
+      <li><a href="#deployment-tips" id="markdown-toc-deployment-tips">Deployment Tips</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>The IRIDA platform currently consists of three, separate components:</p>
+
+<ol>
+  <li>The web interfaces: User interface and API,</li>
+  <li>Galaxy, and</li>
+  <li>Command-line clients.</li>
+</ol>
+
+<p>The IRIDA Web interfaces are intended to be deployed in a Servlet container, supporting Servlet 3.0 or higher. You can download IRIDA as a pre-packaged <code>WAR</code> file at <a href="https://irida.corefacility.ca/downloads/webapp/irida-latest.war">https://irida.corefacility.ca/downloads/webapp/irida-latest.war</a>.</p>
+
+<h1 id="prerequisites">Prerequisites</h1>
+
+<p>The following prerequisites are required for running the IRIDA web interfaces:</p>
+
+<ul>
+  <li><a href="http://www.oracle.com/technetwork/java/index.html">Java</a> 11 or higher.</li>
+  <li>A working servlet container supporting Servlet 3.1 (<a href="https://tomcat.apache.org/">Tomcat</a>, version 8 or higher, for example)</li>
+  <li>A working database server (the application is tested on <a href="https://www.mysql.com/">MySQL</a> or <a href="https://mariadb.org/">MariaDB</a>).</li>
+  <li>A working install of Galaxy (we recommend that you run Galaxy and the IRIDA web interface on separate machines).<br />
+The install guide assumes that you are using <a href="https://www.gnu.org/software/bash/manual/bashref.html">Bash</a></li>
+</ul>
+
+<h2 id="prerequisite-install-instructions">Prerequisite install instructions</h2>
+
+<p>We provide <em>some</em> instructions for installing and setting up your production environment. If you are comfortable installing and configuring a servlet container, or if your production environment has already been configured, you can safely skip this section.</p>
+
+<ul>
+  <li><a href="centos/">CentOS</a></li>
+  <li><a href="ubuntu/">Ubuntu</a></li>
+  <li><strong>Windows</strong>: Since the IRIDA Platform web interfaces are written in Java, they can, in theory, be deployed on a Windows host. We do not officially support or test deployment on Windows servers, so no instructions are provided.</li>
+</ul>
+
+<h1 id="deploying-irida">Deploying IRIDA</h1>
+<p>Deploying IRIDA mainly involves deploying the <code>WAR</code> file into your Servlet container, but does also require some configuration outside of your Servlet container.</p>
+
+<h2 id="servlet-container-configuration">Servlet Container Configuration</h2>
+<p>Two environment variables needs to be set in your Servlet container for IRIDA to function correctly: <code>spring.profiles.active=prod</code> and <code>irida.db.profile=prod</code>.</p>
+
+<p>You can adjust these variables in Tomcat by editing (depending on your distribution) <code>/etc/tomcat/tomcat.conf</code> (CentOS) or <code>/etc/default/tomcat7</code> (Ubuntu), and finding the <code>JAVA_OPTS</code> variable and setting the variables as shown below:</p>
+
+<div class="highlight"><pre><code>JAVA_OPTS="-Dspring.profiles.active=prod -Dirida.db.profile=prod"
+</code></pre></div>
+
+<p>The <code>irida.db.profile=prod</code> option sets a number of recommended database settings for IRIDA such as JDBC, Hibernate, and Liquibase options.  See the <a href="https://github.com/phac-nml/irida/blob/master/src/main/resources/ca/corefacility/bioinformatics/irida/config/jdbc.prod.properties">jdbc.prod.properties file</a> for what gets set.  All these options can be overridden in your <code>/etc/irida/irida.conf</code> file.</p>
+
+<p>The <code>spring.profiles.active=prod</code> option will enable all the production features of IRIDA (web server, project synchronization, email announcements, NCBI uploads, analysis engine).</p>
+
+<p>For high usage or high load installations of IRIDA, you may consider deploying these features to multiple servers.  For more on this feature, see the <a href="#multi-web-server-configuration">Multi Web Server Configuration</a> section.</p>
+
+<h2 id="core-configuration">Core Configuration</h2>
+<p>All IRIDA configuration files are stored in <code>/etc/irida/</code>. The main IRIDA configuration file should be written to <code>/etc/irida/irida.conf</code>. <code>irida.conf</code> is a plain, Java <code>properties</code> file (so a key-value pair file). You can download the file from <a href="config/irida.conf">config/irida.conf</a>, or you can find an example below:</p>
+
+<p>{% highlight ini %}<br />
+{% include_relative config/irida.conf %}<br />
+{% endhighlight %}</p>
+
+<p>If this file does not exist, the platform will use internal configuration values. The internal configuration values point at a local instance of the database server. The likelihood of the internal configuration values correspond to your production environment is alarmingly low (or at least, should be).</p>
+
+<p>The main configuration parameters you will need to change are:</p>
+
+<ol>
+  <li><strong>Directories to store files managed by IRIDA:</strong>
+    <ul>
+      <li><code>sequence.file.base.directory=/opt/irida/data/sequence</code> - Sequence files managed by IRIDA.</li>
+      <li><code>reference.file.base.directory=/opt/irida/data/reference</code> - Reference files assigned to projects in IRIDA.</li>
+      <li><code>output.file.base.directory=/opt/irida/data/output</code> - Results of analysis pipelines.</li>
+      <li><code>assembly.file.base.directory=/opt/irida/data/assembly</code> - Assemblies uploaded into IRIDA.</li>
+    </ul>
+  </li>
+  <li><strong>Threads used for file processing (FastQC, GZip, etc):</strong>
+    <ul>
+      <li><code>file.processing.core.size=4</code> - The initial number of threads available for file processing.</li>
+      <li><code>file.processing.max.size=8</code> - The maximum number of available threads for file processing.  This number should not exceed the configured maximum number of JDBC threads.</li>
+      <li><code>file.processing.queue.capacity=512</code> - The maximum number of file processing jobs that can be queued.</li>
+      <li><code>file.processing.process=true</code> - Whether to run the file processors on the current machine.  This can be set to false if you’re running multiple IRIDA servers and want to improve UI performance on a machine.</li>
+    </ul>
+  </li>
+  <li><strong>Database connection information:</strong>
+    <ul>
+      <li><code>jdbc.url=jdbc:mysql://localhost:3306/irida_test</code></li>
+      <li><code>jdbc.username=test</code></li>
+      <li><code>jdbc.password=test</code></li>
+    </ul>
+  </li>
+  <li><strong>Galaxy connection information for executing pipelines:</strong>
+    <ul>
+      <li><code>galaxy.execution.url=http://localhost/</code></li>
+      <li><code>galaxy.execution.apiKey=xxxx</code></li>
+      <li><code>galaxy.execution.email=user@localhost</code></li>
+      <li><code>irida.workflow.max-running=4</code> - The maximum number of running workflows.  For larger installations this number can be increased.</li>
+      <li><code>irida.workflow.analysis.threads</code> - The number of threads to use for handling analysis/workflow tasks. For larger installations this number can be increased. Increasing beyond <code>irida.workflow.max-running</code> is unlikely to give any additional performance boost.</li>
+    </ul>
+  </li>
+  <li><strong>NCBI SRA export configuration</strong> - An SRA bulk upload user account must be created with NCBI to allow automated SRA uploads.  Contact NCBI’s SRA staff at <a href="mailto:sra@ncbi.nlm.nih.gov">sra@ncbi.nlm.nih.gov</a> and ask for information about setting up a “Center account for simplified format using FTP” for more information.
+    <ul>
+      <li><code>ncbi.upload.host</code> - FTP host to upload ncbi exports</li>
+      <li><code>ncbi.upload.user</code> - FTP Username</li>
+      <li><code>ncbi.upload.password</code> - FTP password</li>
+      <li><code>ncbi.upload.baseDirectory</code> - base directory in which to create SRA submissions</li>
+      <li><code>ncbi.upload.namespace</code> - Prefix for file upload identifiers to NCBI. The namespace is used to guarantee upload IDs are unique.  This configuration option is used as a placeholder and may still be set by the user.</li>
+    </ul>
+  </li>
+  <li><strong>Security configuration</strong>
+    <ul>
+      <li><code>security.password.expiry</code> - The number of days a password is valid for in IRIDA.  After a password expires the user will be required to create a new one.  Passwords cannot be reused.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="web-configuration">Web Configuration</h2>
+<p>The IRIDA platform also looks for a web application configuration file at <code>/etc/irida/web.conf</code>.  Similar to the irida.conf file, this file is a plain Java configuration file.  The properties in this file will be used to configure parameters of the web application component of the IRIDA platform.  You can download the file from <a href="config/web.conf">config/web.conf</a>, or you can find an example below:</p>
+
+<p>{% highlight ini %}<br />
+{% include_relative config/web.conf %}<br />
+{% endhighlight %}</p>
+
+<p>If this file does not exist the platform will use internal configuration values which will probably not correspond to your production environment.</p>
+
+<p>To add new internationalization to your IRIDA server, see the <a href="../../developer/interface/i18n/">internationalization guide</a>.</p>
+
+<p>The <code>mail.server.*</code> configuration parameters will need to correspond to a configured mail server, such as <a href="http://www.postfix.org/">Postfix</a>.  This will be used by IRIDA to send email notifications to users on the creation of an account or on password resets.</p>
+
+<h2 id="analytics">Analytics</h2>
+<p>The IRIDA platform supports web analytics.  Include the analytic snippet inside a file in <code>/etc/irida/analytics/</code>.  The snippet will be injected into the page.</p>
+
+<p>E.g. In <code>/etc/irida/analytics/google-analytics.html</code>.</p>
+
+<p>{% highlight javascript %}<br />
+<script type="text/javascript"></script></p>
+
+<p>var _gaq = _gaq || [];<br />
+  _gaq.push([‘_setAccount’, ‘UA-XXXXX-X’]);<br />
+  _gaq.push([‘_trackPageview’]);</p>
+
+<p>(function() {<br />
+    var ga = document.createElement(‘script’); ga.type = ‘text/javascript’; ga.async = true;<br />
+    ga.src = (‘https:’ == document.location.protocol ? ‘https://ssl’ : ‘http://www’) + ‘.google-analytics.com/ga.js’;<br />
+    var s = document.getElementsByTagName(‘script’)[0]; s.parentNode.insertBefore(ga, s);<br />
+  })();</p>
+
+<p>&lt;/script&gt;<br />
+{% endhighlight %}</p>
+
+<h2 id="deploy-the-war-file">Deploy the <code>WAR</code> File</h2>
+<p>Once you have adjusted the configuration files to your environment, you can deploy the <code>WAR</code> file to your servlet container.</p>
+
+<p>You can download the <code>WAR</code> file from: <a href="https://irida.corefacility.ca/downloads/webapp/irida-latest.war">https://irida.corefacility.ca/downloads/webapp/irida-latest.war</a></p>
+
+<p>Tomcat’s deployment directory is typically some variation of <code>/var/lib/tomcat/webapps/</code>. Deploying the <code>WAR</code> file in Tomcat is as simple as moving the <code>WAR</code> file you downloaded into that directory.</p>
+
+<p>On startup, IRIDA will:</p>
+
+<ol>
+  <li>Automatically prepare the database on your system (using <a href="http://liquibase.org">Liquibase</a>) using the database connection details you specified in <a href="#core-configuration">Core Configuration</a>.</li>
+  <li>Install any internally configured workflows.</li>
+  <li>Configure the connection to Galaxy.</li>
+</ol>
+
+<p>If IRIDA has successfully been deployed, you should be able to use your web browser to navigate to <a href="http://localhost:8080/irida-latest/">http://localhost:8080/irida-latest/</a> (assuming you’re deploying to the local machine, and also assuming that you’ve left the <code>WAR</code> file named <code>irida-latest.war</code>).</p>
+
+<h2 id="logging-in-for-the-first-time">Logging in for the first time</h2>
+
+<p>The first time IRIDA is run, it will add a default administrator user account to the database. Launch your web browser and navigate to the context where you’ve deployed IRIDA.</p>
+
+<p>If everything has been configured correctly, you should see the IRIDA log-in page:</p>
+
+<p><img src="irida-login.png" alt="IRIDA Log in page" /></p>
+
+<p>The default administrator username and password are:</p>
+
+<ul>
+  <li><strong>Username</strong>: admin</li>
+  <li><strong>Password</strong>: password1</li>
+</ul>
+
+<p>You will be required to change the password the first time you log-in with these credentials.</p>
+
+<p>Once you’ve logged in for the first time, you will probably want to create some user accounts. User account creation is outlined in our <a href="{{ site.url }}/user/administrator">Administrative User Guide</a>.</p>
+
+<h2 id="multi-web-server-configuration">Multi Web Server Configuration</h2>
+<p>When IRIDA is deployed in a higher load environment, it may be preferable to deploy multiple IRIDA web application servers to handle all web requests, processing, and scheduled tasks.  IRIDA has the ability to run in a multi-server mode which will distribute these tasks among multiple servers.  This is achieved through the use of Spring profiles.  Deploying IRIDA in this fashion allows IRIDA administrators to maintain good performance for users of the IRIDA web application, while offloading some of the more resource-hungry processing tasks to additional servers.  Multiple profiles may be applied to individual servers to group some of the tasks onto one machine.</p>
+
+<p>Note: The <code>prod</code>, <code>dev</code> profiles and multi server configuration profiles below <strong>cannot be used at the same time</strong>.  Doing so may result in corrupt analysis data sets.</p>
+
+<p>The different application profiles and their functions are the following:</p>
+
+<ul>
+  <li><code>web</code> - The IRIDA user interface and REST API web application servers.  This is the portal for user interactions.  If using more than 1 <code>web</code> server, users &amp; REST API clients must somehow be routed to the other servers.  Minimum number of servers: 1, Recommended: 1, max: unlimited.</li>
+  <li><code>email</code> - Run the email subscription service.  This will send email digests out to users on a scheduled basis.   Required to be active on exactly 1 server.</li>
+  <li><code>analysis</code> - Run the IRIDA analysis engine.  This profile launches and monitors progress of all analysis pipelines in IRIDA.  Required to be active on exactly 1 server.</li>
+  <li><code>processing</code> - File processing pipeline for uploaded sequencing data.  This is the highest load profile as it performs all file management for uploaded sequencing data.  Adding additional servers for this profile will speed up file processing for higher load installations.  Minimum number of servers: 1, recommended: 2, max: unlimited but diminishing returns with higher numbers of servers.</li>
+  <li><code>sync</code> - Synchronizing remote projects.  This profile performs the remote api project synchronization task to pull remote sequencing data and metadata to a local installation.  Required to be active on exactly 1 server.</li>
+  <li><code>ncbi</code> - Uploading data to NCBI.  This profile runs the NCBI SRA uploader task to send project and sample data to NCBI’s SRA.  Required to be active on exactly 1 server.</li>
+</ul>
+
+<p>To launch an IRIDA application server with one (or more) of these profiles, you must enable the profile with the <code>spring.profiles.active</code> variable in your Tomcat configuration.  For example to run an IRIDA server with the <code>web</code> and <code>analysis</code> profiles active, you would set the following configuration:</p>
+
+<div class="highlight"><pre><code>spring.profiles.active=web,analysis
+</code></pre></div>
+
+<p>See the <a href="#servlet-container-configuration">Servlet Container Configuration</a> section for more on setting the <code>spring.profiles.active</code> and <code>irida.db.profile</code> variables for Tomcat.</p>
+
+<h4 id="example-moderate-load-deployment">Example moderate load deployment:</h4>
+
+<ul>
+  <li>Server 1 - <code>web</code>, <code>email</code>, <code>sync</code>, <code>ncbi</code>, <code>analysis</code></li>
+  <li>Server 2 - <code>processing</code></li>
+</ul>
+
+<p>A deployment of this style provides an additional server for file processing, while maintaining high performance for users of the web server.</p>
+
+<h4 id="example-high-load-deployment">Example high load deployment:</h4>
+
+<ul>
+  <li>Server 1 - <code>web</code>, <code>email</code></li>
+  <li>Server 2 - <code>processing</code></li>
+  <li>Server 3 - <code>processing</code></li>
+  <li>Server 4 - <code>sync</code>, <code>ncbi</code>, <code>analysis</code></li>
+</ul>
+
+<p>A deployment of this style provides multiple servers for file processing, while maintaining high performance for users of the web server.  It also offloads any networking lag introduced by synchronization jobs, uploading to NCBI, or analysis jobs.</p>
+
+<h2 id="deployment-tips">Deployment Tips</h2>
+<p>Since IRIDA often deals with large sequence files, you can occasionally run into issues with file upload sizes being too large for the server IRIDA is running on.  There are 2 directories where Tomcat stores temporary files as they’re being uploaded which can be configured to run on some larger shared storage.</p>
+
+<p>First is Tomcat’s “temp” directory.  You can configure Tomcat to use another directory by setting the <code>CATALINA_TMPDIR</code> variable in <code>tomcat.conf</code> (on Centos this can be found in <code>/etc/tomcat</code>):</p>
+
+<div class="highlight"><pre><code>CATALINA_TMPDIR=/Some/Larger/Shared/Storage/temp
+</code></pre></div>
+
+<p>The second is Tomcat’s “work” directory.  This can be configured in <code>server.xml</code> (on Centos this can be found in <code>/etc/tomcat</code>).  You can set the <code>workDir</code> variable in the <code>&lt;Host&gt;</code> section.  Be careful not to modify any other variables:</p>
+
+<div class="highlight"><pre><code class="language-xml"><span class="nt">&lt;Host</span> <span class="err">...</span> <span class="na">workDir=</span><span class="s">&quot;/Some/Larger/Shared/Storage/work&quot;</span><span class="nt">&gt;</span>
+...
+<span class="nt">&lt;/Host&gt;</span></code></pre></div>
+
+:ET

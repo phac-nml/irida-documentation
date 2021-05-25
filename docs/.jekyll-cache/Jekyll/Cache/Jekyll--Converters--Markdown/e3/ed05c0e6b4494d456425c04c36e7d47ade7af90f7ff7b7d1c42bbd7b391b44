@@ -1,0 +1,76 @@
+I""<h1 class="no_toc" id="learn-irida">Learn IRIDA</h1>
+
+<p>The IRIDA platform is composed of several different applications. Most users of IRIDA will use the web interface for managing and organizing their sequencing data, and for launching analytical pipelines on their data. Some advanced users of IRIDA might want to export their data to a separate instance of Galaxy or directly to the Linux command-line for more in-depth analysis. Administrative users and laboratory technicians will run tools for adding data to IRIDA from sequencing instruments.</p>
+
+<h4 class="no_toc" id="quick-links">Quick Links</h4>
+<p><strong><a href="user/">User Guide</a></strong></p>
+
+<p><strong><a href="administrator/">Administrator Guide</a></strong></p>
+
+<ul id="markdown-toc">
+  <li><a href="#tutorials" id="markdown-toc-tutorials">Tutorials</a>    <ul>
+      <li><a href="#getting-data-into-irida" id="markdown-toc-getting-data-into-irida">Getting data into IRIDA</a></li>
+      <li><a href="#analyzing-your-data-with-irida" id="markdown-toc-analyzing-your-data-with-irida">Analyzing your data with IRIDA</a></li>
+      <li><a href="#getting-your-data-out-of-irida" id="markdown-toc-getting-your-data-out-of-irida">Getting your data out of IRIDA</a></li>
+    </ul>
+  </li>
+  <li><a href="#user-guide" id="markdown-toc-user-guide">User Guide</a></li>
+  <li><a href="#administrator-guide" id="markdown-toc-administrator-guide">Administrator Guide</a></li>
+</ul>
+
+<h2 id="tutorials">Tutorials</h2>
+
+<p>The user and administrator guides provide a comprehensive overview of the entire IRIDA platform, but might be too detailed for trying to figure out how to accomplish some tasks. The tutorials section has some examples of common tasks that you might want to accomplish with IRIDA, like getting data into IRIDA, analyzing your data within IRIDA, and getting your data out of IRIDA.</p>
+
+<h3 id="getting-data-into-irida">Getting data into IRIDA</h3>
+
+<p>You can load sequencing data into IRIDA in two different ways:</p>
+
+<ol>
+  <li>Using the <a href="tutorials/web-upload/">web interface</a>.</li>
+  <li>Using the <a href="https://github.com/phac-nml/irida-uploader-tutorial">IRIDA Uploader application</a>.</li>
+</ol>
+
+<p>The web interface upload feature is useful if you only want to add data to IRIDA for one or two samples. If you want to load data into IRIDA in bulk (especially if you’re a sequencing facility!) you should use the uploader application to transfer your data.</p>
+
+<p>The IRIDA Uploader is also available as a Command Line tool via <a href="https://anaconda.org/bioconda/irida-uploader">bioconda</a> and source code on <a href="https://github.com/phac-nml/irida-uploader">GitHub</a></p>
+
+<h3 id="analyzing-your-data-with-irida">Analyzing your data with IRIDA</h3>
+
+<p>IRIDA has several different built-in pipelines for analyzing your data:</p>
+
+<ol>
+  <li><a href="tutorials/assembly/">Assembling your sequencing data</a>.</li>
+  <li><a href="tutorials/snvphyl/">Whole-genome SNV Phylogeny</a>.</li>
+  <li><a href="tutorials/sistr/"><em>Salmonella in-silico</em> Typing (SISTR)</a>.</li>
+  <li><a href="tutorials/refseq_masher/">refseq_masher - Find what NCBI RefSeq genomes match or are contained within your sequence data using Mash MinHash with a Mash sketch database of 54,925 NCBI RefSeq Genomes</a>.</li>
+  <li><a href="tutorials/mentalist/">MentaLiST MLST</a>.</li>
+  <li><a href="tutorials/bio_hansel/">Bio_Hansel</a></li>
+</ol>
+
+<h3 id="getting-your-data-out-of-irida">Getting your data out of IRIDA</h3>
+
+<p>You will sometimes want to be able to get data <em>out</em> of IRIDA, if you want to share your data with an external collaborator, or if you want to run more in-depth analysis than what the analytical tools in IRIDA provide. You can use the tutorials below to get your data out of IRIDA:</p>
+
+<ol>
+  <li><a href="tutorials/sharing/">Sharing projects</a></li>
+  <li><a href="tutorials/sharing-some/">Sharing <em>some</em> data from a project</a></li>
+  <li><a href="tutorials/export-to-galaxy/">Exporting data to Galaxy</a></li>
+  <li><a href="tutorials/export-to-command-line/">Exporting data to the command-line</a></li>
+  <li><a href="tutorials/export-to-ncbi/">Exporting data to NCBI’s Sequence Read Archive</a></li>
+</ol>
+
+<h2 id="user-guide">User Guide</h2>
+
+<p>You can read through the comprehensive <a href="user/">user guide</a> to learn about all of the features that are built into IRIDA.</p>
+
+<h2 id="administrator-guide">Administrator Guide</h2>
+
+<p>If you are a system administrator or lab technician in a sequencing facility, you should read through the comprehensive <a href="administrator/">administrator guide</a>. Some portions of the <a href="user/">user guide</a> are prerequisites for the administrator guide, including:</p>
+
+<ol>
+  <li><a href="user/system-overview/">System overview</a></li>
+  <li><a href="user/login/">Logging in</a></li>
+</ol>
+
+:ET

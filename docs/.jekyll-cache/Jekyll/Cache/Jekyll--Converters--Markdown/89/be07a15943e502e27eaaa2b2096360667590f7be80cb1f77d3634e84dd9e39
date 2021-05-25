@@ -1,0 +1,67 @@
+I"Ã<h1 id="bio_hansel">bio_hansel</h1>
+
+<p>This workflow uses the following software for the bio_hansel pipeline. The pipeline requires the following tool:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Tool Name</th>
+      <th style="text-align: center">Owner</th>
+      <th style="text-align: center">Tool Revision</th>
+      <th style="text-align: center">Toolshed Installable Revision</th>
+      <th style="text-align: center">Toolshed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><strong>bio_hansel</strong></td>
+      <td style="text-align: center">nml</td>
+      <td style="text-align: center"><a href="https://toolshed.g2.bx.psu.edu/view/nml/bio_hansel/4654c51dae72">4654c51dae72</a></td>
+      <td style="text-align: center">9 (2018-05-09)</td>
+      <td style="text-align: center"><a href="http://toolshed.g2.bx.psu.edu/">Galaxy Main Shed</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>To install these tools please proceed through the following steps.</p>
+
+<h2 id="step-1-galaxy-conda-setup">Step 1: Galaxy Conda Setup</h2>
+
+<p>Galaxy makes use of <a href="https://conda.io/docs/intro.html">Conda</a> to automatically install the dependencies for bio_hansel.  Please verify that the version of Galaxy is &gt;= v16.01 and that you have conda version &gt;= 4.3. You can upgrade conda using <code>conda update conda</code>.  Make sure that Galaxy has been setup to use conda by modifying the appropriate configuration settings, see <a href="../../setup#step-4-modify-configuration-file">here</a> for additional details.</p>
+
+<h2 id="step-2-install-galaxy-tools">Step 2: Install Galaxy Tools</h2>
+
+<p>Please install the tools as mentioned in the table above by logging into Galaxy, navigating to <strong>Admin &gt; Search and browse tool sheds</strong>, searching for the appropriate <strong>Tool Name</strong> and installing the appropriate <strong>Toolshed Installable Revision</strong>.</p>
+
+<p>The install progress can be checked by monitoring the Galaxy log files <code>galaxy/*.log</code>.  On completion you should see a message of <code>Installed</code> next to the tool when going to <strong>Admin &gt; Manage installed tool shed repositories</strong>.</p>
+
+<h2 id="step-3-testing-the-pipeline">Step 3: Testing the Pipeline</h2>
+
+<p>A Galaxy workflow and some test data has been included with this documentation to verify that all tools are installed correctly.  To test this pipeline, please proceed through the following steps.</p>
+
+<ol>
+  <li>Upload the <a href="../test/bio_hansel/bio_hansel.ga">bio_hansel Galaxy Workflow</a> by going to <strong>Workflow &gt; Upload or import workflow</strong>.</li>
+  <li>
+    <p>Upload the sequence reads by going to <strong>Analyze Data</strong> and then clicking on the <strong>upload files from disk</strong> icon <img src="../test/snvphyl/images/upload-icon.jpg" alt="upload-icon" />.  Select the <a href="../test/bio_hansel/reads">test/reads</a> files.  Make sure to change the <strong>Type</strong> of each file from <strong>Auto-detect</strong> to <strong>fastqsanger</strong>.  When uploaded you should see the following in your history.</p>
+
+    <p><img src="../test/bio_hansel/images/history.png" alt="upload-history" /></p>
+  </li>
+  <li>
+    <p>Construct a dataset collection of the paired-end reads by clicking the <strong>Operations on multiple datasets</strong> icon <img src="../test/snvphyl/images/datasets-icon.jpg" alt="datasets-icon" />.  Please check off the two <strong>.fastq</strong> files and then go to <strong>For all selectedâ€¦ &gt; Build List of dataset pairs</strong>.  You should see a screen that looks as follows.</p>
+
+    <p><img src="../test/bio_hansel/images/pairing.png" alt="dataset-pair-screen" /></p>
+  </li>
+  <li>This should have properly paired your data. Enter the name of this paired dataset collection at the bottom and click <strong>Create list</strong>.</li>
+  <li>Run the uploaded workflow by clicking on <strong>Workflow</strong>, clicking on the name of the workflow <strong>bio_hansel (imported from uploaded file)</strong> and clicking <strong>Run</strong>.  This should auto fill in the dataset collection.  At the very bottom of the screen click <strong>Run workflow</strong>.</li>
+  <li>
+    <p>If everything was installed correctly, you should see each of the tools run successfully (turn green).  On completion this should look like.</p>
+
+    <p><img src="../test/bio_hansel/images/completed.png" alt="workflow-success" /></p>
+
+    <p>If you see any tool turn red, you can click on the view details icon <img src="../test/snvphyl/images/view-details-icon.jpg" alt="view-details-icon" /> for more information.</p>
+  </li>
+</ol>
+
+<p>If everything was successful then all dependencies for this pipeline have been properly installed.</p>
+
+:ET

@@ -1,0 +1,25 @@
+I"Q<h1 class="no_toc" id="uploading-with-the-web-interface">Uploading with the Web Interface</h1>
+
+<p>This is a quick tutorial on how to upload data to IRIDA using the web interface. You should only upload data to IRIDA from the web interface if you are uploading sequencing data for a very small number of samples – uploading large amounts of data (especially if you’re a sequencing facility) should be done using the [IRIDA Uploader][https://github.com/phac-nml/irida-uploader].</p>
+
+<p>You should start from the beginning of this tutorial if you have not yet created a <a href="../../user/project/">project</a>, or your project does not have any <a href="../../user/samples/">samples</a>. You can skip ahead to other sections if you’ve already got a project with samples added.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#creating-a-new-project" id="markdown-toc-creating-a-new-project">Creating a new Project</a></li>
+  <li><a href="#creating-a-sample-in-your-project" id="markdown-toc-creating-a-sample-in-your-project">Creating a Sample in your Project</a></li>
+  <li><a href="#uploading-data-to-your-sample" id="markdown-toc-uploading-data-to-your-sample">Uploading data to your Sample</a></li>
+</ul>
+
+<h2 id="creating-a-new-project">Creating a new Project</h2>
+
+<p>{% include tutorials/common/creating-a-project.md %}</p>
+
+<h2 id="creating-a-sample-in-your-project">Creating a Sample in your Project</h2>
+
+<p>{% include tutorials/common/creating-a-sample.md %}</p>
+
+<h2 id="uploading-data-to-your-sample">Uploading data to your Sample</h2>
+
+<p>{% include tutorials/common/uploading-sample-files.md %}</p>
+
+:ET

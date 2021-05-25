@@ -1,0 +1,914 @@
+I"c<h1 class="no_toc" id="troubleshooting-pipelines-guide">Troubleshooting Pipelines Guide</h1>
+
+<p>This document describes common issues with IRIDA pipelines and how to resolve them.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#1-types-of-irida-job-errors" id="markdown-toc-1-types-of-irida-job-errors">1. Types of IRIDA job errors</a>    <ul>
+      <li><a href="#11-error-with-detailed-information" id="markdown-toc-11-error-with-detailed-information">1.1. Error with detailed information</a></li>
+      <li><a href="#12-error-with-no-detailed-information" id="markdown-toc-12-error-with-no-detailed-information">1.2. Error with no detailed information</a></li>
+    </ul>
+  </li>
+  <li><a href="#2-finding-the-galaxy-history-used-by-an-irida-pipeline" id="markdown-toc-2-finding-the-galaxy-history-used-by-an-irida-pipeline">2. Finding the Galaxy History used by an IRIDA pipeline</a>    <ul>
+      <li><a href="#21-getting-galaxy-history-when-a-job-has-error-details" id="markdown-toc-21-getting-galaxy-history-when-a-job-has-error-details">2.1. Getting Galaxy History when a job has error details</a></li>
+      <li><a href="#22-getting-galaxy-history-when-job-has-no-error-details" id="markdown-toc-22-getting-galaxy-history-when-job-has-no-error-details">2.2. Getting Galaxy History when job has no error details</a>        <ul>
+          <li><a href="#221-logging-into-the-irida-database" id="markdown-toc-221-logging-into-the-irida-database">2.2.1. Logging into the IRIDA database</a></li>
+          <li><a href="#222-finding-the-galaxy-history-id" id="markdown-toc-222-finding-the-galaxy-history-id">2.2.2. Finding the Galaxy History id</a></li>
+          <li><a href="#223-what-if-the-galaxy-history-id-is-null" id="markdown-toc-223-what-if-the-galaxy-history-id-is-null">2.2.3. What if the Galaxy History id is NULL</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#3-viewing-the-galaxy-history-used-by-the-irida-analysis-pipeline" id="markdown-toc-3-viewing-the-galaxy-history-used-by-the-irida-analysis-pipeline">3. Viewing the Galaxy History used by the IRIDA analysis pipeline</a>    <ul>
+      <li><a href="#31-logging-into-galaxy" id="markdown-toc-31-logging-into-galaxy">3.1. Logging into Galaxy</a></li>
+      <li><a href="#32-viewing-all-galaxy-histories" id="markdown-toc-32-viewing-all-galaxy-histories">3.2. Viewing all Galaxy histories</a></li>
+      <li><a href="#33-viewing-the-correct-history" id="markdown-toc-33-viewing-the-correct-history">3.3. Viewing the correct history</a></li>
+      <li><a href="#34-diagnosing-the-problem" id="markdown-toc-34-diagnosing-the-problem">3.4. Diagnosing the problem</a></li>
+    </ul>
+  </li>
+  <li><a href="#4-viewing-additional-galaxy-job-information" id="markdown-toc-4-viewing-additional-galaxy-job-information">4. Viewing additional Galaxy job information</a>    <ul>
+      <li><a href="#41-galaxy-log-files" id="markdown-toc-41-galaxy-log-files">4.1. Galaxy log files</a>        <ul>
+          <li><a href="#411-galaxy-job-numbers-in-log-file" id="markdown-toc-411-galaxy-job-numbers-in-log-file">4.1.1. Galaxy Job Numbers in log file</a></li>
+        </ul>
+      </li>
+      <li><a href="#42-galaxy-job-working-directories" id="markdown-toc-42-galaxy-job-working-directories">4.2. Galaxy job working directories</a>        <ul>
+          <li><a href="#421-galaxy-configuration" id="markdown-toc-421-galaxy-configuration">4.2.1 Galaxy configuration</a></li>
+          <li><a href="#422-find-galaxy-job-working-directory-parent" id="markdown-toc-422-find-galaxy-job-working-directory-parent">4.2.2. Find Galaxy job working directory parent</a></li>
+          <li><a href="#423-find-galaxy-job-id" id="markdown-toc-423-find-galaxy-job-id">4.2.3. Find Galaxy job id</a></li>
+          <li><a href="#424-find-galaxy-job-working-directory" id="markdown-toc-424-find-galaxy-job-working-directory">4.2.4. Find Galaxy job working directory</a></li>
+          <li><a href="#425-examine-job-working-directory-files" id="markdown-toc-425-examine-job-working-directory-files">4.2.5. Examine job working directory files</a>            <ul>
+              <li><a href="#4251-standard-outerror" id="markdown-toc-4251-standard-outerror">4.2.5.1. Standard out/error</a></li>
+              <li><a href="#4252-the-working-directory" id="markdown-toc-4252-the-working-directory">4.2.5.2. The <code>working</code> directory</a></li>
+              <li><a href="#4253-galaxy-and-tool-scripts" id="markdown-toc-4253-galaxy-and-tool-scripts">4.2.5.3. Galaxy and tool scripts</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#5-rerunning-galaxy-jobs" id="markdown-toc-5-rerunning-galaxy-jobs">5. Rerunning Galaxy jobs</a>    <ul>
+      <li><a href="#51-rerunning-jobs-in-galaxy-ui" id="markdown-toc-51-rerunning-jobs-in-galaxy-ui">5.1. Rerunning jobs in Galaxy UI</a></li>
+      <li><a href="#52-rerunning-jobs-from-command-line" id="markdown-toc-52-rerunning-jobs-from-command-line">5.2. Rerunning jobs from command-line</a></li>
+    </ul>
+  </li>
+  <li><a href="#6-examples" id="markdown-toc-6-examples">6. Examples</a>    <ul>
+      <li><a href="#61-assembly-and-annotation-pipeline-tbl2asn-error" id="markdown-toc-61-assembly-and-annotation-pipeline-tbl2asn-error">6.1. Assembly and Annotation Pipeline <code>tbl2asn</code> error</a>        <ul>
+          <li><a href="#611-input-data" id="markdown-toc-611-input-data">6.1.1. Input data</a></li>
+          <li><a href="#612-pipeline-error" id="markdown-toc-612-pipeline-error">6.1.2. Pipeline error</a></li>
+          <li><a href="#612-find-galaxy-history-and-prokka-dependencies-location" id="markdown-toc-612-find-galaxy-history-and-prokka-dependencies-location">6.1.2. Find Galaxy History and Prokka dependencies location</a></li>
+          <li><a href="#613-replace-tbl2asn" id="markdown-toc-613-replace-tbl2asn">6.1.3. Replace <code>tbl2asn</code></a></li>
+          <li><a href="#614-rerunning-prokka-in-galaxy" id="markdown-toc-614-rerunning-prokka-in-galaxy">6.1.4. Rerunning Prokka in Galaxy</a></li>
+        </ul>
+      </li>
+      <li><a href="#62-snvphyl-pipeline-snv-density-filtering-error" id="markdown-toc-62-snvphyl-pipeline-snv-density-filtering-error">6.2. SNVPhyl Pipeline SNV density filtering error</a>        <ul>
+          <li><a href="#621-input-data" id="markdown-toc-621-input-data">6.2.1. Input data</a></li>
+          <li><a href="#622-pipeline-error" id="markdown-toc-622-pipeline-error">6.2.2. Pipeline error</a></li>
+          <li><a href="#623-getting-the-galaxy-history-id" id="markdown-toc-623-getting-the-galaxy-history-id">6.2.3. Getting the Galaxy History id</a></li>
+          <li><a href="#624-view-galaxy-history" id="markdown-toc-624-view-galaxy-history">6.2.4. View Galaxy History</a></li>
+          <li><a href="#625-rerun-failed-galaxy-job" id="markdown-toc-625-rerun-failed-galaxy-job">6.2.5. Rerun failed Galaxy job</a></li>
+          <li><a href="#626-examine-job-working-directory" id="markdown-toc-626-examine-job-working-directory">6.2.6. Examine job working directory</a></li>
+          <li><a href="#627-testing-out-a-solution" id="markdown-toc-627-testing-out-a-solution">6.2.7. Testing out a solution</a></li>
+        </ul>
+      </li>
+      <li><a href="#63-irida-analysis-pipeline-that-runs-forever" id="markdown-toc-63-irida-analysis-pipeline-that-runs-forever">6.3. IRIDA Analysis Pipeline that runs forever</a>        <ul>
+          <li><a href="#631-find-galaxy-history" id="markdown-toc-631-find-galaxy-history">6.3.1. Find Galaxy History</a></li>
+          <li><a href="#632-clusterslurm-job-info" id="markdown-toc-632-clusterslurm-job-info">6.3.2. Cluster/SLURM job info</a></li>
+          <li><a href="#633-log-into-cluster-node-for-more-details" id="markdown-toc-633-log-into-cluster-node-for-more-details">6.3.3. Log into cluster node for more details</a></li>
+          <li><a href="#634-reschedule-slurm-job" id="markdown-toc-634-reschedule-slurm-job">6.3.4. Reschedule SLURM job</a></li>
+        </ul>
+      </li>
+      <li><a href="#64-analysis-pipeline-upload-timeout" id="markdown-toc-64-analysis-pipeline-upload-timeout">6.4. Analysis Pipeline upload timeout</a>        <ul>
+          <li><a href="#641-look-at-galaxy-upload-jobs" id="markdown-toc-641-look-at-galaxy-upload-jobs">6.4.1. Look at Galaxy upload jobs</a></li>
+          <li><a href="#642-solving-the-issue" id="markdown-toc-642-solving-the-issue">6.4.2. Solving the issue</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>When encountering an analysis pipeline error, the first step to troubleshooting is to figure out what sort of error was encountered. There are two types of errors that can occur: error with detailed information, and error with no detailed information.</p>
+
+<h1 id="1-types-of-irida-job-errors">1. Types of IRIDA job errors</h1>
+
+<h2 id="11-error-with-detailed-information">1.1. Error with detailed information</h2>
+
+<p>This occurs when one of the Galaxy tools in the workflow reported an error and will show up with the status <strong>Error</strong> and a question mark <strong>?</strong> for more details. The stderr/stdout of the tool will be available in the preview.</p>
+
+<p><img src="../images/jobs-all-error-details.png" alt="jobs-all-error-details.png" /></p>
+
+<p>Additional details will be available after clicking on the job:</p>
+
+<p><img src="../images/job-error-details.png" alt="job-error-details.png" /></p>
+
+<p>Here, we get the exact tool <strong>Prokka</strong> and version <code>1.13</code> that is causing the error, along with additional details about the Galaxy instance where all these tools are being run.</p>
+
+<h2 id="12-error-with-no-detailed-information">1.2. Error with no detailed information</h2>
+
+<p>This occurs when there was an issue unrelated to a specific Galaxy tool (and so no detailed information can be obtained about a specific tool).</p>
+
+<p><img src="../images/job-error-nodetails.png" alt="job-error-nodetails.png" /></p>
+
+<p>Examples where this error could occur include timeouts when transferring files to Galaxy or missing tools in Galaxy required by the pipeline. Normally, more details about these errors will be found in the IRIDA log file:</p>
+
+<ol>
+  <li>
+    <p>Timeout when uploading files to Galaxy</p>
+
+    <div class="highlight"><pre><code> 25 Jul 2019 13:52:30,786 ERROR ca.corefacility.bioinformatics.irida.service.analysis.execution.AnalysisExecutionServiceAspect:65 - Error occured for submission: AnalysisSubmission [id=3, name=AssemblyAnnotation_20190725_SRR1952908, submitter=admin, workflowId=4673cf14-20eb-44e1-986b-ac7714f9a96f, analysisState=SUBMITTING, analysisCleanedState=NOT_CLEANED] changing to state ERROR
+ca.corefacility.bioinformatics.irida.exceptions.UploadTimeoutException: Timeout while uploading, time limit = 2 seconds
+     at ca.corefacility.bioinformatics.irida.pipeline.upload.galaxy.GalaxyLibrariesService.filesToLibraryWait(GalaxyLibrariesService.java:245)
+     at ca.corefacility.bioinformatics.irida.pipeline.upload.galaxy.GalaxyHistoriesService.filesToLibraryToHistory(GalaxyHistoriesService.java:201)
+     ...
+     at java.lang.Thread.run(Thread.java:748)
+Caused by: java.util.concurrent.TimeoutException
+     at java.util.concurrent.FutureTask.get(FutureTask.java:205)
+     at ca.corefacility.bioinformatics.irida.pipeline.upload.galaxy.GalaxyLibrariesService.filesToLibraryWait(GalaxyLibrariesService.java:241)
+     ... 28 more
+</code></pre></div>
+
+    <p>A quick solution for this particular error would be to increase the timeout limit for uploading files to Galaxy for pipelines (in this case, set low at 2 seconds). This can be done by setting <code>galaxy.library.upload.timeout=2</code> to some larger number in the <code>/etc/irida/irida.conf</code> file and restarting IRIDA.</p>
+  </li>
+  <li>
+    <p>Missing tools in Galaxy</p>
+
+    <div class="highlight"><pre><code> 25 Jul 2019 14:16:16,393 ERROR ca.corefacility.bioinformatics.irida.service.analysis.execution.AnalysisExecutionServiceAspect:65 - Error occured for submission: AnalysisSubmission [id=4, name=AssemblyAnnotation_20190725_SRR1952908, submitter=admin, workflowId=4673cf14-20eb-4
+4e1-986b-ac7714f9a96f, analysisState=SUBMITTING, analysisCleanedState=NOT_CLEANED] changing to state ERROR
+ca.corefacility.bioinformatics.irida.exceptions.WorkflowException: GalaxyResponseException{status=400, responseBody={"err_msg": "Tool toolshed.g2.bx.psu.edu/repos/iuc/quast/quast/5.0.2 missing. Cannot add dummy datasets.", "err_code": 400014}, errorMessage=Tool toolshed.g2.b
+x.psu.edu/repos/iuc/quast/quast/5.0.2 missing. Cannot add dummy datasets., errorCode=400014, traceback=null}
+     at ca.corefacility.bioinformatics.irida.pipeline.upload.galaxy.GalaxyWorkflowService.runWorkflow(GalaxyWorkflowService.java:123)
+     at ca.corefacility.bioinformatics.irida.service.analysis.execution.galaxy.AnalysisExecutionServiceGalaxyAsync.executeAnalysis(AnalysisExecutionServiceGalaxyAsync.java:152)
+     ...
+     Caused by: GalaxyResponseException{status=400, responseBody={"err_msg": "Tool toolshed.g2.bx.psu.edu/repos/iuc/quast/quast/5.0.2 missing. Cannot add dummy datasets.", "err_code": 400014}, errorMessage=Tool toolshed.g2.bx.psu.edu/repos/iuc/quast/quast/5.0.2 missing. Cannot ad
+d dummy datasets., errorCode=400014, traceback=null}
+</code></pre></div>
+
+    <p>A quick solution for this issue would be to log into Galaxy and make sure the required tool (and version of the tool) is installed. In this case it would be <code>toolshed.g2.bx.psu.edu/repos/iuc/quast/quast/5.0.2</code>.</p>
+  </li>
+</ol>
+
+<p>In general, though, you may want to take a look at the specific Galaxy history used by this IRIDA analysis pipeline to run jobs.</p>
+
+<h1 id="2-finding-the-galaxy-history-used-by-an-irida-pipeline">2. Finding the Galaxy History used by an IRIDA pipeline</h1>
+
+<p>As mentioned in section <a href="#1-types-of-irida-job-errors">(1)</a>, there are two types of errors that can occur in a pipeline: those with detailed information, and those without. Getting the Galaxy History used by the pipeline depends on which type of error you encounter. Once we have the Galaxy History id, we can log into Galaxy to find more information about what was going on with this particular jobs in this Galaxy history.</p>
+
+<h2 id="21-getting-galaxy-history-when-a-job-has-error-details">2.1. Getting Galaxy History when a job has error details</h2>
+
+<p>In this case, it’s pretty straightforward to get the Galaxy History id, it’s displayed in the error details.</p>
+
+<p><img src="../images/job-details-galaxy-history.png" alt="job-details-galaxy-history.png" /></p>
+
+<p>This tells us that the <strong>Galaxy History ID</strong> used by this pipeline is <code>e85a3be143d5905b</code>.</p>
+
+<h2 id="22-getting-galaxy-history-when-job-has-no-error-details">2.2. Getting Galaxy History when job has no error details</h2>
+
+<p>In this case, it’s a bit more difficult to find the Galaxy History id. We will have to log into the IRIDA database to search for it.</p>
+
+<h3 id="221-logging-into-the-irida-database">2.2.1. Logging into the IRIDA database</h3>
+
+<p>If you log into the machine running the IRIDA instance, you can find the database connection details in the <code>/etc/irida/irida.conf</code> file. For example:</p>
+
+<div class="highlight"><pre><code>jdbc.url=jdbc:mysql://localhost:3306/irida_test
+jdbc.username=test
+jdbc.password=test
+</code></pre></div>
+
+<p>This tells us the database software is running on the machine <code>localhost</code> and we want to use the database named <strong>irida_test</strong>, with username <strong>test</strong> and password <strong>test</strong>.</p>
+
+<p>To log into this database, you can run:</p>
+
+<div class="highlight"><pre><code class="language-bash">mysql -u <span class="nb">test</span> -p --host localhost --database irida_test</code></pre></div>
+
+<h3 id="222-finding-the-galaxy-history-id">2.2.2. Finding the Galaxy History id</h3>
+
+<p>Once we’ve logged into the database, we can run a query to get the Galaxy History id, but first we need the IRIDA Analysis pipeline id. This can be found in the page listing the pipelines:</p>
+
+<p><img src="../images/irida-job-id.png" alt="irida-job-id.png" /></p>
+
+<p>In this case, our job id is <code>3</code>.</p>
+
+<p>So, now back to the MySQL database query, we want to run:</p>
+
+<div class="highlight"><pre><code class="language-sql"><span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">analysis_state</span><span class="p">,</span><span class="n">remote_analysis_id</span> <span class="k">FROM</span> <span class="n">analysis_submission</span> <span class="k">WHERE</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span></code></pre></div>
+
+<p>This should give us:</p>
+
+<div class="highlight"><pre><code>+----+----------------------------------------+----------------+--------------------+
+| id | name                                   | analysis_state | remote_analysis_id |
++----+----------------------------------------+----------------+--------------------+
+|  3 | AssemblyAnnotation_20190725_SRR1952908 | ERROR          | 2a56795cad3c7db3   |
++----+----------------------------------------+----------------+--------------------+
+</code></pre></div>
+
+<p>The field containing the Galaxy History id is <code>remote_analysis_id</code> (so the value we are looking for is <code>2a56795cad3c7db3</code>).</p>
+
+<h3 id="223-what-if-the-galaxy-history-id-is-null">2.2.3. What if the Galaxy History id is NULL</h3>
+
+<p>If this value is <code>NULL</code>, then it’s possible that the error occurred before a Galaxy History was created. You can get more information about the history of this IRIDA analysis pipeline execution from the audit tables (<code>analysis_submission_AUD</code>). Please try running:</p>
+
+<div class="highlight"><pre><code class="language-sql"><span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">analysis_state</span><span class="p">,</span><span class="n">modified_date</span><span class="p">,</span><span class="n">remote_analysis_id</span> <span class="k">FROM</span> <span class="n">analysis_submission_AUD</span> <span class="k">WHERE</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span></code></pre></div>
+
+<div class="highlight"><pre><code>+----+----------------------------------------+----------------+---------------------+--------------------+
+| id | name                                   | analysis_state | modified_date       | remote_analysis_id |
++----+----------------------------------------+----------------+---------------------+--------------------+
+|  3 | AssemblyAnnotation_20190725_SRR1952908 | NEW            | 2019-07-25 13:48:33 | NULL               |
+|  3 | AssemblyAnnotation_20190725_SRR1952908 | PREPARING      | 2019-07-25 13:52:26 | NULL               |
+|  3 | AssemblyAnnotation_20190725_SRR1952908 | PREPARED       | 2019-07-25 13:52:27 | 2a56795cad3c7db3   |
+|  3 | AssemblyAnnotation_20190725_SRR1952908 | SUBMITTING     | 2019-07-25 13:52:27 | 2a56795cad3c7db3   |
+|  3 | AssemblyAnnotation_20190725_SRR1952908 | ERROR          | 2019-07-25 13:52:30 | 2a56795cad3c7db3   |
++----+----------------------------------------+----------------+---------------------+--------------------+
+</code></pre></div>
+
+<p>This lets us see the history of the job as it was processed through IRIDA (and includes the <code>modified_date</code> giving an idea of when each stage occurred). You can see that the first two states <strong>NEW</strong> and <strong>PREPARING</strong> have a <code>NULL</code> value for <code>remote_analysis_id</code>. If the IRIDA pipeline errored in these states, there would not have been a Galaxy History created. So, you can skip trying to check the Galaxy History for more details about the job.</p>
+
+<h1 id="3-viewing-the-galaxy-history-used-by-the-irida-analysis-pipeline">3. Viewing the Galaxy History used by the IRIDA analysis pipeline</h1>
+
+<h2 id="31-logging-into-galaxy">3.1. Logging into Galaxy</h2>
+
+<p>Once we have the Galaxy History id, we can move on to logging into Galaxy to view more details about what went wrong with the IRIDA analysis pipeline. The first step is logging into Galaxy as the same user used by IRIDA.</p>
+
+<p><em>Note: if you do not know which Galaxy instance IRIDA is making use of, you can find this in the <code>/etc/irida/irida.conf</code> file as <code>galaxy.execution.url=http://GALAXY</code>. You can find the username as <code>galaxy.execution.email=galaxy-user@galaxy.org</code>. IRIDA uses the Galaxy API to login, which is different from the password, so you may have to check with your administrator for the password used to log into Galaxy.</em></p>
+
+<p><img src="../images/galaxy-home.png" alt="galaxy-home.png" /></p>
+
+<h2 id="32-viewing-all-galaxy-histories">3.2. Viewing all Galaxy histories</h2>
+
+<p>Galaxy will default to one of the histories run by IRIDA. To see all the Galaxy histories, you can go to the <strong>Saved Histories</strong> page.</p>
+
+<p><img src="../images/galaxy-saved-histories.png" alt="galaxy-saved-histories.png" /></p>
+
+<p>This should bring us to a list of all the Galaxy histories.</p>
+
+<p><img src="../images/galaxy-histories-list.png" alt="galaxy-histories-list.png" /></p>
+
+<h2 id="33-viewing-the-correct-history">3.3. Viewing the correct history</h2>
+
+<p>To view the correct History in Galaxy, we can skip directly to it using the following URL <code>http://GALAXY/histories/view?id=[Galaxy History id]</code> Where <strong>Galaxy History id</strong> is the id we discovered from step 1.2 (e.g., <code>e85a3be143d5905b</code>). For example, for me, going to <a href="http://localhost:48888/histories/view?id=e85a3be143d5905b">http://localhost:48888/histories/view?id=e85a3be143d5905b</a> brings up:</p>
+
+<p><img src="../images/galaxy-view-history.png" alt="galaxy-view-history.png" /></p>
+
+<p>This is the History corresponding to the analysis pipeline in IRIDA that failed. I can now see all the failed jobs (in red). Clicking on the bug icon in one of these jobs will show me the error message (which in this case, is the same as was recorded by IRIDA).</p>
+
+<p><img src="../images/galaxy-job-debug.png" alt="galaxy-job-debug.png" /></p>
+
+<p>Clicking the <strong>i</strong> icon gives me more information about the Galaxy job.</p>
+
+<p><img src="../images/galaxy-job-information.png" alt="galaxy-job-information.png" /></p>
+
+<p>Scrolling to the bottom of this screen there is a lot of information about the underlying infrastructure and software:</p>
+
+<p><img src="../images/galaxy-job-information2.png" alt="galaxy-job-information2.png" /></p>
+
+<p>For example, this contains the exact command-line that was run, system resources uses, the <strong>Runner Job ID</strong> (in this case <code>50</code> which is the slurm job id if using slurm to run jobs), as well as the <strong>Path</strong> to the dependency software (in this case <code>/export/tool_deps/_conda/envs/__prokka@1.13</code>, which is the location of the conda environment containing Prokka).</p>
+
+<h2 id="34-diagnosing-the-problem">3.4. Diagnosing the problem</h2>
+
+<p>All of this information could be useful to figure out the underlying issue for this IRIDA pipeline. In this case, from the <strong>Prokka</strong> error message:</p>
+
+<blockquote>
+  <p>[tbl2asn] This copy of tbl2asn is more than a year old.  Please download the current version.</p>
+</blockquote>
+
+<p>This is likely the <a href="{{ site.baseurl }}/administrator/faq/#1-tbl2asn-out-of-date">Prokka tbl2asn out of date</a> issue. Solving this requires updating <code>tbl2asn</code> used by <strong>Prokka</strong>, which will be located under the conda environment (which you can find from the job details information above, in this case it’s <code>/export/tool_deps/_conda/envs/__prokka@1.13</code>).</p>
+
+<p>Alternatively, if you are using a cluster scheduler to schedule jobs, you may wish to view information from this scheduler for this job. The id to use should be located in the job details information (id <code>50</code> shown above). Using this information, you could log into your cluster and run:</p>
+
+<div class="highlight"><pre><code class="language-bash">sacct -j <span class="m">50</span> --format<span class="o">=</span><span class="s2">&quot;jobid,jobname%20,maxrss,maxrssnode,ntasks,elapsed,state,exitcode&quot;</span></code></pre></div>
+
+<div class="highlight"><pre><code>       JobID              JobName     MaxRSS MaxRSSNode   NTasks    Elapsed      State ExitCode 
+------------ -------------------- ---------- ---------- -------- ---------- ---------- -------- 
+          50           g46_prokka                                  00:01:19  COMPLETED      0:0 
+    50.batch                batch     25128K     node-5        1   00:01:19  COMPLETED      0:0
+</code></pre></div>
+
+<p>Here, <code>sacct</code> is a command that comes with slurm and lets you look up information about a job run on the cluster (specified as <code>-j 50</code>). The <code>--format=</code> option specifies what information to print (e.g., <strong>JobID</strong> and <strong>JobName</strong>). The <code>jobname%20</code> specifies that the <strong>JobName</strong> column should be 20 characters wide (useful for printing longer names). The <strong>MaxRSSNode</strong> tells you the cluster node the job executed on that used the maximum RSS (Resident Set Size, memory used by software). See documentation about your cluster scheduler for more information.</p>
+
+<h1 id="4-viewing-additional-galaxy-job-information">4. Viewing additional Galaxy job information</h1>
+
+<p>If the instructions for <a href="#3-viewing-the-galaxy-history-used-by-the-irida-analysis-pipeline">(3)</a> do not lead to a solution, there are additional files you can check in Galaxy to help diagnose an issue.</p>
+
+<h2 id="41-galaxy-log-files">4.1. Galaxy log files</h2>
+
+<p>The Galaxy log files are one possible source of additional information as to what went wrong with an analysis pipeline in IRIDA. These are often located in the files <code>galaxy/*.log</code> but this depends a lot on your specific Galaxy setup.</p>
+
+<p>Looking through these log files at around the time of the pipeline error can give you clues as to what went wrong. For example:</p>
+
+<div class="highlight"><pre><code>galaxy.jobs.runners.drmaa DEBUG 2019-07-30 15:14:49,863 (3362/3363) state change: job finished normally
+galaxy.jobs.output_checker INFO 2019-07-30 15:14:49,934 Job 3362: Fatal error: Exit code 2 ()
+galaxy.jobs.output_checker DEBUG 2019-07-30 15:14:49,934 Tool exit code indicates an error, failing job.
+galaxy.jobs.output_checker DEBUG 2019-07-30 15:14:49,934 job failed, standard error is - [Fatal error: Exit code 2 ()
+/tool_deps/_conda/envs/__refseq_masher@0.1.1/lib/python3.6/importlib/_bootstrap.py:219: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
+  return f(*args, **kwds)
+2019-07-30 15:14:46,399 WARNING: which exited with non-zero code 1 with command "which mash" [in /tool_deps/_conda/envs/__refseq_masher@0.1.1/lib/python3.6/site-packages/refseq_masher/utils.py:44]
+2019-07-30 15:14:46,399 WARNING:  [in /tool_deps/_conda/envs/__refseq_masher@0.1.1/lib/python3.6/site-packages/refseq_masher/utils.py:45]
+Usage: refseq_masher contains [OPTIONS] INPUT...
+
+Error: Invalid value for "--mash-bin": Mash does not exist at "mash". Please install Mash to your $PATH
+]
+</code></pre></div>
+
+<p>These messages indicates that for Galaxy Job <strong>3362</strong> failed with an error. The standard error contains messages <code>WARNING: which exited with non-zero code 1 with command "which mash" [in /tool_deps/_conda/envs/__refseq_masher@0.1.1</code>. This suggests that the issue is that the <code>mash</code> binary is not available in the conda environment <code>__refseq_masher@0.1.1</code>. So, you could activate this environment and check to see what’s going on. For example:</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="c1"># First log into Galaxy machine then use commands like below</span>
+<span class="nv">PATH</span><span class="o">=</span>/tool_deps/_conda/bin/:<span class="nv">$PATH</span> conda activate /tool_deps/_conda/envs/__refseq_masher<span class="se">\@</span><span class="m">0</span>.1.1/
+
+mash</code></pre></div>
+
+<div class="highlight"><pre><code>bash: mash: command not found
+</code></pre></div>
+
+<p>Huh!? <code>mash</code> is not found. You could try re-installing <code>mash</code> to this environment (<code>conda install mash</code>) and try the tool again.</p>
+
+<h3 id="411-galaxy-job-numbers-in-log-file">4.1.1. Galaxy Job Numbers in log file</h3>
+
+<p>When scanning through the log file you will see lines like:</p>
+
+<div class="highlight"><pre><code>galaxy.jobs.runners.drmaa INFO 2019-07-30 15:14:44,983 (3362) queued as 3363
+galaxy.jobs DEBUG 2019-07-30 15:14:44,984 (3362) Persisting job destination (destination id: slurm_cluster)
+galaxy.jobs.runners.drmaa DEBUG 2019-07-30 15:14:45,646 (3362/3363) state change: job is running
+...
+galaxy.jobs.runners.drmaa DEBUG 2019-07-30 15:14:49,863 (3362/3363) state change: job finished normally
+</code></pre></div>
+
+<p>Here, the number <strong>3362</strong> in <code>(3362)</code> or <code>(3362/3363)</code> is the Galaxy Job id, which is also displayed in the information for an individual Galaxy Job in the Galaxy interface:</p>
+
+<p><img src="../images/galaxy-job-id.png" alt="galaxy-job-id.png" /></p>
+
+<p>While the number <strong>3363</strong> in <code>queued as 3363</code> or <code>(3362/3363)</code> is the cluster/job runner id. This is also displayed in the information for an individual Galaxy Job in the Galaxy interface:</p>
+
+<p><img src="../images/job-runner-id.png" alt="job-runner-id.png" /></p>
+
+<h2 id="42-galaxy-job-working-directories">4.2. Galaxy job working directories</h2>
+
+<p>For each job that is run in Galaxy, a unique directory is made to store outputs of the job as well as additional information used to run the job. It can sometimes be useful to switch into this directory and explore the contained files to gain more insight about a particular failure.</p>
+
+<h3 id="421-galaxy-configuration">4.2.1 Galaxy configuration</h3>
+
+<p>By default, Galaxy will clean up the files in each job directory after the job finishes, but Galaxy can be configured to keep these files. To determine if this information still exists on your filesystem for you to explore, you will have to check the <a href="https://github.com/galaxyproject/galaxy/blob/v19.05/config/galaxy.yml.sample#L1619">cleanup_job Galaxy configuration</a> parameter in the <code>config/galaxy.yml</code> file.</p>
+
+<div class="highlight"><pre><code>  cleanup_job: onsuccess
+</code></pre></div>
+
+<p>Possible values are <code>always</code>, <code>onsuccess</code>, and <code>never</code>. You will want this to be set to either <code>onsuccess</code> or <code>never</code>, so that Galaxy leaves the job working directories around once the job is completed.</p>
+
+<h3 id="422-find-galaxy-job-working-directory-parent">4.2.2. Find Galaxy job working directory parent</h3>
+
+<p>To find the Galaxy job working directory, you will have to find the parent directory storing these files. By default, this will be <code>galaxy/database/jobs_directory</code>, but this is configurable with the <a href="https://github.com/galaxyproject/galaxy/blob/v19.05/config/galaxy.yml.sample#L487">job_working_directory</a> configuration option in the <code>config/galaxy.yml</code> file.</p>
+
+<h3 id="423-find-galaxy-job-id">4.2.3. Find Galaxy job id</h3>
+
+<p>You will also need the Galaxy job id, which should be available from the Galaxy interface in the job information page.</p>
+
+<p><img src="../images/galaxy-job-id.png" alt="galaxy-job-id.png" /></p>
+
+<p>In this case, the job id is <code>3362</code>.</p>
+
+<h3 id="424-find-galaxy-job-working-directory">4.2.4. Find Galaxy job working directory</h3>
+
+<p>Once you have the Galaxy job id, and the parent to the working directories, you can change into the job working directory using the following pattern of directory names (where <strong>1234</strong> is the job id):</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="nb">cd</span> database/jobs_directory/001/1234</code></pre></div>
+
+<p>As another example, with job <code>3362</code> the directory should be:</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="nb">cd</span> database/jobs_directory/003/3362</code></pre></div>
+
+<p>For longer job ids (such as <strong>1234567</strong>) there may be more intermediate directories. For example:</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="nb">cd</span> database/jobs_directory/001/234/1234567</code></pre></div>
+
+<h3 id="425-examine-job-working-directory-files">4.2.5. Examine job working directory files</h3>
+
+<p>Once inside the job working directory there are a number of files that may be useful to examine.</p>
+
+<h4 id="4251-standard-outerror">4.2.5.1. Standard out/error</h4>
+
+<p>These files are named <code>galaxy_[JOBID].o</code> and <code>galaxy_[JOBID].e</code>. These should also be available from the Galaxy interface (in the job information page), but can also be inspected here.  For example:</p>
+
+<div class="highlight"><pre><code class="language-bash">cat galaxy_3362.e</code></pre></div>
+
+<div class="highlight"><pre><code>/tool_deps/_conda/envs/__refseq_masher@0.1.1/lib/python3.6/importlib/_bootstrap.py:219: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
+  return f(*args, **kwds)
+2019-07-30 18:29:31,832 WARNING: which exited with non-zero code 1 with command "which mash" [in /tool_deps/_conda/envs/__refseq_masher@0.1.1/lib/python3.6/site-packages/refseq_masher/utils.py:44]
+2019-07-30 18:29:31,832 WARNING:  [in /tool_deps/_conda/envs/__refseq_masher@0.1.1/lib/python3.6/site-packages/refseq_masher/utils.py:45]
+Usage: refseq_masher contains [OPTIONS] INPUT...
+
+Error: Invalid value for "--mash-bin": Mash does not exist at "mash". Please install Mash to your $PATH
+</code></pre></div>
+
+<h4 id="4252-the-working-directory">4.2.5.2. The <code>working</code> directory</h4>
+
+<p>This directory is the current working directory of the tool when it’s run in Galaxy. It may contain temporary files, or input/output files that were actively being used by the job.</p>
+
+<div class="highlight"><pre><code>ls working/
+conda_activate.log  SRR1952908_1.fastq  SRR1952908_2.fastq
+</code></pre></div>
+
+<h4 id="4253-galaxy-and-tool-scripts">4.2.5.3. Galaxy and tool scripts</h4>
+
+<p>These are the files that get submitted to a cluster/executed by Galaxy on your machine.</p>
+
+<ol>
+  <li>
+    <p><code>galaxy_[JOBID].sh</code></p>
+
+    <p>The main script submitted by Galaxy to your cluster.</p>
+  </li>
+  <li>
+    <p><code>tool_script.sh</code></p>
+
+    <p>The actual file which loads up the environment for your tools and runs the tools. This file should contain the command that is printed by the Galaxy interface as the command-line used to execute the tool.</p>
+
+    <p><img src="../images/galaxy-command-line.png" alt="galaxy-command-line.png" /></p>
+  </li>
+  <li>
+    <p>Others</p>
+
+    <p>Other files contain information relating to the machine the tool executed on (memory and cpu info) as well as additional Galaxy files.</p>
+  </li>
+</ol>
+
+<h1 id="5-rerunning-galaxy-jobs">5. Rerunning Galaxy jobs</h1>
+
+<p>Sometimes it can be useful to rerun a Galaxy job that has failed previously to see if the error is reproducible. This can be accomplished through two ways: the Galaxy user interface (UI) or the command-line.</p>
+
+<h2 id="51-rerunning-jobs-in-galaxy-ui">5.1. Rerunning jobs in Galaxy UI</h2>
+
+<p>To rerun jobs from the Galaxy UI, you will first have to log into Galaxy and find the appropriate history for the IRIDA analysis pipeline (see section <a href="#2-finding-the-galaxy-history-used-by-an-irida-pipeline">(2)</a> for details).</p>
+
+<p>Once you have the Galaxy History in front of you, you can find the errored job and click the rerun job icon. All the parameters should be defaulted to the same as what the job was initially run with:</p>
+
+<p><img src="../images/rerun-galaxy-job.png" alt="rerun-galaxy-job.png" /></p>
+
+<p>What you should check for when rerunning the job is whether the error is reproducible, or perhaps there is a different error now showing up.</p>
+
+<h2 id="52-rerunning-jobs-from-command-line">5.2. Rerunning jobs from command-line</h2>
+
+<p><strong>DANGER: Using the instructions in this method (rerunning the <code>tool_script.sh</code> file) <em>will</em> overwrite the previously generated files by this tool in Galaxy. Please only do this for tools that have errored and where you are certain you do not need previously-generated output files.</strong></p>
+
+<p><strong>Use this method only as a last resort and at your own risk.</strong></p>
+
+<p>If rerunning from the Galaxy UI does not give any clues as to what’s going on, as a last resort you can also rerun from the command-line using the same environment as what Galaxy used to load tool dependencies.</p>
+
+<p>To do this, first find and change to the job working directory (as described in section <a href="#42-galaxy-job-working-directories">(4.2)</a>). For example, for job id <code>3362</code> we would change to:</p>
+
+<div class="highlight"><pre><code>cd database/jobs_directory/003/3362
+</code></pre></div>
+
+<p>Now, in here lets look at the <code>tool_script.sh</code> file:</p>
+
+<div class="highlight"><pre><code>#!/bin/bash
+...
+
+. /export/tool_deps/_conda/bin/activate '/export/tool_deps/_conda/envs/__refseq_masher@0.1.1' &gt; conda_activate.log 2&gt;&amp;1
+...
+
+ln -s "/irida/sequence-files/1/2/SRR1952908_1.fastq" "SRR1952908_1.fastq" &amp;&amp; ln -s "/irida/sequence-files/2/2/SRR1952908_2.fastq" "SRR1952908_2.fastq" &amp;&amp;  refseq_masher -vv contains --output refseq_masher-contains.tab --output-type tab --top-n-results 0 --parallelism "${GALAXY_SLOTS:-1}" --min-identity 0.9 --max-pvalue 0.01 "SRR1952908_1.fastq" "SRR1952908_2.fastq"
+</code></pre></div>
+
+<p>This file first tries to load up the tool dependencies (<code>. /export/tool_deps/_conda/bin/activate ...</code>). Then, this runs the actual command to produce the results.</p>
+
+<p>If you are on a machine that has access to the same conda environment (has access to <code>/export/tool_deps/_conda/bin/activate ...</code>), then you could try executing this script yourself (or parts of this script).</p>
+
+<div class="highlight"><pre><code class="language-bash">tool_script.sh</code></pre></div>
+
+<p>This could help give you insight into exactly why the specific tool is failing. However, you may have to modify the script to get it to work properly.</p>
+
+<p><strong>DANGER: Running <code>tool_script.sh</code> <em>will</em> overwrite previously generated files by this Galaxy job. Please only do this on jobs you are certain you do not need the output files.</strong></p>
+
+<h1 id="6-examples">6. Examples</h1>
+
+<p>To tie everything together, let’s work through troubleshooting a few example pipeline errors in IRIDA.</p>
+
+<h2 id="61-assembly-and-annotation-pipeline-tbl2asn-error">6.1. Assembly and Annotation Pipeline <code>tbl2asn</code> error</h2>
+
+<h3 id="611-input-data">6.1.1. Input data</h3>
+
+<p>I submitted the data from the <a href="https://irida.corefacility.ca/downloads/data/irida-sample-data.zip">IRIDA Sample Data</a> download. Specifically, a sample created samples from the fastq files in <code>miseq-run/Data/Intensities/BaseCalls/08-5578*.fastq.gz</code>.</p>
+
+<p><img src="../images/assembly-pipeline-default.png" alt="assembly-pipeline-default.png" /></p>
+
+<h3 id="612-pipeline-error">6.1.2. Pipeline error</h3>
+
+<p>After a while of running, the pipeline encountered an error:</p>
+
+<p><img src="../images/assembly-pipeline-default-error.png" alt="assembly-pipeline-default-error.png" /></p>
+
+<p>This error gives us a lot of information as to what went wrong. In particular, we will likely have to update the <code>tbl2asn</code> software used by <code>prokka</code> (see the <a href="{{ site.baseurl }}/administrator/faq/#1-tbl2asn-out-of-date">Prokka and tbl2asn section</a> for more details).</p>
+
+<h3 id="612-find-galaxy-history-and-prokka-dependencies-location">6.1.2. Find Galaxy History and Prokka dependencies location</h3>
+
+<p>To replace <code>tbl2asn</code> we’ll first need to know where it’s located in the Galaxy file system. To do this we’ll need to find the Galaxy History used by this IRIDA pipeline. Luckily, this information is reported by IRIDA:</p>
+
+<p><img src="../images/assembly-pipeline-default-galaxy-history-id.png" alt="assembly-pipeline-default-galaxy-history-id.png" /></p>
+
+<p>So, let’s go to this Galaxy History by using the URL <code>http://GALAXY_URL/histories/view?id=f2db41e1fa331b3e</code>. This shows us:</p>
+
+<p><img src="../images/assembly-pipeline-default-galaxy-history-error.png" alt="assembly-pipeline-default-galaxy-history-error.png" /></p>
+
+<p>Clicking on the <strong>View details</strong> page for one of the failed <code>Prokka</code> jobs gives us:</p>
+
+<p><img src="../images/assembly-pipeline-default-job-details.png" alt="assembly-pipeline-default-job-details.png" /></p>
+
+<p>So, from this we can see that the <code>Prokka</code> dependencies location is:</p>
+
+<div class="highlight"><pre><code>/export/tool_deps/_conda/envs/__prokka@1.13
+</code></pre></div>
+
+<h3 id="613-replace-tbl2asn">6.1.3. Replace <code>tbl2asn</code></h3>
+
+<p>Lets now log into Galaxy, and following the instructions in the <a href="{{ site.baseurl }}/administrator/faq/#1-tbl2asn-out-of-date">Prokka and tbl2asn section</a> let’s update <code>tbl2asn</code>.</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="c1"># Log into Galaxy</span>
+<span class="c1"># Change to Prokka environment</span>
+<span class="nb">cd</span> /export/tool_deps/_conda/envs/__prokka@1.13
+
+<span class="c1"># Find `tbl2asn` binary</span>
+find -iname <span class="s1">&#39;tbl2asn&#39;</span></code></pre></div>
+
+<div class="highlight"><pre><code>./bin/tbl2asn
+</code></pre></div>
+
+<p>So, <code>tbl2asn</code> is located in <code>./bin/tbl2asn</code>. This is the file we have to replace with the file from <a href="ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools/converters/by_program/tbl2asn/">ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools/converters/by_program/tbl2asn/</a>.</p>
+
+<div class="highlight"><pre><code class="language-bash">wget ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools/converters/by_program/tbl2asn/linux64.tbl2asn.gz
+gunzip linux64.tbl2asn.gz
+cp linux64.tbl2asn ./bin/tbl2asn</code></pre></div>
+
+<h3 id="614-rerunning-prokka-in-galaxy">6.1.4. Rerunning Prokka in Galaxy</h3>
+
+<p>Now that we’ve replaced it, lets try rerunning Prokka in Galaxy.</p>
+
+<p>First, lets switch to the Galaxy History by going back the the History (<code>http://GALAXY_URL/histories/view?id=f2db41e1fa331b3e</code>) and clicking <strong>Switch to this history</strong>:</p>
+
+<p><img src="../images/galaxy-switch-to-history.png" alt="galaxy-switch-to-history.png" /></p>
+
+<p>From here, let’s rerun the <code>Prokka</code> tool:</p>
+
+<p><img src="../images/assembly-pipeline-default-rerun.png" alt="assembly-pipeline-default-rerun.png" /></p>
+
+<p>Awesome. It looks like it’s all working now:</p>
+
+<p><img src="../images/assembly-pipeline-default-success.png" alt="assembly-pipeline-default-success.png" /></p>
+
+<h2 id="62-snvphyl-pipeline-snv-density-filtering-error">6.2. SNVPhyl Pipeline SNV density filtering error</h2>
+
+<h3 id="621-input-data">6.2.1. Input data</h3>
+
+<p>I submitted the data from the <a href="https://irida.corefacility.ca/downloads/data/irida-sample-data.zip">IRIDA Sample Data</a> download. Specifically, samples from the fastq files in <code>miseq-run/Data/Intensities/BaseCalls/</code>, and in <code>miseq-run-salmonella/</code>. The reference genome is <code>references/08-5578.fasta</code>. I ran this through SNVPhyl with the default parameters:</p>
+
+<p><img src="../images/snvphyl-pipeline-default.png" alt="snvphyl-pipeline-default.png" /></p>
+
+<h3 id="622-pipeline-error">6.2.2. Pipeline error</h3>
+
+<p>After a while of running, the pipeline encountered an error:</p>
+
+<p><img src="../images/snvphyl-pipeline-default-error.png" alt="snvphyl-pipeline-default-error.png" /></p>
+
+<p>The IRIDA log file contained:</p>
+
+<div class="highlight"><pre><code>30 Jul 2019 15:15:49,913 ERROR ca.corefacility.bioinformatics.irida.service.impl.AnalysisExecutionScheduledTaskImpl:269 - Workflow for analysis AnalysisSubmission [id=8, name=SNVPhyl_20190730, submitter=admin, workflowId=b7c8b437-3c41-485e-92e5-72b67e37959f, analysisState=RUNNING,
+analysisCleanedState=NOT_CLEANED] in error state WorkflowStatus [state=error, percentComplete=0.85]
+30 Jul 2019 15:15:50,278 ERROR ca.corefacility.bioinformatics.irida.service.impl.AnalysisExecutionScheduledTaskImpl:175 - Error checking state for AnalysisSubmission [id=8, name=SNVPhyl_20190730, submitter=admin, workflowId=b7c8b437-3c41-485e-92e5-72b67e37959f, analysisState=ERROR, analysisCleanedState=NOT_CLEANED]
+java.lang.NullPointerException
+        at ca.corefacility.bioinformatics.irida.model.workflow.analysis.JobError.&lt;init&gt;(JobError.java:164)
+        at ca.corefacility.bioinformatics.irida.pipeline.upload.galaxy.GalaxyJobErrorsService.createNewJobErrors(GalaxyJobErrorsService.java:60)
+        at ca.corefacility.bioinformatics.irida.service.impl.AnalysisExecutionScheduledTaskImpl.handleJobErrors(AnalysisExecutionScheduledTaskImpl.java:195)
+        at ca.corefacility.bioinformatics.irida.service.impl.AnalysisExecutionScheduledTaskImpl.handleWorkflowStatus(AnalysisExecutionScheduledTaskImpl.java:272)
+        at ca.corefacility.bioinformatics.irida.service.impl.AnalysisExecutionScheduledTaskImpl.monitorRunningAnalyses(AnalysisExecutionScheduledTaskImpl.java:173)
+        at ca.corefacility.bioinformatics.irida.config.services.scheduled.AnalysisScheduledTaskConfig.monitorRunningAnalyses(AnalysisScheduledTaskConfig.java:86)
+        at sun.reflect.GeneratedMethodAccessor561.invoke(Unknown Source)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.lang.reflect.Method.invoke(Method.java:498)
+        at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:65)
+        at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+        at org.springframework.security.concurrent.DelegatingSecurityContextRunnable.run(DelegatingSecurityContextRunnable.java:80)
+        at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+        at java.util.concurrent.FutureTask.runAndReset(FutureTask.java:308)
+        at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:180)
+        at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:294)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+        at java.lang.Thread.run(Thread.java:748)
+</code></pre></div>
+
+<h3 id="623-getting-the-galaxy-history-id">6.2.3. Getting the Galaxy History id</h3>
+
+<p>First, lets check the Galaxy History used by this analysis pipeline. This pipeline errored without a specific message for an individual tool. So, to get the Galaxy History id we’ll have to check the database. See <a href="#22-getting-galaxy-history-when-job-has-no-error-details">section (2.2)</a> for more details.</p>
+
+<p>We get the IRIDA analysis id from the analysis page which is analysis id <code>8</code> (shown above). Using this, we can get the Galaxy History id using a query to the IRIDA database:</p>
+
+<div class="highlight"><pre><code class="language-sql"><span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">analysis_state</span><span class="p">,</span><span class="n">remote_analysis_id</span> <span class="k">FROM</span> <span class="n">analysis_submission</span> <span class="k">WHERE</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span></code></pre></div>
+
+<div class="highlight"><pre><code>+----+------------------+----------------+--------------------+
+| id | name             | analysis_state | remote_analysis_id |
++----+------------------+----------------+--------------------+
+|  8 | SNVPhyl_20190730 | ERROR          | 230ca48747e433cc   |
++----+------------------+----------------+--------------------+
+</code></pre></div>
+
+<p>So, the History id is <code>230ca48747e433cc</code>.</p>
+
+<h3 id="624-view-galaxy-history">6.2.4. View Galaxy History</h3>
+
+<p>Lets use this History id to log into Galaxy and view the History. We do this by navigating to <code>http://GALAXY_URL/histories/view?id=230ca48747e433cc</code>. This shows us:</p>
+
+<p><img src="../images/snvphyl-pipeline-default-history.png" alt="snvphyl-pipeline-default-history.png" /></p>
+
+<p>So, the error was at the <strong>snvTable.tsv</strong> stage of the pipeline. But, looking for more details in the Galaxy UI doesn’t get us anywhere:</p>
+
+<p><img src="../images/snvphyl-pipeline-default-debug.png" alt="snvphyl-pipeline-default-debug.png" /></p>
+
+<p>Looking at the job information for the errored tool gives us a lot more details, but still nothing really stands out.</p>
+
+<p><img src="../images/snvphyl-pipeline-default-jobinfo.png" alt="snvphyl-pipeline-default-jobinfo.png" /></p>
+
+<h3 id="625-rerun-failed-galaxy-job">6.2.5. Rerun failed Galaxy job</h3>
+
+<p>Just in case this was a random error, lets try rerunning the job that failed in Galaxy.</p>
+
+<p>First, let’s switch to the Galaxy history by clicking the <strong>Switch to this history</strong> button:</p>
+
+<p><img src="../images/galaxy-switch-to-history.png" alt="galaxy-switch-to-history.png" /></p>
+
+<p>Now let’s rerun the failed job:</p>
+
+<p><img src="../images/snvphyl-pipeline-default-rerun.png" alt="snvphyl-pipeline-default-rerun.png" /></p>
+
+<p>Nope, same issue:</p>
+
+<p><img src="../images/snvphyl-pipeline-default-rerun-error.png" alt="snvphyl-pipeline-default-rerun-error.png" /></p>
+
+<h3 id="626-examine-job-working-directory">6.2.6. Examine job working directory</h3>
+
+<p>Lets examine the job working directory to see if there are anymore hints as to why the job failed.</p>
+
+<p>First, lets get the job id from the Galaxy job information:</p>
+
+<p><img src="../images/snvphyl-pipeline-default-galaxy-jobid.png" alt="snvphyl-pipeline-default-galaxy-jobid.png" /></p>
+
+<p>We have a job id of <code>3410</code> here. So, lets change into that directory on the Galaxy machine.</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="c1"># Log into Galaxy machine</span>
+
+<span class="nb">cd</span> galaxy/database/jobs_directory/003/3410
+ls -1</code></pre></div>
+
+<div class="highlight"><pre><code>galaxy_3410.e
+galaxy_3410.ec
+galaxy_3410.o
+galaxy_3410.sh
+...
+tool_script.sh
+working
+</code></pre></div>
+
+<p>Lets look at the stderr <code>galaxy_3410.e</code>.</p>
+
+<div class="highlight"><pre><code>Alignment written to snvalign.fasta
+Alignment written to snvalign.phy
+</code></pre></div>
+
+<p>So, there’s actual text here. Lets also look at stdout <code>galaxy_3410.o</code>.</p>
+
+<div class="highlight"><pre><code>/tool_deps/snvphyl/1.8/nml/package_snvphyl_1_8/a27110fb7e55/snvphyl/positions2snv_alignment.pl -i snvalign-positions.tsv -f fasta --reference-name reference -o snvalign.fasta
+Date: Tue Jul 30 20:15:28 UTC 2019
+Working on snvalign-positions.tsv
+No valid positions were found. Not creating empty alignment file
+/tool_deps/snvphyl/1.8/nml/package_snvphyl_1_8/a27110fb7e55/snvphyl/positions2snv_alignment.pl -i snvalign-positions.tsv -f phylip --reference-name reference -o snvalign.phy
+Date: Tue Jul 30 20:15:29 UTC 2019
+Working on snvalign-positions.tsv
+No valid positions were found. Not creating empty alignment file
+</code></pre></div>
+
+<p>So, this looks like a lot more information. It looks like <strong>No valid positions were found</strong> is a likely source of the error.</p>
+
+<p>To get more information, let’s look at the intermediate files produced by the tool in the <code>working/</code> directory.</p>
+
+<div class="highlight"><pre><code class="language-bash">ls working/ -1</code></pre></div>
+
+<div class="highlight"><pre><code>dataset_8030.dat
+dataset_8030.dat.csi
+dataset_8032.dat
+dataset_8032.dat.csi
+dataset_8034.dat
+dataset_8034.dat.csi
+dataset_8036.dat
+dataset_8036.dat.csi
+snvalign-positions.tsv
+snvalign-stats.csv
+</code></pre></div>
+
+<p>The files <code>snvalign-positions.tsv</code> and <code>snvalign-stats.csv</code> would be some of the partial results written by this Galaxy tools. Lets look at this:</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="c1"># `cut` cuts out certain columns from this file</span>
+<span class="c1"># `column` lines up these columns when printing the output</span>
+cut -f <span class="m">1</span>,6 working/snvalign-stats.csv <span class="p">|</span> column -s<span class="s1">$&#39;\t&#39;</span> -t</code></pre></div>
+
+<div class="highlight"><pre><code>#Reference name                Percentage of valid and included positions in core genome
+gi|662858600|ref|NC_013766.2|  0.00
+all                            0.00
+</code></pre></div>
+
+<p>The number <code>0.00</code> tells us that <strong>0.00%</strong> of positions were considered as valid by SNVPhyl, which means SNVPhyl will not produce a valid alignment of SNVs. This would explain the message <code>No valid positions were found. Not creating empty alignment file</code>.</p>
+
+<p><strong>Note: for more details on interpreting these files, please see the <a href="https://snvphyl.readthedocs.io/en/latest/user/output/#core-positions">SNVPhyl Documentation</a>.</strong></p>
+
+<p>Let’s take a quick look at the <code>working/snvalign-positions.tsv</code> file:</p>
+
+<div class="highlight"><pre><code class="language-bash">head working/snvalign-positions.tsv <span class="p">|</span> column -s<span class="s1">$&#39;\t&#39;</span> -t</code></pre></div>
+
+<div class="highlight"><pre><code>#Chromosome                    Position  Status            Reference  08-5578  08-5923  AE014613  hcc23
+gi|662858600|ref|NC_013766.2|  73        filtered-invalid  T          -        -        -         A
+gi|662858600|ref|NC_013766.2|  78        filtered-invalid  A          -        -        -         T
+gi|662858600|ref|NC_013766.2|  80        filtered-invalid  G          -        -        -         A
+gi|662858600|ref|NC_013766.2|  88        filtered-invalid  C          -        -        -         A
+gi|662858600|ref|NC_013766.2|  90        filtered-invalid  G          -        -        -         C
+gi|662858600|ref|NC_013766.2|  109       filtered-invalid  A          -        -        -         G
+gi|662858600|ref|NC_013766.2|  111       filtered-invalid  G          -        -        -         A
+gi|662858600|ref|NC_013766.2|  128       filtered-invalid  C          -        -        -         A
+gi|662858600|ref|NC_013766.2|  170       filtered-invalid  T          -        -        -         A
+</code></pre></div>
+
+<p>It looks like some SNV positions were identified, but they likely all have the status of <code>filtered-invalid</code>. We can verify this with:</p>
+
+<div class="highlight"><pre><code class="language-bash"><span class="c1"># Prints lines not containing &#39;filtered&#39;</span>
+grep -v <span class="s1">&#39;filtered&#39;</span> working/snvalign-positions.tsv</code></pre></div>
+
+<div class="highlight"><pre><code>#Chromosome     Position        Status  Reference       08-5578 08-5923 AE014613        hcc23
+</code></pre></div>
+
+<p>So, no lines (outside of the header line) contain the text <code>filtered</code>, so no <code>valid</code> SNVs were identified.</p>
+
+<h3 id="627-testing-out-a-solution">6.2.7. Testing out a solution</h3>
+
+<p>Examining the files in the Galaxy job working directory led us to the conclusion that no <code>valid</code> SNVs were identified by SNVPhyl, and so the Galaxy job building the alignment of SNVs failed.</p>
+
+<p>A common cause for this issue is that the <a href="https://snvphyl.readthedocs.io/en/latest/user/parameters/#step-12-consolidate-vcfs">SNV density filtering</a> thresholds are too high (default is to remove regions where there are at 2 or more SNVs in a 500 bp window).</p>
+
+<p>These can be adjusted in the parameters used by SNVPhyl:</p>
+
+<p><img src="../images/snvphyl-pipeline-no-density-parameters.png" alt="snvphyl-pipeline-no-density-parameters.png" /></p>
+
+<p>Here, I adjusted the <strong>SNV density threshold</strong> of <code>501</code> to be greater than the <strong>window size</strong> (<code>500</code>).</p>
+
+<p>Rerunning the pipeline with these parameters results in a successful execution:</p>
+
+<p><img src="../images/snvphyl-pipeline-no-density-results.png" alt="snvphyl-pipeline-no-density-results.png" /></p>
+
+<h2 id="63-irida-analysis-pipeline-that-runs-forever">6.3. IRIDA Analysis Pipeline that runs forever</h2>
+
+<p>Lets imagine a scenario where a pipeline has started running, but never completes. It appears to be stuck in the <code>RUNNING</code> stage.</p>
+
+<p><img src="../images/sistr-default-pipeline-state.png" alt="sistr-default-pipeline-state.png" /></p>
+
+<p>So, lets take a look at what’s going on.</p>
+
+<h3 id="631-find-galaxy-history">6.3.1. Find Galaxy History</h3>
+
+<p>Since the pipeline is still running, there is no Galaxy History id displayed in the IRIDA interface. So, you must log into the IRIDA database to find the History id.</p>
+
+<p>For this analysis pipeline, the IRIDA id is <code>468</code>, so to find the Galaxy History id, we run the query:</p>
+
+<div class="highlight"><pre><code class="language-sql"><span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">analysis_state</span><span class="p">,</span><span class="n">remote_analysis_id</span> <span class="k">FROM</span> <span class="n">analysis_submission</span> <span class="k">WHERE</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">468</span><span class="p">;</span></code></pre></div>
+
+<div class="highlight"><pre><code>+-----+-------------------------------+----------------+--------------------+
+| id  | name                          | analysis_state | remote_analysis_id |
++-----+-------------------------------+----------------+--------------------+
+| 468 | SISTRTyping_20190731_SH10-001 | RUNNING        | c85e859df31e0b2b   |
++-----+-------------------------------+----------------+--------------------+
+</code></pre></div>
+
+<p>The Galaxy History id is in the column <strong>remote_analysis_id</strong> which is <code>c85e859df31e0b2b</code>.</p>
+
+<p>We can use this to go to the History in Galaxy by navigating to <code>http://GALAXY_URL/histories/view?id=c85e859df31e0b2b</code>. This shows us:</p>
+
+<p><img src="../images/sistr-pipeline-default-shovill-running.png" alt="sistr-pipeline-default-shovill-running.png" /></p>
+
+<p>So, it looks like it’s the <code>shovill</code> stage (genome assembly) which is stuck and not completing.</p>
+
+<h3 id="632-clusterslurm-job-info">6.3.2. Cluster/SLURM job info</h3>
+
+<p>Lets look into more details on the job that was scheduled to the cluster (using SLURM).</p>
+
+<p>First, we must get the Galaxy Job ID, which can be found in the job info page:</p>
+
+<p><img src="../images/sistr-pipeline-default-galaxy-jobinfo.png" alt="sistr-pipeline-default-galaxy-jobinfo.png" /></p>
+
+<p>From here, we can find the <strong>Job API ID</strong> of <code>26851</code>.</p>
+
+<p>When running through this tutorial, I could not see the SLURM job id, so we’ll have to find this out another way using the Galaxy <strong>Job API ID</strong>.</p>
+
+<p>We can log into the cluster and run the SLURM command:</p>
+
+<div class="highlight"><pre><code class="language-bash">squeue -a --format<span class="o">=</span><span class="s2">&quot;%.10i %.20j %.15u %.8T %.10M %.6D %R %C %m&quot;</span> <span class="p">|</span> grep <span class="m">26851</span></code></pre></div>
+
+<div class="highlight"><pre><code>   7791919 g26851_shovill_workf    galaxy-irida  RUNNING       2-03:07      1 node-2 8 24G
+</code></pre></div>
+
+<p>Lining this up and including the header for this info gives us:</p>
+
+<div class="highlight"><pre><code>JOBID    NAME                  USER          STATE    TIME     NODES  NODELIST(REASON)  CPUS  MIN_MEMORY
+7791919  g26851_shovill_workf  galaxy-irida  RUNNING  2-03:07  1      node-2            8     24G
+</code></pre></div>
+
+<p>So, the command <code>squeue</code> prints information about active jobs in the SLURM queue (<code>--format</code> is used to choose the information to display). We then use <code>grep 26851</code> to search for the Galaxy Job ID, which is printed as part of the <strong>NAME</strong> of the job running with SLURM (which is not the SLURM <strong>JOBID</strong>).</p>
+
+<p><em>Note: If this does not work because the Galaxy Job ID does not display as part of the <strong>NAME</strong>, you could also use something like <code>grep '(26851) queued as' galaxy/*.log</code> in the Galaxy log files, which should print a line like <code>(26851) queued as 7791919</code> showing you exactly what the SLURM job id is.</em></p>
+
+<p>Coming back to the SLURM job information we just printed, you can see that the <strong>TIME</strong> is listed as <em>2 days 3 hours and 7 minutes</em>. This is way too long for the tool <code>shovill</code>, so something has gone wrong.</p>
+
+<h3 id="633-log-into-cluster-node-for-more-details">6.3.3. Log into cluster node for more details</h3>
+
+<p>To figure out what went wrong, lets try logging into the cluster node running the job <code>node-2</code> and looking for more details.</p>
+
+<div class="highlight"><pre><code class="language-bash">ssh node-2
+
+ps aux <span class="p">|</span> grep shovill</code></pre></div>
+
+<div class="highlight"><pre><code>... shovill --outdir out --cpus 8 --ram 24 --R1 /irida/file_1.fastq --R2 /irida/file_2.fastq ...
+</code></pre></div>
+
+<p>This tells us that <code>shovill</code> is running on this machine, but if we run <code>top</code> it shows us that <code>shovill</code> nor any of its dependencies are running (<strong>0% CPU usage</strong>). So, something strange is going on here.</p>
+
+<h3 id="634-reschedule-slurm-job">6.3.4. Reschedule SLURM job</h3>
+
+<p>Lets log out of the cluster node (<code>node-2</code>) running this job and try rescheduling the job on the cluster. To do this, we can just cancel the current job and Galaxy should (if properly configured, see the <a href="https://docs.galaxyproject.org/en/master/admin/jobs.html">Galaxy Job Configuration</a> for more information) detect this situation and reschedule <code>shovill</code> on the cluster.</p>
+
+<p>To cancel the current job, we first need the cluster (SLURM) job id, which was displayed as <strong>JOBID</strong> when running the <code>squeue</code> command in section <a href="#632-clusterslurm-job-info">(6.3.2)</a> above.</p>
+
+<div class="highlight"><pre><code>JOBID    NAME                  USER          STATE    TIME     NODES  NODELIST(REASON)  CPUS  MIN_MEMORY
+7791919  g26851_shovill_workf  galaxy-irida  RUNNING  2-03:07  1      node-2            8     24G
+</code></pre></div>
+
+<p>Here, the id is <code>7791919</code>. So, to cancel the job, we can use the command (required to be run as the same user submitting the Galaxy jobs):</p>
+
+<div class="highlight"><pre><code class="language-bash">scancel <span class="m">7791919</span></code></pre></div>
+
+<p>You should now see that job <code>7791919</code> disappears from the cluster queue, and if Galaxy is configured to detect and resubmit jobs that were cancelled, you should now see a new job scheduled for <code>shovill</code>.</p>
+
+<div class="highlight"><pre><code>JOBID    NAME                  USER          STATE    TIME  NODES  NODELIST(REASON)  CPUS  MIN_MEMORY
+7791962  g26851_shovill_workf  galaxy-irida  RUNNING  0:05  1      node-3            8     24G
+</code></pre></div>
+
+<p>If everything is working properly (and if the <code>shovill</code> job error was just a random error) you should eventually see the IRIDA pipeline complete.</p>
+
+<p><img src="../images/sistr-pipeline-default-completed.png" alt="sistr-pipeline-default-completed.png" /></p>
+
+<h2 id="64-analysis-pipeline-upload-timeout">6.4. Analysis Pipeline upload timeout</h2>
+
+<p>Let us say we have submitted a pipeline and it failed with no job errors:</p>
+
+<p><img src="../images/job-error-nodetails.png" alt="job-error-nodetails.png" /></p>
+
+<p>And say the IRIDA log file contains:</p>
+
+<div class="highlight"><pre><code>31 Jul 2019 15:03:52,910 ERROR ca.corefacility.bioinformatics.irida.service.analysis.execution.AnalysisExecutionServiceAspect:65 - Error occured for submission: AnalysisSubmission [id=11, name=AssemblyAnnotation_20190731_AE014613, submitter=admin, workflowId=4673cf14-20eb-44e1-986b-ac7714f9a96f, analysisState=SUBMITTING, analysisCleanedState=NOT_CLEANED] changing to state ERROR
+ca.corefacility.bioinformatics.irida.exceptions.UploadTimeoutException: Timeout while uploading, time limit = 2 seconds
+        at ca.corefacility.bioinformatics.irida.pipeline.upload.galaxy.GalaxyLibrariesService.filesToLibraryWait(GalaxyLibrariesService.java:245)
+        at ca.corefacility.bioinformatics.irida.pipeline.upload.galaxy.GalaxyHistoriesService.filesToLibraryToHistory(GalaxyHistoriesService.java:201)
+        at ca.corefacility.bioinformatics.irida.service.analysis.workspace.galaxy.AnalysisCollectionServiceGalaxy.uploadSequenceFilesPaired(AnalysisCollectionServiceGalaxy.java:140)
+        at ca.corefacility.bioinformatics.irida.service.analysis.workspace.galaxy.AnalysisWorkspaceServiceGalaxy.prepareAnalysisFiles(AnalysisWorkspaceServiceGalaxy.java:231)
+        at ca.corefacility.bioinformatics.irida.service.analysis.execution.galaxy.AnalysisExecutionServiceGalaxyAsync.executeAnalysis(AnalysisExecutionServiceGalaxyAsync.java:147)
+...
+Caused by: java.util.concurrent.TimeoutException
+        at java.util.concurrent.FutureTask.get(FutureTask.java:205)
+        at ca.corefacility.bioinformatics.irida.pipeline.upload.galaxy.GalaxyLibrariesService.filesToLibraryWait(GalaxyLibrariesService.java:241)
+        ... 28 more
+</code></pre></div>
+
+<p>Now, this could be caused by too low of a value for the parameter <code>galaxy.library.upload.timeout</code> in the <code>/etc/irida/irida.conf</code> file, in which case you can increase the value and restart IRIDA.</p>
+
+<p>However, if the <code>galaxy.library.upload.timeout</code> value is already set pretty high, there may be some other reason why you are getting this <strong>TimeoutException</strong>.</p>
+
+<h3 id="641-look-at-galaxy-upload-jobs">6.4.1. Look at Galaxy upload jobs</h3>
+
+<p>Before IRIDA schedules a workflow, it must first get data into Galaxy. These are processed by Galaxy to determine the file type and other metadata about the files. These processing tasks are scheduled as jobs in Galaxy and if these jobs do not get scheduled in time by the underlying scheduler (i.e. SLURM), the <code>galaxy.library.upload.timeout</code> may be hit, causing IRIDA to switch this pipeline into an <code>ERROR</code> state.</p>
+
+<p>To look at the Galaxy upload jobs, the first method would be to search for them in your queuing system. For example, with SLURM you could run:</p>
+
+<div class="highlight"><pre><code class="language-bash">squeue -a --format<span class="o">=</span><span class="s2">&quot;%.10i %.20j %.15u %.8T %.10M %.6D %R %C %m&quot;</span> -u galaxy</code></pre></div>
+
+<p>Here, <code>squeue</code> gives information about the jobs running in SLURM, <code>--format</code> defines what to display, and <code>-u galaxy</code> shows only jobs for the <strong>galaxy</strong> user (change this value depending on the user running jobs for Galaxy). The results of this command are:</p>
+
+<div class="highlight"><pre><code>JOBID    NAME                  USER    STATE    TIME  NODES  NODELIST(REASON)  CPUS  MIN_MEMORY
+7793214  g26950_upload1_workf  galaxy  PENDING  0:00  1      (None)            1     2G
+7793215  g26949_upload1_workf  galaxy  PENDING  0:00  1      (Priority)        1     2G
+7793216  g26951_upload1_workf  galaxy  PENDING  0:00  1      (Priority)        1     2G
+</code></pre></div>
+
+<p>Here, it looks like there are some Galaxy <code>upload</code> jobs, but they are all in the state <code>PENDING</code> on the cluster. Now may be a good time to check how busy your cluster is:</p>
+
+<div class="highlight"><pre><code class="language-bash">squeue -a --format<span class="o">=</span><span class="s2">&quot;%.10i %.20j %.15u %.8T %.10M %.6D %R %C %m&quot;</span> <span class="p">|</span> grep <span class="s1">&#39;PENDING&#39;</span> -c</code></pre></div>
+
+<div class="highlight"><pre><code>500
+</code></pre></div>
+
+<p>Hmm… there are <strong>500</strong> jobs in the <code>PENDING</code> state on the cluster (including the 3 upload jobs we have scheduled). This may be the cause of the timeout issues for IRIDA analysis pipelines, that the cluster is too busy.</p>
+
+<h3 id="642-solving-the-issue">6.4.2. Solving the issue</h3>
+
+<p>Job scheduling priorities on a cluster is very specific for each institution, so we do not have any single solution for this problem. But we do recommend making sure the Galaxy <code>upload</code> jobs are given priority over many other jobs on your cluster if you want IRIDA pipelines (or Galaxy uploads) to be responsive. These jobs should take minimal resources and should only run for at most a few minutes.</p>
+
+<p>Prioritizing jobs on a cluster and adjusting Galaxy job queues are beyond the scope of this guide, but we recommend referring to the <a href="https://docs.galaxyproject.org/en/master/admin/cluster.html">Galaxy Cluster</a> and <a href="https://docs.galaxyproject.org/en/master/admin/jobs.html">Galaxy Job</a> documentation for more details.</p>
+
+:ET
