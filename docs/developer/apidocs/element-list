@@ -81,6 +81,8 @@ ca.corefacility.bioinformatics.irida.ria.utilities
 ca.corefacility.bioinformatics.irida.ria.utilities.components
 ca.corefacility.bioinformatics.irida.ria.utilities.converters
 ca.corefacility.bioinformatics.irida.ria.web
+ca.corefacility.bioinformatics.irida.ria.web.activities
+ca.corefacility.bioinformatics.irida.ria.web.activities.dto
 ca.corefacility.bioinformatics.irida.ria.web.admin
 ca.corefacility.bioinformatics.irida.ria.web.admin.dto.statistics
 ca.corefacility.bioinformatics.irida.ria.web.ajax
@@ -100,6 +102,7 @@ ca.corefacility.bioinformatics.irida.ria.web.ajax.projects.settings
 ca.corefacility.bioinformatics.irida.ria.web.ajax.projects.settings.dto
 ca.corefacility.bioinformatics.irida.ria.web.ajax.projects.settings.exceptions
 ca.corefacility.bioinformatics.irida.ria.web.ajax.users
+ca.corefacility.bioinformatics.irida.ria.web.analyses
 ca.corefacility.bioinformatics.irida.ria.web.analysis
 ca.corefacility.bioinformatics.irida.ria.web.analysis.auditing
 ca.corefacility.bioinformatics.irida.ria.web.analysis.dto
@@ -117,6 +120,7 @@ ca.corefacility.bioinformatics.irida.ria.web.components.datatables.config
 ca.corefacility.bioinformatics.irida.ria.web.components.datatables.export
 ca.corefacility.bioinformatics.irida.ria.web.components.datatables.models
 ca.corefacility.bioinformatics.irida.ria.web.dto
+ca.corefacility.bioinformatics.irida.ria.web.dto.list
 ca.corefacility.bioinformatics.irida.ria.web.errors
 ca.corefacility.bioinformatics.irida.ria.web.exceptions
 ca.corefacility.bioinformatics.irida.ria.web.files
