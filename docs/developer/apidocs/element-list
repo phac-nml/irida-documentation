@@ -1,5 +1,8 @@
+ca.corefacility.bioinformatics.irida
+ca.corefacility.bioinformatics.irida.config
 ca.corefacility.bioinformatics.irida.config.analysis
 ca.corefacility.bioinformatics.irida.config.data
+ca.corefacility.bioinformatics.irida.config.environment
 ca.corefacility.bioinformatics.irida.config.repository
 ca.corefacility.bioinformatics.irida.config.security
 ca.corefacility.bioinformatics.irida.config.services
@@ -75,7 +78,9 @@ ca.corefacility.bioinformatics.irida.repositories.specification
 ca.corefacility.bioinformatics.irida.repositories.user
 ca.corefacility.bioinformatics.irida.ria.config
 ca.corefacility.bioinformatics.irida.ria.config.filters
-ca.corefacility.bioinformatics.irida.ria.config.thymeleaf
+ca.corefacility.bioinformatics.irida.ria.config.thymeleaf.webpacker
+ca.corefacility.bioinformatics.irida.ria.config.thymeleaf.webpacker.processor
+ca.corefacility.bioinformatics.irida.ria.config.thymeleaf.webpacker.util
 ca.corefacility.bioinformatics.irida.ria.security
 ca.corefacility.bioinformatics.irida.ria.utilities
 ca.corefacility.bioinformatics.irida.ria.utilities.components
