@@ -7,10 +7,10 @@
       "name" : "the IRIDA Team",
       "email" : "IRIDA-mail@sfu.ca"
     },
-    "version" : "irida-21.09"
+    "version" : "irida-22.01"
   },
   "servers" : [ {
-    "url" : "http://localhost:38623",
+    "url" : "http://localhost:42701",
     "description" : "Generated server url"
   } ],
   "security" : [ {
@@ -193,6 +193,54 @@
         }
       }
     },
+    "/api/sequencingrun" : {
+      "get" : {
+        "tags" : [ "sequencingrun" ],
+        "summary" : "Lists all sequencing runs",
+        "description" : "Lists all sequencing runs.",
+        "operationId" : "listAllSequencingRun",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponseResourceResourceCollectionSequencingRun"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "sequencingrun" ],
+        "summary" : "Create a new sequencing run",
+        "description" : "Create a new sequencing run.",
+        "operationId" : "createSequencingRun",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SequencingRun"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponseResourceSequencingRun"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/sequencingrun/{sequencingrunId}/sequenceFiles" : {
       "post" : {
         "tags" : [ "sequencingrun" ],
@@ -240,7 +288,7 @@
         "tags" : [ "sequencingrun" ],
         "summary" : "Create a sequencing run",
         "description" : "Create a sequencing run.",
-        "operationId" : "createSequencingRun",
+        "operationId" : "createSequencingRun_1",
         "parameters" : [ {
           "name" : "runType",
           "in" : "path",
@@ -249,54 +297,6 @@
             "type" : "string"
           }
         } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/SequencingRun"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ResponseResourceSequencingRun"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/sequencingrun" : {
-      "get" : {
-        "tags" : [ "sequencingrun" ],
-        "summary" : "Lists all sequencing runs",
-        "description" : "Lists all sequencing runs.",
-        "operationId" : "listAllSequencingRun",
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ResponseResourceResourceCollectionSequencingRun"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post" : {
-        "tags" : [ "sequencingrun" ],
-        "summary" : "Create a new sequencing run",
-        "description" : "Create a new sequencing run.",
-        "operationId" : "createSequencingRun_1",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -571,6 +571,54 @@
         }
       }
     },
+    "/api/projects" : {
+      "get" : {
+        "tags" : [ "projects" ],
+        "summary" : "Lists all projects",
+        "description" : "Lists all projects.",
+        "operationId" : "listAllProjects",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponseResourceResourceCollectionProject"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "projects" ],
+        "summary" : "Create a new project",
+        "description" : "Create a new project.",
+        "operationId" : "createProject",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Project"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponseResourceProject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/projects/{projectId}/users" : {
       "get" : {
         "tags" : [ "projects" ],
@@ -716,54 +764,6 @@
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/ResponseResourceResourceCollectionLabelledRelationshipResourceProjectSample"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/projects" : {
-      "get" : {
-        "tags" : [ "projects" ],
-        "summary" : "Lists all projects",
-        "description" : "Lists all projects.",
-        "operationId" : "listAllProjects",
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ResponseResourceResourceCollectionProject"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post" : {
-        "tags" : [ "projects" ],
-        "summary" : "Create a new project",
-        "description" : "Create a new project.",
-        "operationId" : "createProject",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/Project"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ResponseResourceProject"
                 }
               }
             }
@@ -1937,16 +1937,31 @@
         "type" : "object",
         "properties" : {
           "rel" : {
-            "type" : "string",
-            "xml" : {
-              "attribute" : true
-            }
+            "type" : "string"
           },
           "href" : {
-            "type" : "string",
-            "xml" : {
-              "attribute" : true
-            }
+            "type" : "string"
+          },
+          "hreflang" : {
+            "type" : "string"
+          },
+          "media" : {
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "deprecation" : {
+            "type" : "string"
+          },
+          "profile" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
           }
         }
       },
@@ -2056,14 +2071,6 @@
           }
         }
       },
-      "ResponseResourceSequencingRun" : {
-        "type" : "object",
-        "properties" : {
-          "resource" : {
-            "$ref" : "#/components/schemas/SequencingRun"
-          }
-        }
-      },
       "SequencingRun" : {
         "required" : [ "createdDate", "label", "layoutType", "sequencerType", "uploadStatus" ],
         "type" : "object",
@@ -2106,6 +2113,14 @@
           },
           "identifier" : {
             "type" : "string"
+          }
+        }
+      },
+      "ResponseResourceSequencingRun" : {
+        "type" : "object",
+        "properties" : {
+          "resource" : {
+            "$ref" : "#/components/schemas/SequencingRun"
           }
         }
       },
@@ -2236,16 +2251,16 @@
           "fileProcessor" : {
             "type" : "string"
           },
-          "modifiedDate" : {
-            "type" : "string",
-            "format" : "date-time"
-          },
           "files" : {
             "uniqueItems" : true,
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/SequenceFile"
             }
+          },
+          "modifiedDate" : {
+            "type" : "string",
+            "format" : "date-time"
           },
           "label" : {
             "type" : "string"
@@ -2306,56 +2321,6 @@
         "properties" : {
           "resource" : {
             "$ref" : "#/components/schemas/GenomeAssembly"
-          }
-        }
-      },
-      "JoinProjectUser" : {
-        "required" : [ "label" ],
-        "type" : "object",
-        "properties" : {
-          "object" : {
-            "$ref" : "#/components/schemas/User"
-          },
-          "subject" : {
-            "$ref" : "#/components/schemas/Project"
-          },
-          "label" : {
-            "type" : "string"
-          },
-          "timestamp" : {
-            "type" : "string",
-            "format" : "date-time"
-          },
-          "createdDate" : {
-            "type" : "string",
-            "format" : "date-time"
-          },
-          "identifier" : {
-            "type" : "string"
-          }
-        }
-      },
-      "LabelledRelationshipResourceProjectUser" : {
-        "type" : "object",
-        "properties" : {
-          "label" : {
-            "type" : "string"
-          },
-          "resource" : {
-            "$ref" : "#/components/schemas/JoinProjectUser"
-          },
-          "identifier" : {
-            "type" : "string"
-          },
-          "links" : {
-            "type" : "array",
-            "xml" : {
-              "name" : "link",
-              "namespace" : "http://www.w3.org/2005/Atom"
-            },
-            "items" : {
-              "$ref" : "#/components/schemas/Link"
-            }
           }
         }
       },
@@ -2422,6 +2387,64 @@
           }
         }
       },
+      "ResponseResourceProject" : {
+        "type" : "object",
+        "properties" : {
+          "resource" : {
+            "$ref" : "#/components/schemas/Project"
+          }
+        }
+      },
+      "JoinProjectUser" : {
+        "required" : [ "label" ],
+        "type" : "object",
+        "properties" : {
+          "object" : {
+            "$ref" : "#/components/schemas/User"
+          },
+          "subject" : {
+            "$ref" : "#/components/schemas/Project"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "label" : {
+            "type" : "string"
+          },
+          "createdDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "identifier" : {
+            "type" : "string"
+          }
+        }
+      },
+      "LabelledRelationshipResourceProjectUser" : {
+        "type" : "object",
+        "properties" : {
+          "label" : {
+            "type" : "string"
+          },
+          "resource" : {
+            "$ref" : "#/components/schemas/JoinProjectUser"
+          },
+          "identifier" : {
+            "type" : "string"
+          },
+          "links" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "link",
+              "namespace" : "http://www.w3.org/2005/Atom"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/Link"
+            }
+          }
+        }
+      },
       "ResponseResourceLabelledRelationshipResourceProjectUser" : {
         "type" : "object",
         "properties" : {
@@ -2440,12 +2463,12 @@
           "subject" : {
             "$ref" : "#/components/schemas/Project"
           },
-          "label" : {
-            "type" : "string"
-          },
           "timestamp" : {
             "type" : "string",
             "format" : "date-time"
+          },
+          "label" : {
+            "type" : "string"
           },
           "createdDate" : {
             "type" : "string",
@@ -2586,14 +2609,6 @@
           }
         }
       },
-      "ResponseResourceProject" : {
-        "type" : "object",
-        "properties" : {
-          "resource" : {
-            "$ref" : "#/components/schemas/Project"
-          }
-        }
-      },
       "ResponseResourceRootResource" : {
         "type" : "object",
         "properties" : {
@@ -2607,10 +2622,6 @@
         "properties" : {
           "links" : {
             "type" : "array",
-            "xml" : {
-              "name" : "link",
-              "namespace" : "http://www.w3.org/2005/Atom"
-            },
             "items" : {
               "$ref" : "#/components/schemas/Link"
             }
@@ -2769,12 +2780,6 @@
               "type" : "string"
             }
           },
-          "analysisOutputFilesMap" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "$ref" : "#/components/schemas/AnalysisOutputFile"
-            }
-          },
           "analysisType" : {
             "$ref" : "#/components/schemas/AnalysisType"
           },
@@ -2820,46 +2825,6 @@
           },
           "label" : {
             "type" : "string"
-          },
-          "links" : {
-            "type" : "array",
-            "xml" : {
-              "name" : "link",
-              "namespace" : "http://www.w3.org/2005/Atom"
-            },
-            "items" : {
-              "$ref" : "#/components/schemas/Link"
-            }
-          },
-          "identifier" : {
-            "type" : "string"
-          }
-        }
-      },
-      "AnalysisOutputFile" : {
-        "required" : [ "createdDate", "executionManagerFileId", "label" ],
-        "type" : "object",
-        "properties" : {
-          "createdDate" : {
-            "type" : "string",
-            "format" : "date-time"
-          },
-          "executionManagerFileId" : {
-            "type" : "string"
-          },
-          "label" : {
-            "type" : "string"
-          },
-          "fileRevisionNumber" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "bytesForFile" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string",
-              "format" : "byte"
-            }
           },
           "links" : {
             "type" : "array",
@@ -3179,6 +3144,39 @@
           }
         }
       },
+      "AnalysisOutputFile" : {
+        "required" : [ "createdDate", "executionManagerFileId", "label" ],
+        "type" : "object",
+        "properties" : {
+          "createdDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "executionManagerFileId" : {
+            "type" : "string"
+          },
+          "fileRevisionNumber" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "label" : {
+            "type" : "string"
+          },
+          "links" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "link",
+              "namespace" : "http://www.w3.org/2005/Atom"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/Link"
+            }
+          },
+          "identifier" : {
+            "type" : "string"
+          }
+        }
+      },
       "ResponseResourceAnalysisOutputFile" : {
         "type" : "object",
         "properties" : {
@@ -3248,14 +3246,14 @@
               "$ref" : "#/components/schemas/SequenceFile"
             }
           },
-          "label" : {
-            "type" : "string"
-          },
           "forwardSequenceFile" : {
             "$ref" : "#/components/schemas/SequenceFile"
           },
           "reverseSequenceFile" : {
             "$ref" : "#/components/schemas/SequenceFile"
+          },
+          "label" : {
+            "type" : "string"
           },
           "links" : {
             "type" : "array",
@@ -3290,12 +3288,6 @@
             "type" : "object",
             "additionalProperties" : {
               "type" : "string"
-            }
-          },
-          "analysisOutputFilesMap" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "$ref" : "#/components/schemas/AnalysisOutputFile"
             }
           },
           "analysisType" : {
