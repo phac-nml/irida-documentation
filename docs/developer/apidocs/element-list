@@ -1,5 +1,4 @@
 ca.corefacility.bioinformatics.irida
-ca.corefacility.bioinformatics.irida.config
 ca.corefacility.bioinformatics.irida.config.analysis
 ca.corefacility.bioinformatics.irida.config.data
 ca.corefacility.bioinformatics.irida.config.environment
@@ -10,6 +9,8 @@ ca.corefacility.bioinformatics.irida.config.services.conditions
 ca.corefacility.bioinformatics.irida.config.services.scheduled
 ca.corefacility.bioinformatics.irida.config.web
 ca.corefacility.bioinformatics.irida.config.workflow
+ca.corefacility.bioinformatics.irida.constraints
+ca.corefacility.bioinformatics.irida.constraints.impl
 ca.corefacility.bioinformatics.irida.database.changesets
 ca.corefacility.bioinformatics.irida.events
 ca.corefacility.bioinformatics.irida.events.annotations
@@ -32,6 +33,7 @@ ca.corefacility.bioinformatics.irida.model.run
 ca.corefacility.bioinformatics.irida.model.sample
 ca.corefacility.bioinformatics.irida.model.sample.metadata
 ca.corefacility.bioinformatics.irida.model.sequenceFile
+ca.corefacility.bioinformatics.irida.model.subscription
 ca.corefacility.bioinformatics.irida.model.upload
 ca.corefacility.bioinformatics.irida.model.upload.galaxy
 ca.corefacility.bioinformatics.irida.model.user
@@ -101,6 +103,7 @@ ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.remote
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.ui
 ca.corefacility.bioinformatics.irida.ria.web.ajax.export
 ca.corefacility.bioinformatics.irida.ria.web.ajax.metadata
+ca.corefacility.bioinformatics.irida.ria.web.ajax.metadata.dto
 ca.corefacility.bioinformatics.irida.ria.web.ajax.ontologies
 ca.corefacility.bioinformatics.irida.ria.web.ajax.projects
 ca.corefacility.bioinformatics.irida.ria.web.ajax.projects.settings
@@ -115,7 +118,6 @@ ca.corefacility.bioinformatics.irida.ria.web.announcements
 ca.corefacility.bioinformatics.irida.ria.web.announcements.dto
 ca.corefacility.bioinformatics.irida.ria.web.cart
 ca.corefacility.bioinformatics.irida.ria.web.cart.dto
-ca.corefacility.bioinformatics.irida.ria.web.clients
 ca.corefacility.bioinformatics.irida.ria.web.components
 ca.corefacility.bioinformatics.irida.ria.web.components.agGrid
 ca.corefacility.bioinformatics.irida.ria.web.components.ant.notification
@@ -134,6 +136,7 @@ ca.corefacility.bioinformatics.irida.ria.web.launchPipeline
 ca.corefacility.bioinformatics.irida.ria.web.launchPipeline.dtos
 ca.corefacility.bioinformatics.irida.ria.web.linelist
 ca.corefacility.bioinformatics.irida.ria.web.linelist.dto
+ca.corefacility.bioinformatics.irida.ria.web.login
 ca.corefacility.bioinformatics.irida.ria.web.models
 ca.corefacility.bioinformatics.irida.ria.web.models.datatables
 ca.corefacility.bioinformatics.irida.ria.web.models.tables
@@ -142,6 +145,8 @@ ca.corefacility.bioinformatics.irida.ria.web.pipelines
 ca.corefacility.bioinformatics.irida.ria.web.pipelines.dto
 ca.corefacility.bioinformatics.irida.ria.web.projects
 ca.corefacility.bioinformatics.irida.ria.web.projects.dto
+ca.corefacility.bioinformatics.irida.ria.web.projects.dto.samples
+ca.corefacility.bioinformatics.irida.ria.web.projects.error
 ca.corefacility.bioinformatics.irida.ria.web.projects.metadata
 ca.corefacility.bioinformatics.irida.ria.web.projects.settings
 ca.corefacility.bioinformatics.irida.ria.web.projects.settings.dto
@@ -153,6 +158,8 @@ ca.corefacility.bioinformatics.irida.ria.web.sequencingRuns
 ca.corefacility.bioinformatics.irida.ria.web.sequencingRuns.dto
 ca.corefacility.bioinformatics.irida.ria.web.services
 ca.corefacility.bioinformatics.irida.ria.web.sessionAttrs
+ca.corefacility.bioinformatics.irida.ria.web.settings
+ca.corefacility.bioinformatics.irida.ria.web.settings.dto
 ca.corefacility.bioinformatics.irida.ria.web.users
 ca.corefacility.bioinformatics.irida.ria.web.users.dto
 ca.corefacility.bioinformatics.irida.ria.web.utilities
