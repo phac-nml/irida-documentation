@@ -70,21 +70,14 @@ Updating an Existing User Account
 
 {% include_relative includes/start-from-the-user-list.md %}
 
-To edit a user account, click on the "Edit" button at the top of the "User Details" table:
-
-![User details edit button.](images/user-details-edit-button.png)
-
-All of the fields that were available to modify when creating a user account are available for editing:
-
-![Edit user details.](images/edit-user-details.png)
-When you're finished updating the user account, you can click the "Update User" button at the bottom of the form to save the changes.
+When editing a user account, remember to click the "Update User" button of the bottom of the form to save the changes.
 
 Resetting a Password
 --------------------
 
 {% include_relative includes/start-from-the-user-list.md %}
 
-To reset the password for a user account, click on the "Reset Password" button at the top of the "User Details" table:
+To reset the password for a user account, hit the "Security" tab and click on the "Send Email" button:
 
 ![User details reset password button.](images/user-details-reset-password-button.png)
 
@@ -92,7 +85,7 @@ When you click the button, you will be asked to confirm if you would like to res
 
 ![Reset password confirmation dialog.](images/reset-password-confirm.png)
 
-You should see a success notification at the top of your browser window when you confirm:
+You should see a success notification at the top-right of your browser window when you confirm:
 
 ![Reset password success notification.](images/reset-password-success.png)
 
@@ -115,13 +108,7 @@ You can view the details of an existing user account by clicking on the username
 
 ![User details page.](images/user-details-page.png)
 
-To edit a user account, click on the "Edit" button at the top of the "User Details" table:
-
-![User details edit button.](images/user-details-edit-button.png)
-
-To disable a user account, uncheck the "Enabled" field, and click "Update User":
-
-![Uncheck the "Enabled" field.](images/uncheck-enabled.png)
+To disable a user account, uncheck the "Enabled" field and click the "Update User" button of the bottom of the form to save the change.
 
 **Note**: A user account that is not "Enabled" is **not** deleted from the system, but that user can no longer log in to IRIDA.
 
@@ -203,9 +190,7 @@ If a client is going to be adding or modifying data in IRIDA, you should also en
 Updating an Existing System Client
 ----------------------------------
 
-{% include_relative includes/select-a-specific-client.md %}
-
-To modify the client details, you can click on the "Edit" button, in the top, right-hand corner of the "Client Details" panel:
+To modify the client details, you can click on the "Edit" button at the end of the row.
 
 ![Client details edit button.](images/client-details-edit-button.png)
 
@@ -217,9 +202,11 @@ After you have made the modifications that you want to the existing client, clic
 
 ### Generating a New Client Secret
 
-You may want to generate a new client secret for a client if, for example, the client secret has been accidentally leaked by the client and someone is abusing your API.
+You may want to generate a new client secret for a client if, for example, the client secret has been accidentally
+leaked by the client and someone is abusing your API.
 
-Client secrets are generated randomly by IRIDA. You can have IRIDA issue a new client secret by navigating to the ["Edit Client Details"](#updating-an-existing-system-client) page (as above), and checking "Generate a new client secret":
+Client secrets are generated randomly by IRIDA. To generate a new secret, click on the refresh button next to the
+client's secret in the table:
 
 ![Generate new client secret checkbox.](images/edit-client-details-generate-new-secret.png)
 
@@ -228,19 +215,10 @@ To generate the new secret, click on the "Update Client" button. The new client 
 Removing a System Client
 ------------------------
 
-{% include_relative includes/select-a-specific-client.md %}
-
-To remove a client, click on the "Remove" button at the top, right-hand corner of the "Client Details" panel:
+To remove a client, click on the "Remove" button at the end of the row, you will need to select "Ok" on a confirmation
+pop up to ensure this is what you intented to do:
 
 ![Client details panel delete button.](images/client-details-delete-button.png)
-
-You will be asked to confirm the deletion:
-
-![Delete client confirmation dialog.](images/delete-client-confirm.png)
-
-Click "OK" to confirm, or "Cancel" to decline the deletion.
-
-After deleting a client, you will be returned to the list of clients.
 
 Managing Remote IRIDA Connections
 =================================
@@ -288,15 +266,16 @@ Enter a suitable name for the remote installation.  This name will be visible to
 
 ![Create API](images/create-api-details.png)
 
-After adding the Remote Connection you should be directed to the details page for that API.
+After adding the Remote Connection the Remote Connections table will be updated.
 
-To test the Remote Connection, click the "Connect" button.  You should be directed to a login page for the remote connection.  To connect to the remote instance of IRIDA you must have been given a username and password for the remote installation.  See [Remote instances of IRIDA](../user/dashboard/#remote-instances-of-irida) for more details.
-
-![API Details](images/api-details.png)
+To test the Remote Connection, click the "Connect" button. You should be directed to a login page for the remote
+connection. To connect to the remote instance of IRIDA you must have been given a username and password for the remote
+installation. See [Remote instances of IRIDA](../user/dashboard/#remote-instances-of-irida) for more details.
 
 Removing a Remote Connection
 ----------------------------
-From the Remote Connections list page, click on the name of the connection you wish to delete.  This will bring you to the API details page.  Click the "Remove" button on that page and confirm.
+From the Remote Connections list, click the "Remove" button at the end of the row for the remote connection you want to
+remove. A confirmatory pop up message will appear. Click "Ok" and the connection will be removed.
 
 ![Remove API](images/remove-api.png)
 
@@ -314,13 +293,15 @@ Note that a priority change will only effect analyses in the `Queued` state.  Th
 
 Viewing Sequencing Runs
 =======================
-First navigate to the sequencing runs page via the admin panel side menu:
+To view the list of all sequencing runs uploaded to IRIDA, navigate to the sequencing runs page via the admin panel side menu:
 
 ![Sequencing runs menu.](images/sequencing-runs-side-menu.png)
 
-The "Sequencing Runs" page lists all of the sequencing runs uploaded to IRIDA:
+To delete a sequencing run, click the `Remove` button in the right-most column: 
 
-![Sequencing runs list.](images/sequencing-runs-list.png)
+Note: This will remove the sequencing run and all associated sequence files.  If this operation results in a sample being empty, the sample will also be removed.
+
+![Sequencing run remove.](images/remove-run.png)
 
 You can view the specific details about a sequencing run by clicking on the ID of the sequencing run:
 
@@ -329,14 +310,6 @@ You can view the specific details about a sequencing run by clicking on the ID o
 The sequencing run details page shows information that was captured from the sequencing run file, and provides you a method to view a complete collection of files that were uploaded as part of a run:
 
 ![Sequencing run details page.](images/sequencing-run-details.png)
-
-To delete a sequencing run, click the `Remove` button on the details page.  Note: This will remove the sequencing run and all assocaited sequence files.  If this operation results in a sample being empty, the sample will also be removed.
-
-![Sequencing run remove.](images/remove-run.png)
-
-To view the collection of files that were uploaded as part of the run, click on the "Files" tab, above the quick-details pane:
-
-![Sequencing run details file tab.](images/sequencing-run-details-files-tab.png)
 
 On the sequencing run files list you can download individual files by clicking on the ![download icon](images/file-download-icon.png) button, or you can view the quality control results produced by FastQC by clicking on the filename in the table:
 
