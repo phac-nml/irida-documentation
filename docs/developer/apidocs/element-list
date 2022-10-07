@@ -5,7 +5,6 @@ ca.corefacility.bioinformatics.irida.config.environment
 ca.corefacility.bioinformatics.irida.config.repository
 ca.corefacility.bioinformatics.irida.config.security
 ca.corefacility.bioinformatics.irida.config.services
-ca.corefacility.bioinformatics.irida.config.services.conditions
 ca.corefacility.bioinformatics.irida.config.services.scheduled
 ca.corefacility.bioinformatics.irida.config.web
 ca.corefacility.bioinformatics.irida.config.workflow
@@ -17,6 +16,7 @@ ca.corefacility.bioinformatics.irida.events.annotations
 ca.corefacility.bioinformatics.irida.exceptions
 ca.corefacility.bioinformatics.irida.exceptions.galaxy
 ca.corefacility.bioinformatics.irida.exceptions.pipelines
+ca.corefacility.bioinformatics.irida.jackson2.mixin
 ca.corefacility.bioinformatics.irida.model
 ca.corefacility.bioinformatics.irida.model.announcements
 ca.corefacility.bioinformatics.irida.model.assembly
@@ -50,6 +50,7 @@ ca.corefacility.bioinformatics.irida.model.workflow.manager
 ca.corefacility.bioinformatics.irida.model.workflow.manager.galaxy
 ca.corefacility.bioinformatics.irida.model.workflow.structure
 ca.corefacility.bioinformatics.irida.model.workflow.submission
+ca.corefacility.bioinformatics.irida.oauth2
 ca.corefacility.bioinformatics.irida.pipeline.results
 ca.corefacility.bioinformatics.irida.pipeline.results.impl
 ca.corefacility.bioinformatics.irida.pipeline.results.updater
@@ -101,11 +102,11 @@ ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.pipeline
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.references
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.remote
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.ui
-ca.corefacility.bioinformatics.irida.ria.web.ajax.export
 ca.corefacility.bioinformatics.irida.ria.web.ajax.metadata
 ca.corefacility.bioinformatics.irida.ria.web.ajax.metadata.dto
 ca.corefacility.bioinformatics.irida.ria.web.ajax.ontologies
 ca.corefacility.bioinformatics.irida.ria.web.ajax.projects
+ca.corefacility.bioinformatics.irida.ria.web.ajax.projects.dto
 ca.corefacility.bioinformatics.irida.ria.web.ajax.projects.settings
 ca.corefacility.bioinformatics.irida.ria.web.ajax.projects.settings.dto
 ca.corefacility.bioinformatics.irida.ria.web.ajax.projects.settings.exceptions
@@ -139,7 +140,11 @@ ca.corefacility.bioinformatics.irida.ria.web.linelist.dto
 ca.corefacility.bioinformatics.irida.ria.web.login
 ca.corefacility.bioinformatics.irida.ria.web.models
 ca.corefacility.bioinformatics.irida.ria.web.models.datatables
+ca.corefacility.bioinformatics.irida.ria.web.models.export
+ca.corefacility.bioinformatics.irida.ria.web.models.project
+ca.corefacility.bioinformatics.irida.ria.web.models.sequenceFile
 ca.corefacility.bioinformatics.irida.ria.web.models.tables
+ca.corefacility.bioinformatics.irida.ria.web.models.user
 ca.corefacility.bioinformatics.irida.ria.web.oauth
 ca.corefacility.bioinformatics.irida.ria.web.pipelines
 ca.corefacility.bioinformatics.irida.ria.web.pipelines.dto
