@@ -7,9 +7,9 @@ name: Documentation build
 on:
   pull_request: # Run on all pull requests
   push:
-    branches:   # Run on any push to development or master
+    branches:   # Run on any push to development or main
       - development
-      - master
+      - main
 jobs:
   docs-build: # Maven integration tests
     runs-on: ubuntu-20.04 #See pre-installed software at https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-README.md
