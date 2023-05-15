@@ -86,7 +86,6 @@ ca.corefacility.bioinformatics.irida.ria.config.thymeleaf.webpacker.processor
 ca.corefacility.bioinformatics.irida.ria.config.thymeleaf.webpacker.util
 ca.corefacility.bioinformatics.irida.ria.security
 ca.corefacility.bioinformatics.irida.ria.utilities
-ca.corefacility.bioinformatics.irida.ria.utilities.components
 ca.corefacility.bioinformatics.irida.ria.utilities.converters
 ca.corefacility.bioinformatics.irida.ria.web
 ca.corefacility.bioinformatics.irida.ria.web.activities
@@ -96,6 +95,7 @@ ca.corefacility.bioinformatics.irida.ria.web.admin.dto.statistics
 ca.corefacility.bioinformatics.irida.ria.web.ajax
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.ajax
+ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.analysis
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.cart
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.clients
 ca.corefacility.bioinformatics.irida.ria.web.ajax.dto.pipeline
@@ -123,9 +123,6 @@ ca.corefacility.bioinformatics.irida.ria.web.components
 ca.corefacility.bioinformatics.irida.ria.web.components.agGrid
 ca.corefacility.bioinformatics.irida.ria.web.components.ant.notification
 ca.corefacility.bioinformatics.irida.ria.web.components.ant.table
-ca.corefacility.bioinformatics.irida.ria.web.components.datatables
-ca.corefacility.bioinformatics.irida.ria.web.components.datatables.config
-ca.corefacility.bioinformatics.irida.ria.web.components.datatables.export
 ca.corefacility.bioinformatics.irida.ria.web.components.datatables.models
 ca.corefacility.bioinformatics.irida.ria.web.dto
 ca.corefacility.bioinformatics.irida.ria.web.dto.list
@@ -159,6 +156,7 @@ ca.corefacility.bioinformatics.irida.ria.web.rempoteapi.dto
 ca.corefacility.bioinformatics.irida.ria.web.samples
 ca.corefacility.bioinformatics.irida.ria.web.samples.dto
 ca.corefacility.bioinformatics.irida.ria.web.search
+ca.corefacility.bioinformatics.irida.ria.web.search.dto
 ca.corefacility.bioinformatics.irida.ria.web.sequencingRuns
 ca.corefacility.bioinformatics.irida.ria.web.sequencingRuns.dto
 ca.corefacility.bioinformatics.irida.ria.web.services
