@@ -7,7 +7,7 @@
       "name": "the IRIDA Team",
       "email": "IRIDA-mail@sfu.ca"
     },
-    "version": "irida-22.09"
+    "version": "irida-23.01.3"
   },
   "servers": [
     {
@@ -2446,6 +2446,10 @@
           "label": {
             "type": "string"
           },
+          "fileSizeBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
           "links": {
             "type": "array",
             "xml": {
@@ -2502,6 +2506,10 @@
           },
           "label": {
             "type": "string"
+          },
+          "fileSizeBytes": {
+            "type": "integer",
+            "format": "int64"
           },
           "links": {
             "type": "array",
@@ -2608,6 +2616,13 @@
             "type": "string"
           },
           "label": {
+            "type": "string"
+          },
+          "fileSizeBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fileSize": {
             "type": "string"
           },
           "fileRevisionNumber": {
@@ -3580,6 +3595,10 @@
           },
           "label": {
             "type": "string"
+          },
+          "fileSizeBytes": {
+            "type": "integer",
+            "format": "int64"
           },
           "links": {
             "type": "array",
